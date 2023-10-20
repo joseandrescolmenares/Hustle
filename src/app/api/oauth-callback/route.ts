@@ -19,9 +19,9 @@ export async function GET(request: Request) {
         {
           params: {
             grant_type: "authorization_code",
-            client_id: "a3f99a23-910e-4b62-abae-40826a0a8bd3" ,
-            client_secret: "d0d396d5-1047-4d95-9516-292d8befa83a",
-            redirect_uri: "https://hustle-beta.vercel.app/api/oauth-callback",
+            client_id: clientId ,
+            client_secret: clientSecret ,
+            redirect_uri: redirectUri ,
             code: code,
           },
           headers: {
