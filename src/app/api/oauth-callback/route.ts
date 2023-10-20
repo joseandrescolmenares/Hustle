@@ -32,7 +32,6 @@ export async function GET(request: Request) {
       //  console.log(access_token, refresh_token)
       //   Aquí puedes guardar los tokens en la base de datos o en una cookie.
 
-      //  redirect("/dashboard")
    return Response.json({jose: "crack"})
     } catch (error) {
       return Response.json({
