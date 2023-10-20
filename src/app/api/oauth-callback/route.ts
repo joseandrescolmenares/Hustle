@@ -17,9 +17,9 @@ export async function GET(request: Request) {
         {
           params: {
             grant_type: "authorization_code",
-            client_id: process.env.HUBSPOT_CLIENT_ID,
-            client_secret: process.env.HUBSPOT_CLIENT_SECRET ,
-            redirect_uri: process.env.HUBSPOT_REDIRECT_URI,
+            client_id: clientId,
+            client_secret:clientSecret,
+            redirect_uri: redirectUri ,
             code: code,
           },
           headers: {
