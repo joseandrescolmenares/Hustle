@@ -1,15 +1,17 @@
 import axios from "axios";
 import { redirect } from "next/navigation";
 
-// let SCOPES = ["crm.objects.contacts.read"];
 export async function GET(request: Request) {
   const { pathname, searchParams, search } = new URL(request.url);
   const code = searchParams.get("code");
-  if (code) {
-    const clientId = process.env.HUBSPOT_CLIENT_ID;
-    const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
-    const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
+  const clientId = process.env.HUBSPOT_CLIENT_ID;
+  const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
+  const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
 
+  if (!code || !clientId || !clientSecret || !redirectUri) {
+    return Response.json({ error: "Faltan variables de configuración." });
+  }
+  
     try {
       const response: any = await axios.post(
         "https://api.hubapi.com/oauth/v1/token",
@@ -33,14 +35,12 @@ export async function GET(request: Request) {
       //   Aquí puedes guardar los tokens en la base de datos o en una cookie.
 
       //  redirect("/dashboard")
-       return Response.json({jose:"funcionsa"})
+  
     } catch (error) {
       return Response.json({
         error: "Hubo un error al obtener el token de acceso.",
       });
     }
-  } else {
-    return Response.json({ error: "Falta el código de autorización." });
-  }
+  
 }
 
