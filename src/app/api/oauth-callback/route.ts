@@ -18,7 +18,7 @@ export async function GET(request: Request) {
           params: {
             grant_type: "authorization_code",
             client_id: clientId,
-            client_secret:clientSecret,
+            client_secret: clientSecret,
             redirect_uri: redirectUri ,
             code: code,
           },
