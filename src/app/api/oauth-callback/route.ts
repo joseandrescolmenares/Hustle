@@ -4,9 +4,8 @@ import { redirect } from "next/navigation";
 // let SCOPES = ["crm.objects.contacts.read"];
 export async function GET(request: Request) {
   const { pathname, searchParams, search } = new URL(request.url);
-
-  if (search?.includes("code")) {
-    const code = searchParams.get("code");
+  const code = searchParams.get("code");
+  if (code) {
     const clientId = process.env.HUBSPOT_CLIENT_ID;
     const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
     const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
