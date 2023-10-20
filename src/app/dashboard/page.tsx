@@ -1,10 +1,10 @@
-
-const page = () => {
+'use client'
+ const dashboard = () => {
   return (
-    <div>
-      
-    </div>
+    <>
+       <p>jose</p>
+    </>
   )
 }
 
-export default page
+export default dashboard

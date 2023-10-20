@@ -33,7 +33,7 @@ export async function GET(request: Request) {
 
       //   Aquí puedes guardar los tokens en la base de datos o en una cookie.
 
-       redirect("/")
+       redirect("http://localhost:3000/dashboard")
     } catch (error) {
       return Response.json({
         error: "Hubo un error al obtener el token de acceso.",
