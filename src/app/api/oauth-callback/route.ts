@@ -1,8 +1,7 @@
 import axios from "axios";
-import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
-  const { searchParams, search } = new URL(request.url);
+  const { searchParams, } = new URL(request.url);
   const code = searchParams.get("code");
   const clientId = process.env.HUBSPOT_CLIENT_ID;
   const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
@@ -11,7 +10,6 @@ export async function GET(request: Request) {
   if (!code || !clientId || !clientSecret || !redirectUri) {
     return Response.json({ error: "Faltan variables de configuración." });
   }
-  
     try {
       const response: any = await axios.post(
         "https://api.hubapi.com/oauth/v1/token",
@@ -19,9 +17,9 @@ export async function GET(request: Request) {
         {
           params: {
             grant_type: "authorization_code",
-            client_id: clientId ,
-            client_secret: clientSecret ,
-            redirect_uri: redirectUri ,
+            client_id: process.env.HUBSPOT_CLIENT_ID,
+            client_secret: process.env.HUBSPOT_CLIENT_SECRET ,
+            redirect_uri: process.env.HUBSPOT_REDIRECT_URI,
             code: code,
           },
           headers: {
