@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       );
 
       const { access_token, refresh_token } = response.data;
-
+       console.log(access_token, refresh_token)
       //   Aquí puedes guardar los tokens en la base de datos o en una cookie.
 
       //  redirect("http://localhost:3000/dashboard")
