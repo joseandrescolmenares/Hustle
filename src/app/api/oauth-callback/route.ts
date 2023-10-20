@@ -2,7 +2,7 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
-  const { pathname, searchParams, search } = new URL(request.url);
+  const { searchParams, search } = new URL(request.url);
   const code = searchParams.get("code");
   const clientId = process.env.HUBSPOT_CLIENT_ID;
   const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
