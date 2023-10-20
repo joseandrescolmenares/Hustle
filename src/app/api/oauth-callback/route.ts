@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
     const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
 
-    try {
+    // try {
       const response: any = await axios.post(
         "https://api.hubapi.com/oauth/v1/token",
         null,
@@ -32,13 +32,13 @@ export async function GET(request: Request) {
       //  console.log(access_token, refresh_token)
       //   Aquí puedes guardar los tokens en la base de datos o en una cookie.
 
-      //  redirect("http://localhost:3000/dashboard")
-      return Response.json({jose:"funcionsa"})
-    } catch (error) {
-      return Response.json({
-        error: "Hubo un error al obtener el token de acceso.",
-      });
-    }
+      //  redirect("/dashboard")
+       return Response.json({jose:"funcionsa"})
+    // } catch (error) {
+    //   return Response.json({
+    //     error: "Hubo un error al obtener el token de acceso.",
+    //   });
+    // }
   } else {
     return Response.json({ error: "Falta el código de autorización." });
   }
