@@ -1,4 +1,5 @@
 import axios from "axios";
+import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
   const { searchParams, } = new URL(request.url);
@@ -31,13 +32,12 @@ export async function GET(request: Request) {
       // const { access_token, refresh_token } = response.data;
       //  console.log(access_token, refresh_token)
       //   Aquí puedes guardar los tokens en la base de datos o en una cookie.
-
-   return Response.json({jose: "crack"})
     } catch (error) {
       return Response.json({
         error: "Hubo un error al obtener el token de acceso.",
       });
     }
+    redirect("/dashboard")
   
 }
 
