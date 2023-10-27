@@ -24,8 +24,6 @@ export default function UserAuthForm({ auth, className, ...props }: UserAuthForm
     }, 3000)
   }
 
-
-
   return (
     <div className={cn("grid gap-6", className)} {...props}>
       <form onSubmit={onSubmit}>

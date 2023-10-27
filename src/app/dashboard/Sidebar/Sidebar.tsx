@@ -10,7 +10,7 @@ function Sidebar() {
       >
         <div className="flex h-full flex-col overflow-y-auto border-r border-slate-200 bg-purple-300 px-3 py-4 dark:border-slate-700 dark:bg-slate-900">
           <div
-            href="#"
+            // href="#"
             className="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white"
           >
             <svg
