@@ -1,63 +1,94 @@
-"use client"
+"use client";
+import React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-import * as React from "react"
+import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
 
-import { cn } from "@/lib/utils"
-import { Icons } from "../../../components/Icons/IconsAuth/IconsAuth"
-import { Button } from "../../../components/ui/Button"
-import { Input } from "../../../components/ui/Input"
+import { Button } from "../../../components/ui/Button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../../../components/ui/Form";
+import { Input } from "../../../components/ui/Input";
 
+const formSchema = z.object({
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  password: z.string().min(6, {
+    message: "Password must be at least 6 characters.",
+  }),
+});
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
-  auth : string
-}
-
-export default function UserAuthForm({ auth, className, ...props }: UserAuthFormProps) {
+export default function UserAuthForm() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
 
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
-    setIsLoading(true)
-
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
     setTimeout(() => {
       setIsLoading(false)
     }, 3000)
   }
 
   return (
-    <div className={cn("grid gap-6", className)} {...props}>
-      <form onSubmit={onSubmit}>
-        <div className="grid gap-2">
-          <div className="grid gap-4">
-            <label className="sr-only" htmlFor="email">
-              Email
-            </label>
-            <Input
-              id="email"
-              placeholder="name@example.com"
-              type="email"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect="off"
-              disabled={isLoading}
-            />
-            <Input
-              id="password"
-              placeholder="*******"
-              type="password"
-              autoCapitalize="none"
-              autoCorrect="off"
-              disabled={isLoading}
-            />
-          </div>
-          <Button disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+    <>
+      {" "}
+      <div className="flex flex-col space-y-2 text-center">
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Create an account
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Enter your email below to create your account
+        </p>
+      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="name@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-            Sign In
-          </Button>
-        </div>
-      </form>
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                 <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="********" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button  className="w-full"  type="submit">Submit</Button>
+        </form>
+      </Form>
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -72,10 +103,10 @@ export default function UserAuthForm({ auth, className, ...props }: UserAuthForm
         {isLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
-          <Icons.google className="mr-2 h-4 w-4" />
+          <Icons.gitHub className="mr-2 h-4 w-4" />
         )}{" "}
-        Google
+        Github
       </Button>
-    </div>
-  )
+    </>
+  );
 }
