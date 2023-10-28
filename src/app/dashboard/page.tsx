@@ -1,6 +1,6 @@
 'use client'
-import { Sidebar } from "./Sidebar"
-import { MainTable } from "./Contact"
+import { Sidebar } from "./components/Sidebar"
+import { MainTable } from "./components/Contact"
 
  const dashboard = () => {
   return (

@@ -33,12 +33,14 @@
     --ring: 222.2 84% 4.9%;
  
     --radius: 0.5rem;
+    --color-primary: 142, 50, 234;
 
   }
  
   .dark {
-    --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
+
+    --background: 222.2 84% 4.9%;
  
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
