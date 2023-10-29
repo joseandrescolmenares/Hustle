@@ -33,10 +33,10 @@ const handleAuthLogin = async (
 };
 
 const handleAuthGoogle = async () => {
-  let { data, error } = await supabase.auth.signInWithOAuth({
+  const   dataGoogleAuth =  await supabase.auth.signInWithOAuth({
     provider: "google"
   });
-  console.log(data, error)
+  return dataGoogleAuth
 };
 
 export { handleAuthLogin, handleAuthSignup, handleAuthGoogle };

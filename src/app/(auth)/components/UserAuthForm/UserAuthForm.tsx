@@ -30,10 +30,14 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
     },
   });
 
-async function onSubmit(values: z.infer<typeof formSchema>) {
+  const handleAuthGoogleProvider = async () => {
+    let { data, error } = await handleAuthGoogle();
+  };
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const { email, password } = values;
-   const dataAuth = await handleAuth(email, password);
-   console.log(dataAuth)
+    const dataAuth = await handleAuth(email, password);
+    console.log(dataAuth);
   }
 
   return (
@@ -44,7 +48,7 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
           Create an account
         </h1>
         <p className="text-sm text-muted-foreground">
-        Enter your email and password to create your account
+          Enter your email and password to create your account
         </p>
       </div>
       <Form {...form}>
@@ -90,7 +94,12 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
           </span>
         </div>
       </div>
-      <Button variant="outline" type="button" disabled={isLoading} onClick={handleAuthGoogle}>
+      <Button
+        variant="outline"
+        type="button"
+        disabled={isLoading}
+        onClick={handleAuthGoogleProvider}
+      >
         {isLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
