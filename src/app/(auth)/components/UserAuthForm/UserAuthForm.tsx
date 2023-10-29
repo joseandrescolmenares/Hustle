@@ -32,7 +32,7 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
 
 async function onSubmit(values: z.infer<typeof formSchema>) {
     const { email, password } = values;
-   const dataAuth : any = await handleAuth(email, password);
+   const dataAuth = await handleAuth(email, password);
    console.log(dataAuth)
   }
 
