@@ -4,7 +4,7 @@ import { handleAuthSignup } from "@/lib/Auth";
 
 const SignUp = () => {
   return (
-    <UserAuthForm auth="signup"/>
+    <UserAuthForm handleAuth={handleAuthSignup}/>
   );
 };
 
