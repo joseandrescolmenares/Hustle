@@ -12,7 +12,7 @@ import {
 
 const MainTable = () => {
   return (
-    <Table >
+    <Table className=' w-full' >
     <TableCaption>A list of your recent invoices.</TableCaption>
     <TableHeader>
       <TableRow>
