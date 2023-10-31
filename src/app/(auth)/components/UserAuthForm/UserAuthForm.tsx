@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -6,6 +6,8 @@ import * as z from "zod";
 import { formSchema } from "@/lib/formValidateSchema";
 import { UserAuthFormProp } from "@/lib/types/authForm";
 import { handleAuthGoogle } from "@/lib/Auth";
+import Cookies from "js-cookie";
+
 
 import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
 import { Button } from "../../../components/ui/Button";
@@ -32,12 +34,15 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
 
   const handleAuthGoogleProvider = async () => {
     let { data, error } = await handleAuthGoogle();
+    Cookies.set("access_token", data?.url)
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { email, password } = values;
-    const dataAuth = await handleAuth(email, password);
-    console.log(dataAuth);
+    const dataAuth : any = await handleAuth(email, password);
+    Cookies.set("access_token",dataAuth?.data.session.access_token)
+
+
   }
 
   return (

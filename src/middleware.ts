@@ -1,14 +1,12 @@
-import { NextRequest, NextResponse  } from 'next/server'
- 
-export function middleware(request: NextRequest) {
-  // Call our authentication function to check the request
-//   if(!request.cookies.has("sb-access-token")){ 
-//     return NextResponse.redirect(new URL("/login", request.url))
-//   }
-//   return NextResponse.redirect(new URL("/", request.url))
-// }
-// Limit the middleware to paths starting with `/api/`
-}
+import { NextRequest, NextResponse } from "next/server";
+
 export const config = {
-    matcher: '/dashboard',
+  matcher: "/dashboard",
+};
+export function middleware(request: NextRequest) {
+  if (!request.cookies.get("access_token") ) {
+    console.log(request.cookies.get("access-token"))
+    return NextResponse.redirect(new URL("/login", request.url));
   }
+  return NextResponse.next();
+}
