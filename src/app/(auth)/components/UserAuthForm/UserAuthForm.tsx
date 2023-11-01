@@ -45,7 +45,7 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
     const dataAuth: any = await handleAuth(email, password);
     Cookies.set("access_token", dataAuth?.data.session.access_token);
   }
-
+ 
   return (
     <>
       {" "}

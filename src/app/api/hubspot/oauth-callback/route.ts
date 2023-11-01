@@ -1,6 +1,7 @@
 import axios from "axios";
 import { redirect } from "next/navigation";
 
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
@@ -35,14 +36,13 @@ export async function GET(request: Request) {
       Authorization: `Bearer ${access_token}`,
       "Content-Type": "application/json",
     };
-    const apiUrl =
-      "https://api.hubapi.com/contacts/v1/lists/all/contacts/all?count=1";
+    const apiUrl ="https://api.hubapi.com/crm/v3/objects/contacts";
 
     const responseData: any = await axios.get(apiUrl, { headers });
 
-    console.log("responseData", responseData.data.contacts[0]);
+    console.log("responseData", responseData.data);
 
-    //   Aquí puedes guardar los tokens en la base de datos o en una cookie.
+
   } catch (error) {
     return Response.json({
       error: "Hubo un error al obtener el token de acceso.",
