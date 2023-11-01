@@ -1,13 +1,12 @@
-"use client"
+"use client";
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { formSchema } from "@/lib/formValidateSchema";
 import { UserAuthFormProp } from "@/lib/types/authForm";
-import { handleAuthGoogle } from "@/lib/Auth";
+import { supabase } from "@/lib/ClientSupabase";
 import Cookies from "js-cookie";
-
 
 import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
 import { Button } from "../../../components/ui/Button";
@@ -32,17 +31,19 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
     },
   });
 
-  const handleAuthGoogleProvider = async () => {
-    let { data, error } = await handleAuthGoogle();
-    Cookies.set("access_token", data?.url)
-  };
+
+    const handleAuthGoogleProvider = async () => {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+      });
+    };
+    
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { email, password } = values;
-    const dataAuth : any = await handleAuth(email, password);
-    Cookies.set("access_token",dataAuth?.data.session.access_token)
-
-
+    const dataAuth: any = await handleAuth(email, password);
+    Cookies.set("access_token", dataAuth?.data.session.access_token);
   }
 
   return (
@@ -99,7 +100,7 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
           </span>
         </div>
       </div>
-      <Button
+      {/* <Button
         variant="outline"
         type="button"
         disabled={isLoading}
@@ -111,7 +112,7 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
           <Icons.google className="mr-2 h-4 w-4" />
         )}{" "}
         Google
-      </Button>
+      </Button> */}
     </>
   );
 }
