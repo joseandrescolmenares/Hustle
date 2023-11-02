@@ -1,6 +1,7 @@
 import axios from "axios";
 import { redirect } from "next/navigation";
-
+import { cookies } from "next/headers";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -32,17 +33,24 @@ export async function GET(request: Request) {
 
     const { access_token, refresh_token } = responseToken.data;
 
-    const headers = {
-      Authorization: `Bearer ${access_token}`,
-      "Content-Type": "application/json",
-    };
-    const apiUrl ="https://api.hubapi.com/crm/v3/objects/contacts";
+    // const headers = {
+    //   Authorization: `Bearer ${access_token}`,
+    //   "Content-Type": "application/json",
+    // };
+    // const apiUrl = "https://api.hubapi.com/crm/v3/objects/contacts";
 
-    const responseData: any = await axios.get(apiUrl, { headers });
+    // const responseData: any = await axios.get(apiUrl, { headers });
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    console.log("responseData", responseData.data);
 
+    // const { data, error } = await supabase
+    //   .from("integrations")
+    //   .update({ isHubspot: true, tokenHubspot: access_token })
+    //   .eq("userId", "4e76bc6a-79a1-4d91-a27f-af5f33ffabb0")
+    //   .select();
 
+    // console.log(data, "table", error);
   } catch (error) {
     return Response.json({
       error: "Hubo un error al obtener el token de acceso.",

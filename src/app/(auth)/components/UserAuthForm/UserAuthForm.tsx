@@ -8,7 +8,6 @@ import { UserAuthFormProp } from "@/lib/types/authForm";
 import { supabase } from "@/lib/ClientSupabase";
 import Cookies from "js-cookie";
 
-import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
 import { Button } from "../../../components/ui/Button";
 import {
   Form,
@@ -31,21 +30,19 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
     },
   });
 
-
-    const handleAuthGoogleProvider = async () => {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-      });
-    };
-    
-
+  const handleAuthGoogleProvider = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { email, password } = values;
     const dataAuth: any = await handleAuth(email, password);
     Cookies.set("access_token", dataAuth?.data.session.access_token);
+
   }
- 
+
   return (
     <>
       {" "}
