@@ -33,24 +33,16 @@ export async function GET(request: Request) {
 
     const { access_token, refresh_token } = responseToken.data;
 
-    // const headers = {
-    //   Authorization: `Bearer ${access_token}`,
-    //   "Content-Type": "application/json",
-    // };
-    // const apiUrl = "https://api.hubapi.com/crm/v3/objects/contacts";
-
-    // const responseData: any = await axios.get(apiUrl, { headers });
     const cookieStore = cookies();
+    cookieStore.set("access_token", access_token)
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-
-
-    // const { data, error } = await supabase
-    //   .from("integrations")
-    //   .update({ isHubspot: true, tokenHubspot: access_token })
-    //   .eq("userId", "4e76bc6a-79a1-4d91-a27f-af5f33ffabb0")
-    //   .select();
-
-    // console.log(data, "table", error);
+    const userId = cookieStore.get("userId");
+    const { data, error } = await supabase
+      .from("integrations")
+      .update({ isHubspot: true, tokenHubspot: access_token })
+      .eq("userId", userId?.value)
+      .select();
+ 
   } catch (error) {
     return Response.json({
       error: "Hubo un error al obtener el token de acceso.",

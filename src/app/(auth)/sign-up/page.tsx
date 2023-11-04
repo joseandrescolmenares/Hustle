@@ -21,7 +21,7 @@ const SignUp = () => {
         }
       );
       const result = dataTableIntegration.data;
-      console.log(result,"data table");
+      console.log(result)
     }
     return data;
   };

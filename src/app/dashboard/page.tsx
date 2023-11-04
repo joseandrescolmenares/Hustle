@@ -1,19 +1,38 @@
 "use client";
 
-import { MainTable } from "./components/Contact";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/lib/ClientSupabase";
+import { Dialog } from "./components/Dialog";
+// import { cookies } from "next/headers";
+import Cookies from "js-cookie";
+import axios from "axios";
 
-const dashboard = () => {
-  const hubspotAuthUrl = `https://app.hubspot.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_HUBSPOT_CLIENT_ID}&scope=crm.objects.contacts.read&redirect_uri=${process.env.NEXT_PUBLIC_HUBSPOT_REDIRECT_URI}`;
+const Dashboard = () => {
+  const [dataHubspot, setDataHubspot] = useState<boolean>(false);
+  // const Cookies = cookies();
+  const userId = Cookies.get("userId");
+
+  useEffect(() => {
+    const getContactHubspot = async () => {
+      let { data, error } = await supabase
+        .from("integrations")
+        .select("isHubspot")
+        .eq("userId", userId);
+      if (data == null) return;
+      setDataHubspot(data[0]?.isHubspot);
+    };
+
+    getContactHubspot();
+  }, [userId]);
+
+  if (dataHubspot == null) return;
 
   return (
     <div className=" w-full">
-      {/* <MainTable /> */}
-      <a className=" hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow bg-customPurple " type="button" href={hubspotAuthUrl}>
-        {" "}
-        conect Hubspot
-      </a>
+      {/* {!dataHubspot? <Dialog /> : <div></div>} */}
+      <Dialog />
     </div>
   );
 };
 
-export default dashboard;
+export default Dashboard;

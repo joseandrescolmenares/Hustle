@@ -4,7 +4,6 @@ import { AuthResponse } from "@supabase/supabase-js";
 import { UserAuthForm } from "@/app/(auth)/components/UserAuthForm";
 
 const login = () => {
-  
   const handleAuthLogin = async (
     email: string,
     password: string

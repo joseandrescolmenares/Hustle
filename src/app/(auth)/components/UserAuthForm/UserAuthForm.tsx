@@ -7,7 +7,7 @@ import { formSchema } from "@/lib/formValidateSchema";
 import { UserAuthFormProp } from "@/lib/types/authForm";
 import { supabase } from "@/lib/ClientSupabase";
 import Cookies from "js-cookie";
-
+import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/Button";
 import {
   Form,
@@ -22,6 +22,7 @@ import { Input } from "../../../components/ui/Input";
 
 export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,7 +41,10 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
     const { email, password } = values;
     const dataAuth: any = await handleAuth(email, password);
     Cookies.set("access_token", dataAuth?.data.session.access_token);
-
+    Cookies.set("userId", dataAuth?.data.user?.id);
+    if (dataAuth) {
+      router.push("/dashboard");
+    }
   }
 
   return (

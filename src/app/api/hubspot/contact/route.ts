@@ -1,10 +1,18 @@
 import axios from "axios";
-import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-
-
 export async function GET(request: Request) {
-   
-  return  NextResponse.json({funca: "funcaa"})
+  const Cookies = cookies();
+  const cookieToken = Cookies.get("access_token")?.value;
+
+  const headers = {
+    Authorization: `Bearer ${cookieToken}`,
+    "Content-Type": "application/json",
+  };
+  const apiUrl = "https://api.hubapi.com/crm/v3/objects/contacts";
+
+  const responseData: any = await axios.get(apiUrl, { headers });
+
+  return NextResponse.json(responseData.data);
 }
