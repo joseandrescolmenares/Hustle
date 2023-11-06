@@ -14,5 +14,8 @@ export async function GET(request: Request) {
 
   const responseData: any = await axios.get(apiUrl, { headers });
 
-  return NextResponse.json(responseData.data);
+    console.log(responseData)
+  
+
+  return NextResponse.json(responseData?.data);
 }
