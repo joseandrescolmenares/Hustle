@@ -38,7 +38,8 @@ export async function GET(request: Request) {
     cookieStore.set("access_token", access_token);
     cookieStore.set("expires_in", expires_in);
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-    const userId = cookieStore.get("userId");
+    const userId = cookieStore.get("userId")
+
     const { data, error } = await supabase
       .from("integrations")
       .update({ isHubspot: true, tokenHubspot: access_token })

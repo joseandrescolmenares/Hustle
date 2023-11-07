@@ -15,13 +15,14 @@ const dashboard = async () => {
     .eq("userId", userId);
 
   if (data == null) return;
-  let dataHubspot = data[0].isHubspot;
+  let dataHubspot = data[0]?.isHubspot;
 
   if (dataHubspot) {
     let result = await getContact(cookieToken);
-    console.log(result.results[0].properties)
+    console.log(result.results[0].properties);
     return (
       <div className=" w-full flex  justify-center items-center">
+     
         <div>
           <p>{result?.results[0].properties.firstname}</p>
           <p>{result?.results[0].properties.lastname}</p>
