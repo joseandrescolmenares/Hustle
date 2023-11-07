@@ -7,9 +7,11 @@ export const getContact = async (cookieToken: string | undefined) => {
         Authorization: `Bearer ${cookieToken}`,
         "Content-Type": "application/json",
       };
-      // objectTypeId
+    //  asociasones
+"    crm/v4/associations/contact/company/labels"
       const Urldeal = "https://api.hubapi.com/crm/v3/objects/deals"
-      const UrlTest = "https://api.hubapi.com/crm/v3/objects/contacts"
+    
+      const UrlTest = "https://api.hubapi.com/crm/v3/objects/contacts/batch/read"
       const apiUrl = "https://api.hubapi.com/crm/v3/objects/contacts";
       const responseData: any = await axios.get(UrlTest, { headers });
       const dataContact = responseData.data;

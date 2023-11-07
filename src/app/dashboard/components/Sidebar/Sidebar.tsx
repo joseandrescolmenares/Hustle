@@ -1,5 +1,6 @@
 import iconsHustle from "../../../../../public/hustle.png";
-import { CiGrid41, CiWarning, CiBellOn,CiFilter } from "react-icons/ci";
+import { CiGrid41, CiWarning, CiBellOn, CiFilter } from "react-icons/ci";
+import Link from "next/link";
 
 import Image from "next/image";
 
@@ -12,38 +13,28 @@ function Sidebar() {
         aria-label="Sidebar"
       >
         <div className="flex h-full items-center justify-center flex-col overflow-y-auto shadow-lg border-slate-200  px-3 py-4 dark:border-slate-700 dark:bg-slate-900">
-          <div
-            // href="#"
-            className="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white"
-          >
+          <div className="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white">
             <Image src={iconsHustle} alt="Hustle" className=" w-6" />
             {/* <span className="ml-3 text-base font-semibold">Hustle</span> */}
           </div>
           <ul className="space-y-2 text-sm font-medium">
-            <li>
-              <a
-                href="#"
-                className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700"
-              >
+            <Link href="/dashboard">
+              {" "}
+              <li className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700">
                 <CiGrid41 size={24} />
                 {/* <span className="ml-3 flex-1 whitespace-nowrap">Home</span> */}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple  dark:text-white dark:hover:bg-slate-700"
-              >
-                <CiWarning  size={24} />
+              </li>
+            </Link>
+            <Link href="/dashboard/revenueAlert">
+              {" "}
+              <li className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple  dark:text-white dark:hover:bg-slate-700">
+                <CiWarning size={24} />
                 {/* <span className="ml-3 flex-1 whitespace-nowrap">meetings</span> */}
-              </a>
-            </li>
+              </li>
+            </Link>
             <li>
-              <a
-                href="#"
-                className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700"
-              >
-                <CiFilter  size={24} />
+              <a className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700">
+                <CiFilter size={24} />
                 {/* <span className="ml-3 flex-1 whitespace-nowrap">Pipeline</span> */}
               </a>
             </li>
@@ -52,7 +43,7 @@ function Sidebar() {
                 href="#"
                 className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700"
               >
-                <CiBellOn  size={24} />
+                <CiBellOn size={24} />
                 {/* <span className="ml-3 flex-1 whitespace-nowrap">Settings</span> */}
               </a>
             </li>
