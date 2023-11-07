@@ -19,19 +19,19 @@ const dashboard = async () => {
 
   if (dataHubspot) {
     let result = await getContact(cookieToken);
-    console.log(result)
+    console.log(result.results[0].properties)
     return (
       <div className=" w-full flex  justify-center items-center">
         <div>
-          {/* <p>{result?.results[0].properties.firstname}</p>
-          <p>{result?.results[0].properties.lastname}</p> */}
+          <p>{result?.results[0].properties.firstname}</p>
+          <p>{result?.results[0].properties.lastname}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className=" w-full flex  justify-center items-center">
+    <div className="w-full flex  justify-center items-center">
       <Dialog />
     </div>
   );
