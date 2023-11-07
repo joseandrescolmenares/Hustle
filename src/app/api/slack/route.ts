@@ -38,7 +38,7 @@ export async function GET(request: Request) {
       })
       .eq("userId", userId)
       .select();
-      console.log(result,"result ", data, "base")
+  
   } catch (error) {
     console.log(error);
     return Response.json({
