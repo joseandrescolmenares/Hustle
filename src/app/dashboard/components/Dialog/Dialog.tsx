@@ -27,7 +27,7 @@ export default function Dialog() {
                 href={hubspotAuthUrl}
               >
                 {" "}
-                conect Hubspot
+                conect Hubspo
               </a>
             </div>
           </div>
