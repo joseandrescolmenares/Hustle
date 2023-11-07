@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const Cookies = cookies();
-  const cookieToken = Cookies.get("access_token")?.value;
+  const cookieToken = Cookies.get("accessTokenHubspot")?.value;
 
   const headers = {
     Authorization: `Bearer ${cookieToken}`,

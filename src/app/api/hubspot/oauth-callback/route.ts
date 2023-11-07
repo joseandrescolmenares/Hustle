@@ -35,17 +35,18 @@ export async function GET(request: Request) {
     const { access_token, refresh_token, expires_in } = responseToken.data;
     const cookieStore = cookies();
     cookieStore.set("refresh_token", refresh_token);
-    cookieStore.set("access_token", access_token);
+    cookieStore.set("accessTokenHubspot", access_token);
     cookieStore.set("expires_in", expires_in);
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const userId = cookieStore.get("userId")
 
     const { data, error } = await supabase
       .from("integrations")
-      .update({ isHubspot: true, tokenHubspot: access_token })
+      .update({ isHubspot: true})
       .eq("userId", userId?.value)
       .select();
       // functionToExecute(refresh_token);
+      console.log(data, "integration hospos")
   } catch (error) {
     return Response.json({
       error: "Hubo un error al obtener el token de acceso.",

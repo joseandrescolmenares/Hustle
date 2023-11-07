@@ -13,7 +13,7 @@ const SignUp = () => {
       email: email,
       password: password,
     });
-    if (data) {
+    if (data?.data) {
       const dataTableIntegration = await axios.post(
         "/api/supabase/integrationTable",
         {

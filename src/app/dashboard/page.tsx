@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/ClientSupabase";
 import { Dialog } from "./components/Dialog";
@@ -8,18 +9,16 @@ import { renewToken } from "@/service/renewToken";
 const dashboard = async () => {
   const Cookies = cookies();
   const userId = Cookies.get("userId")?.value;
-  const cookieToken = Cookies.get("access_token")?.value;
+  const cookieToken = Cookies.get("accessTokenHubspot")?.value;
   let { data, error } = await supabase
     .from("integrations")
     .select("isHubspot")
     .eq("userId", userId);
-
   if (data == null) return;
   let dataHubspot = data[0]?.isHubspot;
 
   if (dataHubspot) {
     let result = await getContact(cookieToken);
-    console.log(result.results[0].properties);
     return (
       <div className=" w-full flex  justify-center items-center">
      
