@@ -1,14 +1,18 @@
 import axios from "axios";
-import { renewToken } from "./renewToken";
+import { renewToken } from "../renewToken";
+import { cookies } from "next/headers";
 
-export const getAllCompanies = async (cookieToken: string | undefined) => {
+export const getIdCompanies = async (idCompany: string) => {
+  const cookiesStore = cookies();
+  const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
+
   try {
     const headers = {
       Authorization: `Bearer ${cookieToken}`,
       "Content-Type": "application/json",
     };
 
-    const getAllCompanies = "https://api.hubapi.com/crm/v3/objects/companies/contact/types";
+    const getAllCompanies = `https://api.hubapi.com/crm/v3/objects/companies/${idCompany}`;
 
     const responseData: any = await axios.get(getAllCompanies, { headers });
     const dataCompanies = responseData.data;
