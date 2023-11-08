@@ -53,6 +53,5 @@ export async function GET(request: Request) {
     }
   }
 
-  // redirect("/dashboard");
-  return NextResponse.json({ fun: "funca" });
+  redirect("/dashboard");
 }
