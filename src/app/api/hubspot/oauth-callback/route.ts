@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
   const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
 
-  if (!code || !clientId || !clientSecret) {
+  if (!code || !clientId || !clientSecret || redirectUri) {
     return Response.json({ error: "Faltan variables de configuración." });
   }
   try {
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
           grant_type: "authorization_code",
           client_id: clientId,
           client_secret: clientSecret,
-          redirect_uri: "https://hustle-beta.vercel.app/api/hubspot/oauth-callback",
+          redirect_uri: redirectUri,
           code: code,
         },
         headers: {

@@ -16,6 +16,7 @@ export default function Dialog() {
         <div className="fixed inset-0 flex items-center justify-center z-20 backdrop-blur w-full  h-screen">
           <div className="modal-dialog bg-white rounded-lg shadow-lg p-4 flex flex-col items-center justify-center">
             <div className="modal-content p-4 flex flex-col justify-center items-center gap-4">
+            <a href={ulrSlack}>slack</a>
               <h1 className="text-2xl font-bold ">Connect your Hubspot</h1>
 
               <p className=" font-sans">Get the most value from Hustle by connecting your CRM</p>
@@ -26,7 +27,7 @@ export default function Dialog() {
                 href={hubspotAuthUrl}
               >
                 {" "}
-                <a href={ulrSlack}>slack</a>
+                
                 conect Hubspo
               </a>
             </div>
