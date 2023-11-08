@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
   const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
 
-  if (!code || !clientId || !clientSecret || redirectUri) {
+  if (!code || !clientId || !clientSecret || !redirectUri) {
     return Response.json({ error: "Faltan variables de configuración." });
   }
   try {

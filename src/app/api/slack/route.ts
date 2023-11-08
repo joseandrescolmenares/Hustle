@@ -11,7 +11,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   if (code) {
-    console.log(process.env.SLACK_CLIENT_ID,process.env.SLACK_CLIENT_SECRET," api key" )
     try {
       const responseToken: any = await axios.post(
         "https://slack.com/api/oauth.v2.access",
@@ -29,7 +28,6 @@ export async function GET(request: Request) {
         }
       );
       const result = responseToken?.data;
-      console.log(result, "result");
       const { data, error } = await supabase
         .from("integrations")
         .update({
