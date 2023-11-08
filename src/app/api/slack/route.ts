@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
   const cookieStore = cookies();
+  const userId = cookieStore.get("userId")?.value;
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
@@ -26,19 +27,21 @@ export async function GET(request: Request) {
       }
     );
     const result = responseToken.data;
-    const userId = cookieStore.get("userId")?.value;
     const { data, error } = await supabase
       .from("integrations")
       .update({
         isSlack: true,
         webhookUrlSlack: result?.incoming_webhook?.url,
-        accessTokenSlack: result.access_token,
+        accessTokenSlack: result?.access_token,
         channelSlack: result?.incoming_webhook?.channel,
         teamSlack: result?.team,
       })
       .eq("userId", userId)
       .select();
-  
+
+      console.log(data, "dataSlack")
+
+    if (error) return NextResponse.json({ error: "error" });
   } catch (error) {
     console.log(error);
     return Response.json({
@@ -46,5 +49,6 @@ export async function GET(request: Request) {
     });
   }
 
-  redirect("/dashboard");
+  // redirect("/dashboard");
+  return NextResponse.json({ fun: "funca" });
 }
