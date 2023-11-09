@@ -33,10 +33,10 @@ const dashboard = async () => {
     );
   }
 
-  // return (
-  //   <div className="w-full flex  justify-center items-center">
-  //     <Dialog />
-  //   </div>
-  // );
+  return (
+    <div className="w-full flex  justify-center items-center">
+      <Dialog />
+    </div>
+  );
 };
 export default dashboard;
