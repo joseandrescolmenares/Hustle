@@ -11,7 +11,7 @@ export const getAllCompanies = async () => {
       "Content-Type": "application/json",
     };
 
-    const getAllCompanies = "https://api.hubapi.com/crm/v3/objects/companies/";
+    const getAllCompanies = "https://api.hubapi.com/crm/v3/objects/companies";
 
     const responseData: any = await axios.get(getAllCompanies, { headers });
     const dataCompanies = responseData.data;

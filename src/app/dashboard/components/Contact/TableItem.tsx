@@ -29,8 +29,8 @@ const MainTable = ({ allCompanies }: any) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {allCompanies.results.map((item: React.Key | null | undefined | string) => (
-            <TableRow key={item}>
+        {allCompanies.results.map((item: any) => (
+            <TableRow key={item.id}>
               <TableCell className="font-medium">INV001</TableCell>
               <TableCell className="w-[270px]">
                 {item?.properties?.name}

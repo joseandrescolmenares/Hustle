@@ -7,8 +7,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     "Contacto: Solo 2 Contactos asociados",
   ];
   let arrayProperties = ["$38 200", "Procurement", "Mexico", "FinTech"];
-  //   const dataCompany = await getIdCompanies(params.id)
-  //   console.log(dataCompany,"dart")
+    const dataCompany = await getIdCompanies(params.id)
+    console.log(dataCompany,"dart")
   // dataCompany.properties.name
   return (
     <div className="w-full flex mt-7">

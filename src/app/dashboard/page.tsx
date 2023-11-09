@@ -19,6 +19,7 @@ const dashboard = async () => {
   // renewToken()
   if (dataHubspot) {
     let result = await getAllCompanies();
+    console.log(result.results[0].properties,"resil ")
     return (
       <div className=" w-full flex  justify-center items-center">
         {/* <a href={ulrSlack}>slack</a>  */}
@@ -32,10 +33,10 @@ const dashboard = async () => {
     );
   }
 
-  return (
-    <div className="w-full flex  justify-center items-center">
-      <Dialog />
-    </div>
-  );
+  // return (
+  //   <div className="w-full flex  justify-center items-center">
+  //     <Dialog />
+  //   </div>
+  // );
 };
 export default dashboard;
