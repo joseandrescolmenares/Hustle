@@ -1,5 +1,5 @@
 import axios from "axios";
-import { renewToken } from "../renewToken";
+import { renewToken } from "../../renewToken";
 import { cookies } from "next/headers";
 
 export const getAllCompanies = async () => {
@@ -10,13 +10,13 @@ export const getAllCompanies = async () => {
       Authorization: `Bearer ${cookieToken}`,
       "Content-Type": "application/json",
     };
-
-    const getAllCompanies = "https://api.hubapi.com/crm/v3/objects/companies";
-
-    const responseData: any = await axios.get(getAllCompanies, { headers });
-    const dataCompanies = responseData.data;
-    return dataCompanies;
+    const getAllCompanies = "https://api.hubapi.com/crm/v3/objects/companies/";
+    
+    const responseData: any = await axios.get(getAllCompanies,{ headers});
+    const dataCompanies = responseData?.data;
+    return  dataCompanies;
   } catch (error) {
+    console.log(error)
     throw new Error();
   }
 };

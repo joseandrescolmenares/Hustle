@@ -1,5 +1,5 @@
 import axios from "axios";
-import { renewToken } from "../renewToken";
+import { renewToken } from "../../renewToken";
 import { cookies } from "next/headers";
 
 export const getIdCompanies = async (idCompany: string) => {
@@ -12,7 +12,7 @@ export const getIdCompanies = async (idCompany: string) => {
       "Content-Type": "application/json",
     };
 
-    const getAllCompanies = `https://api.hubapi.com/crm/v3/objects/companies/${idCompany}`;
+    const getAllCompanies = `https://api.hubapi.com/crm/v3/objects/companies/${idCompany}?properties=hubspot_owner_id`;
 
     const responseData: any = await axios.get(getAllCompanies, { headers });
     const dataCompanies = responseData.data;

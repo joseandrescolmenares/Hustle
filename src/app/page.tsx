@@ -1,10 +1,7 @@
-"use client";
 import { redirect } from "next/navigation";
 
+
 export default function Home() {
-  return (
-    <div>
-      joseee
-    </div>
-  );
+  redirect("https://meethustle.io/");
+  return <div></div>;
 }

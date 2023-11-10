@@ -21,32 +21,33 @@ function Sidebar() {
             <Link href="/dashboard">
               {" "}
               <li className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700">
-                <CiGrid41 size={24} />
+                {/* <CiGrid41 size={24} /> */}
+                <CiWarning size={24} />
                 {/* <span className="ml-3 flex-1 whitespace-nowrap">Home</span> */}
               </li>
             </Link>
-            <Link href="/dashboard/revenueAlert">
+            {/* <Link href="/dashboard/revenueAlert">
               {" "}
               <li className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple  dark:text-white dark:hover:bg-slate-700">
                 <CiWarning size={24} />
-                {/* <span className="ml-3 flex-1 whitespace-nowrap">meetings</span> */}
+            
               </li>
-            </Link>
-            <li>
+            </Link> */}
+            {/* <li>
               <a className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700">
                 <CiFilter size={24} />
-                {/* <span className="ml-3 flex-1 whitespace-nowrap">Pipeline</span> */}
+               
               </a>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <a
                 href="#"
                 className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700"
               >
                 <CiBellOn size={24} />
-                {/* <span className="ml-3 flex-1 whitespace-nowrap">Settings</span> */}
+             
               </a>
-            </li>
+            </li> */}
           </ul>
           <div className="mt-auto flex">
             <div className="flex w-full justify-between">

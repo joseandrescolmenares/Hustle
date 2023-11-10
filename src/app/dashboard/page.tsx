@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/ClientSupabase";
 import { Dialog } from "./components/Dialog";
 import { cookies } from "next/headers";
-import { getAllContact } from "@/service/getAllContact";
-import { getAllCompanies } from "@/service/company/getAllCompanies";
+import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
 import { TableItem } from "./components/Contact";
 
 const dashboard = async () => {
@@ -16,10 +15,11 @@ const dashboard = async () => {
     .eq("userId", userId);
   if (data == null) return;
   let dataHubspot = data[0]?.isHubspot;
-  // renewToken()
+
   if (dataHubspot) {
-    let result = await getAllCompanies();
-    console.log(result.results[0].properties,"resil ")
+    let result = await getAllDeals();
+    // console.log(result.results.map(el => el.properties,"resil"))
+    console.log(result);
     return (
       <div className=" w-full flex  justify-center items-center">
         {/* <a href={ulrSlack}>slack</a>  */}
