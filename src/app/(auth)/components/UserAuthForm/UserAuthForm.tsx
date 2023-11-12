@@ -9,6 +9,8 @@ import { supabase } from "@/lib/ClientSupabase";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/Button";
+import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
+import axios from "axios";
 import {
   Form,
   FormControl,
@@ -19,6 +21,7 @@ import {
   FormMessage,
 } from "../../../components/ui/Form";
 import { Input } from "../../../components/ui/Input";
+import { redirect } from "next/dist/server/api-utils";
 
 export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -35,6 +38,7 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
+
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -101,7 +105,7 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
           </span>
         </div>
       </div>
-      {/* <Button
+      <Button
         variant="outline"
         type="button"
         disabled={isLoading}
@@ -113,7 +117,7 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
           <Icons.google className="mr-2 h-4 w-4" />
         )}{" "}
         Google
-      </Button> */}
+      </Button>
     </>
   );
 }

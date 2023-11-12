@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/ClientSupabase";
 import { Dialog } from "./components/Dialog";
 import { cookies } from "next/headers";
-import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
+
 import { TableItem } from "./components/Contact";
+import { asyncFetchDataOwner } from "@/service/fetchDataOwner";
 
 const dashboard = async () => {
   const ulrSlack = `https://slack.com/oauth/v2/authorize?scope=incoming-webhook,channels:read,commands&client_id=${process.env.SLACK_CLIENT_ID}`;
@@ -17,18 +18,11 @@ const dashboard = async () => {
   let dataHubspot = data[0]?.isHubspot;
 
   if (dataHubspot) {
-    let result = await getAllDeals();
-    // console.log(result.results.map(el => el.properties,"resil"))
-    console.log(result);
+    const dataOwnerDeals = await asyncFetchDataOwner();
     return (
-      <div className=" w-full flex  justify-center items-center">
+      <div className=" w-full flex  justify-center items-center ml-7">
         {/* <a href={ulrSlack}>slack</a>  */}
-
-        <TableItem allCompanies={result} />
-        {/* {result &&
-            result.results.map((item: React.Key | null | undefined): any => (
-              <p key={item}>{item.properties.name}</p>
-            ))} */}
+        <TableItem dataOwnerDeals={dataOwnerDeals} />
       </div>
     );
   }

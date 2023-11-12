@@ -1,7 +1,11 @@
 import axios from "axios";
 import { cookies } from "next/headers";
 
-export const getIOwner = async (idOwner: string) => {
+export const getIOwner = async (
+  idOwner: string,
+  dealsName?: string,
+  dealsId?: string
+) => {
   const cookiesStore = cookies();
   const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
   try {
@@ -12,8 +16,17 @@ export const getIOwner = async (idOwner: string) => {
     const urlOwner = `https://api.hubapi.com/crm/v3/owners/${idOwner}`;
 
     const responseData: any = await axios.get(urlOwner, { headers });
-    const dataCompanies = responseData?.data;
-    return dataCompanies;
+    const dataDeals = responseData?.data;
+    if (dealsName) {
+      const newDataDeals = {
+        ...dataDeals,
+        dealname: dealsName,
+        dealsId: dealsId,
+      };
+      return newDataDeals;
+    }
+
+    return dataDeals;
   } catch (error) {
     console.log(error);
     throw new Error();
