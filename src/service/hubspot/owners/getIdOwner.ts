@@ -4,7 +4,8 @@ import { cookies } from "next/headers";
 export const getIOwner = async (
   idOwner: string,
   dealsName?: string,
-  dealsId?: string
+  dealsId?: string,
+  num_associated_contacts?: any
 ) => {
   const cookiesStore = cookies();
   const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
@@ -22,6 +23,7 @@ export const getIOwner = async (
         ...dataDeals,
         dealname: dealsName,
         dealsId: dealsId,
+        partnerContact: num_associated_contacts,
       };
       return newDataDeals;
     }

@@ -16,21 +16,20 @@ const bannerSlack = async () => {
 
   return (
     <>
-      {!dataIsSlack ? (
-        <div className="w-full h-11 bg-customPurple absolute ml-36 flex justify-center items-center ">
-          <div className="flex gap-5">
-            <p className=" text-white">
-              connect Hustle to your slack for alerts
-            </p>{" "}
-            <a className=" text-white flex gap-1" href={ulrSlack}>
-              <Icons.slack />
-              slack
-            </a>
-          </div>
-        </div>
-      ) : (
-        <></>
-      )}
+  {!dataIsSlack ? (
+  <div className="w-11/12 h-11 bg-customPurple absolute z-5 flex justify-center items-center ml-4 ">
+    <div className="flex gap-5">
+      <p className="text-white">
+        connect Hustle to your slack for alerts
+      </p>{" "}
+      <a className="text-white flex gap-1 cursor-pointer z-10" href={ulrSlack}>
+        <Icons.slack />
+        slack
+      </a>
+    </div>
+  </div>
+) : null}
+
     </>
   );
 };

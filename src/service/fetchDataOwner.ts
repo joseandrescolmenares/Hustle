@@ -12,12 +12,14 @@ export const asyncFetchDataOwner = async () => {
           hubspot_owner_id: string;
           dealname: string;
           hs_object_id: string;
+          num_associated_contacts: any;
         };
       }) =>
         getIOwner(
           deals.properties.hubspot_owner_id,
           deals.properties.dealname,
-          deals.properties.hs_object_id
+          deals.properties.hs_object_id,
+          deals.properties.num_associated_contacts
         )
     );
     const data = await Promise.all(promises);

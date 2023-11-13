@@ -1,5 +1,6 @@
 import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
+import { score } from "@/app/ai/score/score";
 
 export default async function Page({ params }: { params: { id: string } }) {
   let array = [
@@ -15,34 +16,32 @@ export default async function Page({ params }: { params: { id: string } }) {
   console.log(dataDeals, "owner");
 
   return (
-    <div className="w-full flex  h-full">
+    <div className="w-full flex  h-full mt-20">
       <div className=" m-8 w-3/5 flex flex-col gap-10">
-        <h1>Detalle del caso</h1>
-        <div className=" p-6 w-full bg-slate-400 flex flex-col gap-4">
+        <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-3xl" >Detalle del caso</h1>
+        <div className="w-full shadow-lg border-slate-200 p-4 rounded-md  flex flex-col gap-4">
           <div>
-            <h2>{dataDeals.properties.dealname}</h2>
+            <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0">{score(dataDeals?.properties?.num_associated_contacts).flag} {dataDeals.properties.dealname}</h2>
           </div>
           <div className="flex gap-4">
-            <p>{dataDeals.properties.amount}</p>
+            <h2 className="">${dataDeals.properties.amount}</h2>
           </div>
         </div>
-        <div className="p-6 w-full bg-slate-400 flex flex-col gap-4">
-          <h2>Razones</h2>
+        <div className="shadow-md border-slate-200 p-4 rounded-md  w-full flex flex-col gap-4">
+          <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0">Razones</h2>
           <div className="flex gap-4">
-            {array.map((item) => (
-              <p key={item}>{item}</p>
-            ))}
+            <p className="p-4 bg-customPurple text-white rounded-xl ">{score(dataDeals?.properties?.num_associated_contacts).reason}</p>
           </div>
         </div>
-        <div className=" p-6 w-full bg-slate-400 flex flex-col gap-4">
-          <h2>Workspace</h2>
+        <div className=" shadow-md border-slate-200 p-4 rounded-md  w-full  flex flex-col gap-4">
+          <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0">Workspace</h2>
           <div>
             @MaxVelasco por favor incluyeme en los proximos reuniones y email
             para acelerar el ciclo
           </div>
         </div>
       </div>
-      <div className="mt-20 flex justify-start items-center bg-slate-200 flex-col w-1/3 h-3/5 ml-8">
+      <div className="mt-20 flex justify-start items-center shadow-lg border-slate-200  p-4 rounded-md  flex-col w-1/3 h-3/5 ml-8">
         <div className=" p-6 flex justify-center text-center flex-col h-full">
           <h2>
             {dataOwner.firstName} {dataOwner.lastName}

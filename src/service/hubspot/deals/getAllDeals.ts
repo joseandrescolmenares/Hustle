@@ -10,7 +10,7 @@ export const getAllDeals = async () => {
       Authorization: `Bearer ${cookieToken}`,
       "Content-Type": "application/json",
     };
-    const urlDeals = "https://api.hubapi.com/crm/v3/objects/deals?properties=hubspot_owner_id,dealname,dealstage";
+    const urlDeals = "https://api.hubapi.com/crm/v3/objects/deals?properties=hubspot_owner_id,dealname,dealstage,num_associated_contacts";
 
     const responseData: any = await axios.get(urlDeals,{ headers});
     const dataCompanies = responseData?.data;
