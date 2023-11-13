@@ -39,8 +39,19 @@ export async function GET(request: Request) {
         })
         .eq("userId", userId)
         .select();
-
-      console.log(data, "dataSlack");
+      const dataMessage = {
+        text: "¡Gracias por conectar Hustle a Slack! Estaré enviándote alertas por aquí. ¡Gracias!"
+      };
+      const resultSlack: any = await axios.post(
+        result?.incoming_webhook?.url,
+        dataMessage,
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      );
+      console.log(resultSlack, "dataSlack");
 
       if (error) return NextResponse.json({ error: "error" });
     } catch (error) {
