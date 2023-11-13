@@ -7,7 +7,7 @@ import { TableItem } from "./components/Contact";
 import { asyncFetchDataOwner } from "@/service/fetchDataOwner";
 
 const dashboard = async () => {
-  const ulrSlack = `https://slack.com/oauth/v2/authorize?scope=incoming-webhook,channels:read,commands&client_id=${process.env.SLACK_CLIENT_ID}`;
+ 
   const Cookies = cookies();
   const userId = Cookies.get("userId")?.value;
   let { data, error } = await supabase
@@ -21,7 +21,6 @@ const dashboard = async () => {
     const dataOwnerDeals = await asyncFetchDataOwner();
     return (
       <div className=" w-full flex  justify-center items-center ml-7">
-        {/* <a href={ulrSlack}>slack</a>  */}
         <TableItem dataOwnerDeals={dataOwnerDeals} />
       </div>
     );

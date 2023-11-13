@@ -1,4 +1,5 @@
 import { Sidebar } from "./components/Sidebar";
+import { BannerSlack } from "./components/BannerSlack";
 
 export default function LayoutDashboard({
   children,
@@ -8,9 +9,8 @@ export default function LayoutDashboard({
   return (
     <div className="flex justify-center  w-full ">
       <Sidebar />
-      <div className=" w-4/5">
-          {children}
-      </div>
+      <BannerSlack />
+      <div className="w-10/12">{children}</div>
     </div>
   );
 }
