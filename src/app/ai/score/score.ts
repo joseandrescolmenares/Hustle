@@ -4,7 +4,7 @@ export const score = (dealsProperties: any) => {
     const factors = {
         contact: dealsProperties
        
-        // interactions: mendel.interactions
+        // interactions:
     };
 
     const rules = [
