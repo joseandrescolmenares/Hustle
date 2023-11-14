@@ -44,7 +44,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <div className="w-full flex  h-full ">
-      <div className=" m-8 w-3/5 flex flex-col gap-10">
+      <div className=" ml-6 w-3/5 flex flex-col gap-10 mt-14">
         <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-3xl">
           Detalle del caso
         </h1>

@@ -38,20 +38,21 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "https://hustle-beta.vercel.app/authGoogle"
-      }
+        redirectTo: "https://hustle-beta.vercel.app/authGoogle",
+      },
     });
-
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true)
     const { email, password } = values;
     const dataAuth: any = await handleAuth(email, password);
     Cookies.set("access_token", dataAuth?.data.session.access_token);
     Cookies.set("userId", dataAuth?.data.user?.id);
-    if (dataAuth) {
+    if (dataAuth.data) {
       router.push("/dashboard");
     }
+    setIsLoading(false)
   }
 
   return (
@@ -59,10 +60,12 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
       {" "}
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">
-         {login ? "Welcome to Hustle" : "Create an account "} 
+          {login ? "Welcome to Hustle" : "Create an account "}
         </h1>
         <p className="text-sm text-muted-foreground">
-        {login ? "Enter your email and password to log in to your account" : "Enter your email and password to create your account "}
+          {login
+            ? "Enter your email and password to log in to your account"
+            : "Enter your email and password to create your account "}
         </p>
       </div>
       <Form {...form}>
@@ -94,7 +97,11 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
             )}
           />
           <Button className="w-full" type="submit">
-            Submit
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              "Submit"
+            )}
           </Button>
         </form>
       </Form>
