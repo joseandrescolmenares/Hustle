@@ -37,6 +37,9 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
   const handleAuthGoogleProvider = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: "https://hustle-beta.vercel.app/authGoogle"
+      }
     });
 
   };
