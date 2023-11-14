@@ -19,6 +19,7 @@ const dashboard = async () => {
 
   if (dataHubspot) {
     const dataOwnerDeals = await asyncFetchDataOwner();
+    console.log(dataOwnerDeals, "data")
     return (
       <div className=" w-full flex  justify-center items-center ml-7">
         <TableItem dataOwnerDeals={dataOwnerDeals} />

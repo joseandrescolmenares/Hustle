@@ -23,7 +23,7 @@ import {
 import { Input } from "../../../components/ui/Input";
 import { redirect } from "next/dist/server/api-utils";
 
-export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
+export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,10 +59,10 @@ export default function UserAuthForm({ handleAuth }: UserAuthFormProp) {
       {" "}
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">
-          Create an account
+         {login ? "Welcome to Hustle" : "Create an account "} 
         </h1>
         <p className="text-sm text-muted-foreground">
-          Enter your email and password to create your account
+        {login ? "Enter your email and password to log in to your account" : "Enter your email and password to create your account "}
         </p>
       </div>
       <Form {...form}>

@@ -17,7 +17,7 @@ const bannerSlack = async () => {
   return (
     <>
   {!dataIsSlack ? (
-  <div className="w-11/12 h-11 bg-customPurple absolute z-5 flex justify-center items-center ml-4 ">
+  <div className="w-11/12 h-11 bg-customPurple absolute z-5 flex justify-center items-center ml-4 mb-6 ">
     <div className="flex gap-5">
       <p className="text-white">
         connect Hustle to your slack for alerts

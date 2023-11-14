@@ -1,3 +1,4 @@
 export interface UserAuthFormProp{
-    handleAuth:(email: string, password: string) => void;
+    handleAuth:(email: string, password: string) => void,
+    login: boolean
 }

@@ -3,6 +3,7 @@ import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
 import { score } from "@/app/ai/score/score";
 import { Input } from "@/app/components/ui/Input";
 import { getIdNotes } from "@/service/hubspot/activity/notes/getIdNotes";
+const { JSDOM } = require("jsdom");
 
 type NoteData = {
   id: string;
@@ -12,19 +13,21 @@ type NoteData = {
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  let array = [
-    "Fecha de cierre: Vencida",
-    "Etapa: 3 meses sin cambia",
-    "Contacto: Solo 2 Contactos asociados",
-  ];
-  let arrayProperties = ["$38 200", "Procurement", "Mexico", "FinTech"];
+  function extractTextFromHTML(htmlString: any) {
+    const dom = new JSDOM(htmlString);
+    return dom.window.document.body.textContent || "";
+  }
+
   const dataDeals = await getIdDeals(params.id);
   if (!dataDeals) return;
   const idOwner = dataDeals.properties.hubspot_owner_id;
   const dataOwner = await getIOwner(idOwner);
+  console.log(dataDeals);
 
   const getNotesData = async () => {
-    const notesIds = dataDeals.associations.notes.results.map(
+    if (!dataDeals.associations) return [];
+
+    const notesIds = dataDeals?.associations?.notes?.results.map(
       (notes: any) => notes.id
     );
 
@@ -37,15 +40,15 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const allNotesData = await getNotesData();
 
-  console.log(allNotesData);
+
 
   return (
-    <div className="w-full flex  h-full mt-20">
+    <div className="w-full flex  h-full ">
       <div className=" m-8 w-3/5 flex flex-col gap-10">
         <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-3xl">
           Detalle del caso
         </h1>
-        <div className="w-full shadow-lg border-slate-200 p-4 rounded-md  flex flex-col gap-4">
+        <div className="w-full shadow-md border-slate-200 p-4 rounded-md  flex flex-col gap-4">
           <div>
             <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0">
               {score(dataDeals?.properties?.num_associated_contacts).flag}{" "}
@@ -72,39 +75,48 @@ export default async function Page({ params }: { params: { id: string } }) {
           </h2>
           <div>
             <div>
-              <Input placeholder="Type your message here." />
+              <Input placeholder="adds progress notes " />
             </div>
             <div>
-              {allNotesData
-                ? allNotesData.map((propertiesNotes: NoteData) => (
-                    <div key={propertiesNotes.id}>
-                      {propertiesNotes?.properties.hs_note_body}
-                    </div>
-                  ))
-                : null}
+              <div className=" h-64 overflow-x-scroll  flex flex-col gap-4 mt-5">
+                {allNotesData
+                  ? allNotesData.map((note: NoteData) => (
+                      <p
+                        className="p-4 shadow-md border-slate-200"
+                        key={note.id}
+                      >
+                        {extractTextFromHTML(note.properties.hs_note_body)}
+                      </p>
+                    ))
+                  : null}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="mt-20 flex justify-start items-center shadow-lg border-slate-200  p-4 rounded-md  flex-col w-1/3 h-3/5 ml-8">
-        <div className=" p-6 flex justify-center text-center flex-col h-full">
-          <h2>
-            {dataOwner.firstName} {dataOwner.lastName}
+      <div className="mt-20 flex justify-start items-center shadow-lg border-slate-200  p-2 rounded-md  flex-col w-5/12 h-3/5 ml-8">
+        <div className=" pl-3 flex  flex-col h-full">
+          <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0">
+            propietario
           </h2>
+          <p>
+            {dataOwner.firstName} {dataOwner.lastName}
+          </p>
           <div className=" mt-8 flex flex-col w-full justify-between items-center h-full ">
-            <div className="flex justify-between gap-14 w-full">
+            <div className="flex justify-between w-full gap-8">
               <p>Estado del caso </p>
               <p>detectado</p>
             </div>
-            <div className="flex justify-between gap-14 w-full">
+            <div className="flex justify-between  w-full gap-8">
               <p> Severidad </p>
             </div>
-            <div className="flex justify-between gap-14 w-full">
+            <div className="flex justify-between w-full gap-8">
               <p>Detectado</p>
             </div>
-            <div className="flex justify-between gap-14 w-full">
+            <div className="flex justify-between gap-8 w-full">
               {" "}
               <p>Última actualización</p>
+              <p>{dataDeals.properties.hs_lastmodifieddate}</p>
             </div>
             <div> </div>
           </div>
