@@ -1,10 +1,30 @@
+"use client";
 import iconsHustle from "../../../../../public/hustle.png";
 import { CiGrid41, CiWarning, CiBellOn, CiFilter } from "react-icons/ci";
 import Link from "next/link";
-
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../../components/ui/dropdown-menu";
+import Cookies from "js-cookie";
 
 function Sidebar() {
+  const router = useRouter();
+  const handleLogout = () => {
+    Cookies.remove("expires_in");
+    Cookies.remove("userId");
+    Cookies.remove("access_token");
+    Cookies.remove("accessTokenHubspot");
+    Cookies.remove("refresh_token");
+    router.refresh();
+  };
   return (
     <div className="h-screen  dark:bg-slate-900 ">
       <aside
@@ -49,29 +69,43 @@ function Sidebar() {
               </a>
             </li> */}
           </ul>
+
           <div className="mt-auto flex">
-            <div className="flex w-full justify-between">
-              {/* <span className="text-sm font-medium text-black dark:text-white">
-                email@example.com
-              </span> */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                aria-roledescription="more menu"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                className="h-5 w-5 text-black dark:text-white"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="1" />
-                <circle cx="19" cy="12" r="1" />
-                <circle cx="5" cy="12" r="1" />
-              </svg>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  viewBox="0 0 24 24"
+                  aria-roledescription="more menu"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  className="h-5 w-5 text-black dark:text-white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="1" />
+                  <circle cx="19" cy="12" r="1" />
+                  <circle cx="5" cy="12" r="1" />
+                </svg>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem
+                  className="flex justify-center cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  <LogOut />
+                </DropdownMenuItem>
+                {/* <DropdownMenuItem>Billing</DropdownMenuItem>
+                <DropdownMenuItem>Team</DropdownMenuItem>
+                <DropdownMenuItem>Subscription</DropdownMenuItem> */}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </aside>
