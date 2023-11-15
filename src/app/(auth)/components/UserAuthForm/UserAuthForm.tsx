@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/Button";
 import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
 import axios from "axios";
+import { Toaster, toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -44,20 +45,26 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
+    setIsLoading(true);
     const { email, password } = values;
     const dataAuth: any = await handleAuth(email, password);
-    Cookies.set("access_token", dataAuth?.data.session.access_token);
-    Cookies.set("userId", dataAuth?.data.user?.id);
-    if (dataAuth.data) {
+    console.log(dataAuth);
+    if (dataAuth?.data?.user) {
+      Cookies.set("access_token", dataAuth?.data?.session.access_token);
+      Cookies.set("userId", dataAuth?.data.user?.id);
+      toast.success("Event has been created");
       router.push("/dashboard");
+    } else {
+      toast.error(login ? "Invalid login credentials": "User already registered");
+      setIsLoading(false);
     }
-    setIsLoading(false)
   }
 
   return (
     <>
-      {" "}
+      <div className=" absolute">
+        <Toaster richColors position="top-right" />{" "}
+      </div>
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">
           {login ? "Welcome to Hustle" : "Create an account "}
