@@ -25,7 +25,7 @@ const SignUp = () => {
     }
     return data;
   };
-  return <UserAuthForm handleAuth={handleAuthSignup} />;
+  return <UserAuthForm handleAuth={handleAuthSignup}  login={false}/>;
 };
 
 export default SignUp;

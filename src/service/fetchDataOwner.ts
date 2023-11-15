@@ -20,6 +20,7 @@ export const asyncFetchDataOwner = async () => {
           deals.properties.dealname,
           deals.properties.hs_object_id,
           deals.properties.num_associated_contacts,
+
         )
     );
     const data = await Promise.all(promises);
