@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { TableItem } from "./components/Contact";
 import { asyncFetchDataOwner } from "@/service/fetchDataOwner";
 
+
 const dashboard = async () => {
  
   const Cookies = cookies();
@@ -15,13 +16,16 @@ const dashboard = async () => {
     .select("isHubspot")
     .eq("userId", userId);
   if (data == null) return;
+  if(error){
+    
+  }
   let dataHubspot = data[0]?.isHubspot;
 
   if (dataHubspot) {
     const dataOwnerDeals = await asyncFetchDataOwner();
-    console.log(dataOwnerDeals, "data")
     return (
       <div className=" w-full flex  justify-center items-center ml-7">
+       
         <TableItem dataOwnerDeals={dataOwnerDeals} />
       </div>
     );

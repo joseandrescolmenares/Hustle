@@ -2,7 +2,6 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-// import { functionToExecute } from "@/service/renewToken";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -31,22 +30,24 @@ export async function GET(request: Request) {
         },
       }
     );
- console.log(responseToken.data,"dataaaa")
+    console.log(responseToken.data, "dataaaa");
     const { access_token, refresh_token, expires_in } = responseToken.data;
     const cookieStore = cookies();
     cookieStore.set("refresh_token", refresh_token);
     cookieStore.set("accessTokenHubspot", access_token);
     cookieStore.set("expires_in", expires_in);
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-    const userId = cookieStore.get("userId")
+    const userId = cookieStore.get("userId");
 
     const { data, error } = await supabase
       .from("integrations")
-      .update({ isHubspot: true})
+      .update({ isHubspot: true })
       .eq("userId", userId?.value)
       .select();
-      // functionToExecute(refresh_token);
-      console.log(data, "integration hospos")
+
+    if (error) {
+      return "hubo un error al integrar hubspot";
+    }
   } catch (error) {
     return Response.json({
       error: "Hubo un error al obtener el token de acceso.",

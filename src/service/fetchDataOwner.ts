@@ -19,13 +19,13 @@ export const asyncFetchDataOwner = async () => {
           deals.properties.hubspot_owner_id,
           deals.properties.dealname,
           deals.properties.hs_object_id,
-          deals.properties.num_associated_contacts,
-
+          deals.properties.num_associated_contacts
         )
     );
     const data = await Promise.all(promises);
     return data;
   } catch (error) {
     console.error("Error:", error);
+    throw new Error();
   }
 };

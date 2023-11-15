@@ -42,20 +42,26 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
         redirectTo: "https://hustle-beta.vercel.app/authGoogle",
       },
     });
+    if (data) {
+      toast.success("Welcome to Hustle");
+    } else {
+      toast.error("Invalid login");
+    }
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     const { email, password } = values;
     const dataAuth: any = await handleAuth(email, password);
-    console.log(dataAuth);
     if (dataAuth?.data?.user) {
       Cookies.set("access_token", dataAuth?.data?.session.access_token);
       Cookies.set("userId", dataAuth?.data.user?.id);
-      toast.success("Event has been created");
+      toast.success("Welcome to Hustle");
       router.push("/dashboard");
     } else {
-      toast.error(login ? "Invalid login credentials": "User already registered");
+      toast.error(
+        login ? "Invalid login credentials" : "User already registered"
+      );
       setIsLoading(false);
     }
   }

@@ -9,7 +9,7 @@ export default function Error({
 }) {
   return (
 
-    <div className="">
+    <div className=" flex justify-center items-center h-full">
       <h2>Something went wrong!</h2>
       <button onClick={() => reset()}>Try again</button>
     </div>
