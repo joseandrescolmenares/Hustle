@@ -45,9 +45,6 @@ export async function GET(request: Request) {
       .eq("userId", userId?.value)
       .select();
 
-    if (error) {
-      return "hubo un error al integrar hubspot";
-    }
   } catch (error) {
     return Response.json({
       error: "Hubo un error al obtener el token de acceso.",
