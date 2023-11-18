@@ -51,7 +51,6 @@ export async function GET(request: Request) {
           },
         }
       );
-      console.log(resultSlack, "dataSlack");
 
       if (error) return NextResponse.json({ error: "error" });
     } catch (error) {

@@ -22,7 +22,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (!dataDeals) return;
   const idOwner = dataDeals.properties.hubspot_owner_id;
   const dataOwner = await getIOwner(idOwner);
-  console.log(dataDeals);
 
   const getNotesData = async () => {
     if (!dataDeals.associations) return [];

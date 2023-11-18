@@ -50,7 +50,7 @@ export default function AuthGoogle() {
               .from("integrations")
               .select("*")
               .eq("userId", user.id);
-            console.log(integrations, "table");
+
             if (!integrations?.length) {
               const dataTableIntegration = await axios.post(
                 "/api/supabase/integrationTable",

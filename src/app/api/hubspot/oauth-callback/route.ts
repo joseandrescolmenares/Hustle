@@ -30,7 +30,6 @@ export async function GET(request: Request) {
         },
       }
     );
-    console.log(responseToken.data, "dataaaa");
     const { access_token, refresh_token, expires_in } = responseToken.data;
     const cookieStore = cookies();
     cookieStore.set("refresh_token", refresh_token);

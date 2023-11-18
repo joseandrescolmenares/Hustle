@@ -25,7 +25,6 @@ export async function POST(request: Request) {
       },
     ])
     .select();
-    console.log(integrations,"dataaa");
 
 console.log(error, "errorr")
   return new NextResponse(

@@ -7,6 +7,7 @@ export const getIOwner = async (
   dealsId?: string,
   num_associated_contacts?: any,
 ) => {
+
   const cookiesStore = cookies();
   const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
   try {
@@ -14,10 +15,21 @@ export const getIOwner = async (
       Authorization: `Bearer ${cookieToken}`,
       "Content-Type": "application/json",
     };
+    if(!idOwner){ 
+   const data = {
+        dealname: dealsName,
+        dealsId: dealsId,
+        partnerContact: num_associated_contacts,
+        id: idOwner
+
+      }
+      return data
+    }
     const urlOwner = `https://api.hubapi.com/crm/v3/owners/${idOwner}`;
 
     const responseData: any = await axios.get(urlOwner, { headers });
     const dataDeals = responseData?.data;
+   
     if (dealsName) {
       const newDataDeals = {
         ...dataDeals,

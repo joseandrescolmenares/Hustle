@@ -13,7 +13,7 @@ const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
 export async function renewToken() {
   const cookieStore = cookies()
   const refresh_token = cookieStore.get("refresh_token")?.value;
-console.log(refresh_token)
+
   try {
     const response = await axios.post(
       "https://api.hubapi.com/oauth/v1/token",

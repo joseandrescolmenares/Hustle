@@ -1,8 +1,8 @@
 import axios from "axios";
-import { renewToken } from "../../renewToken";
+import { Console } from "console";
 import { cookies } from "next/headers";
 
-export const getAllDeals = async () => {
+export const getAllDeals = async (url: string) => {
   const cookiesStore = cookies();
   const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
   try {
@@ -10,13 +10,14 @@ export const getAllDeals = async () => {
       Authorization: `Bearer ${cookieToken}`,
       "Content-Type": "application/json",
     };
-    const urlDeals = "https://api.hubapi.com/crm/v3/objects/deals?properties=hubspot_owner_id,dealname,dealstage,num_associated_contacts";
+    const urlDeals = url;
 
-    const responseData: any = await axios.get(urlDeals,{ headers});
+    const responseData: any = await axios.get(urlDeals, { headers });
     const dataCompanies = responseData?.data;
-    return  dataCompanies;
+
+    return dataCompanies;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw new Error();
   }
 };
