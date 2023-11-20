@@ -1,6 +1,8 @@
 "use client";
 import { Pagination } from "../Pagination";
 import React, { useEffect, useState, useRef } from "react";
+import { supabase } from "@/lib/ClientSupabase";
+import Cookies from "js-cookie";
 import axios from "axios";
 import {
   Table,
@@ -19,7 +21,8 @@ import { Toaster, toast } from "sonner";
 const MainTable = () => {
   const [allDeals, setAllDeals] = useState<any>([]);
   const [lastDealId, setLastDealId] = useState<string | null>("0");
-  console.log(allDeals, "state")
+
+  const userId = Cookies.get("userId");
 
   useEffect(() => {
     const integrationCompleted = localStorage.getItem("integrationCompleted");
@@ -31,16 +34,22 @@ const MainTable = () => {
   useEffect(() => {
     const getDeals = async () => {
       // try {
-        const resultDeals = await axios.post(`/api/hubspot/getAllDeals`, {
-          lastDealId: "0",
-        });
-        const data = resultDeals.data;
-        console.log(data, "dataa");
+      let { data, error } = await supabase
+        .from("integrations")
+        .select("dealsAlll")
+        .eq("userId", userId);
+      if (!data) {
+        const resultDeals = await axios.get(`/api/hubspot/getAllDeals`);
+        const deals = resultDeals.data;
+        console.log(deals, "dataa");
 
-        setAllDeals(data.dealsData);
-        // if (data?.link !== lastDealId) {
-        //   setLastDealId(data?.link);
-        // }
+        setAllDeals(deals.dealsData);
+      } else {
+      }
+
+      // if (data?.link !== lastDealId) {
+      //   setLastDealId(data?.link);
+      // }
       // } catch (error) {
       //   console.error("Error al obtener tratos:", error);
       // }
@@ -50,7 +59,7 @@ const MainTable = () => {
     getDeals();
 
     // Establecer el componente como desmontado al desmontarse
-  }, [lastDealId ]);
+  }, [lastDealId]);
 
   if (!allDeals) return;
   return (
@@ -78,12 +87,12 @@ const MainTable = () => {
             ? allDeals?.map((deals: any) => (
                 <TableRow key={deals.id}>
                   <TableCell className="font-medium">
-                    {score(deals.partnerContact).flag}
+                    {score(deals.dealContacts).flag}
                   </TableCell>
                   <TableCell>{deals?.dealname}</TableCell>
                   <TableCell className="lex justify-center items-center">
                     <div className="flex gap-4 justify-center ">
-                      {score(deals.partnerContact)?.reason}
+                      {score(deals.dealContacts)?.reason}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -93,7 +102,7 @@ const MainTable = () => {
                   <TableCell>
                     <Link
                       className=" cursor-pointer"
-                      href={`/dashboard/${deals?.dealsId}`}
+                      href={`/dashboard/${deals?.id_deals}`}
                     >
                       <div className=" ml-3">
                         <CiLogin size={24} />

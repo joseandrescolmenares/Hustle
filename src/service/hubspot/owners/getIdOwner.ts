@@ -24,6 +24,7 @@ export const getIOwner = async (
 ) => {
   const cookiesStore = cookies();
   const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
+  const userId = cookiesStore.get("userId")?.value;
   try {
     const headers = {
       Authorization: `Bearer ${cookieToken}`,
@@ -32,9 +33,25 @@ export const getIOwner = async (
     if (!idOwner) {
       const data = {
         dealname: dealsName,
-        dealsId: dealsId,
-        partnerContact: num_associated_contacts,
-        id: idOwner,
+        id_deals: dealsId,
+        dealContacts: num_associated_contacts,
+        amount: amount,
+        idOwner : idOwner,
+        closed_lost_reason: closed_lost_reason,
+        closed_won_reason:closed_won_reason,
+        closedate: closedate,
+        createdate: createdate,
+        dealstage: dealstage,
+        description: description,
+        hs_all_collaborator_owner_ids: hs_all_collaborator_owner_ids,
+        hs_deal_stage_probability:hs_deal_stage_probability,
+        hs_forecast_probability:hs_forecast_probability,
+        hs_is_closed_won:hs_is_closed_won,
+        hs_lastmodifieddate:hs_lastmodifieddate,
+        hs_next_step:hs_next_step,
+        hs_priority: hs_priority,
+        num_contacted_notes:num_contacted_notes,
+        user_id : userId 
       };
       return data;
     }
@@ -45,10 +62,28 @@ export const getIOwner = async (
 
     if (dealsName) {
       const newDataDeals = {
-        ...dataDeals,
+        nameOnwer : `${dataDeals.firstName} ${dataDeals.lastName}`,
+        idOwner : idOwner,
         dealname: dealsName,
-        dealsId: dealsId,
-        partnerContact: num_associated_contacts,
+        id_deals: dealsId,
+        dealContacts: num_associated_contacts,
+        amount: amount,
+        closed_lost_reason: closed_lost_reason,
+        closed_won_reason:closed_won_reason,
+        closedate: closedate,
+        createdate: createdate,
+        dealstage: dealstage,
+        description: description,
+        hs_all_collaborator_owner_ids: hs_all_collaborator_owner_ids,
+        hs_deal_stage_probability:hs_deal_stage_probability,
+        hs_forecast_probability:hs_forecast_probability,
+        hs_is_closed_won:hs_is_closed_won,
+        hs_lastmodifieddate:hs_lastmodifieddate,
+        hs_next_step:hs_next_step,
+        hs_priority: hs_priority,
+        num_contacted_notes:num_contacted_notes,
+        user_id :userId 
+
       };
       return newDataDeals;
     }
