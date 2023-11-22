@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/ClientSupabase";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
 import {
   Table,
   TableBody,
@@ -19,8 +20,8 @@ import { score } from "@/app/ai/score/score";
 import { Toaster, toast } from "sonner";
 
 const MainTable = () => {
-  const [allDeals, setAllDeals] = useState<any>([]);
-  const [lastDealId, setLastDealId] = useState<string | null>("0");
+  const [allDeals, setAllDeals] = useState<any[] | null>([]);
+  const [agreementStatus, setAgreementStatus] = useState<boolean>(true);
 
   const userId = Cookies.get("userId");
 
@@ -38,28 +39,23 @@ const MainTable = () => {
         .from("integrations")
         .select("dealsAlll")
         .eq("userId", userId);
-      if (!data) {
+      if (data == null) return;
+      if (!data[0]?.dealsAlll) {
         const resultDeals = await axios.get(`/api/hubspot/getAllDeals`);
         const deals = resultDeals.data;
-        console.log(deals, "dataa");
-
         setAllDeals(deals.dealsData);
       } else {
+        let { data: dataDeals, error } = await supabase
+          .from("deals")
+          .select("*")
+          .eq("user_id", userId);
+        console.log(dataDeals, "data", error, "error");
+        setAllDeals(dataDeals);
       }
-
-      // if (data?.link !== lastDealId) {
-      //   setLastDealId(data?.link);
-      // }
-      // } catch (error) {
-      //   console.error("Error al obtener tratos:", error);
-      // }
     };
 
-    // Llamar a la función para obtener tratos
     getDeals();
-
-    // Establecer el componente como desmontado al desmontarse
-  }, [lastDealId]);
+  }, []);
 
   if (!allDeals) return;
   return (
@@ -95,10 +91,10 @@ const MainTable = () => {
                       {score(deals.dealContacts)?.reason}
                     </div>
                   </TableCell>
+                  <TableCell>{deals.nameOnwer}</TableCell>
                   <TableCell>
-                    {deals.firstName} {deals.lastName}{" "}
+                    {"Dectectado"}
                   </TableCell>
-                  <TableCell>Dectectado</TableCell>
                   <TableCell>
                     <Link
                       className=" cursor-pointer"
