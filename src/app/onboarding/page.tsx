@@ -37,16 +37,24 @@ export default function TeamSwitcher() {
   const [guestLink, setGuestLink] = React.useState("");
 
   const handleCreateTeam = async () => {
-    const data = await axios.post("/api/supabase/db/createTeam", {
-      nameTeam: inputTeam?.nameTeam,
-      statusAccout: inputTeam?.statusAccount,
-    });
-    const result = data?.data
-   if(result){
-    router.push("/dashboard")
-   }
+    try {
+      const cleanedData = {
+        nameTeam: inputTeam?.nameTeam?.trim(),
+        statusAccount: inputTeam?.statusAccount?.trim(),
+      };
+  
+      const data = await axios.post("/api/supabase/db/createTeam", cleanedData);
+      const result = data?.data;
+  
+      if (result) {
+     
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error("Error al crear el equipo:", error)
+    }
   };
- 
+  
 
   const handleGuestLink = async (e: any) => {};
   return (

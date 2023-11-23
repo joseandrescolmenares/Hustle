@@ -31,7 +31,6 @@ id_integrations (
     )
     .eq("id_team", teamId);
 
-  console.log(teams, "data");
   if (teams == null) return;
 
   const { isHubspot }: any = teams[0]?.id_integrations;
