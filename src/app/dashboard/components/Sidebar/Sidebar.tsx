@@ -1,10 +1,17 @@
 "use client";
 import iconsHustle from "../../../../../public/hustle.png";
-import { CiGrid41, CiWarning, CiBellOn, CiFilter } from "react-icons/ci";
+import {
+  CiGrid41,
+  CiWarning,
+  CiBellOn,
+  CiFilter,
+  CiUser,
+} from "react-icons/ci";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
+import { Profile } from "../Profile";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,7 +44,7 @@ function Sidebar() {
             <Image src={iconsHustle} alt="Hustle" className=" w-6" />
             {/* <span className="ml-3 text-base font-semibold">Hustle</span> */}
           </div>
-          <ul className="space-y-2 text-sm font-medium">
+          <ul className="space-y-2 text-sm font-medium flex justify-center items-center flex-col gap-2">
             <Link href="/dashboard">
               {" "}
               <li className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700">
@@ -68,6 +75,9 @@ function Sidebar() {
              
               </a>
             </li> */}
+           
+              <Profile />
+         
           </ul>
 
           <div className="mt-auto flex">
@@ -91,15 +101,16 @@ function Sidebar() {
                   <circle cx="5" cy="12" r="1" />
                 </svg>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>log out Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem
                   className="flex justify-center cursor-pointer"
                   onClick={handleLogout}
                 >
-                  <LogOut />
+                  <LogOut className=" cursor-pointer" />
                 </DropdownMenuItem>
                 {/* <DropdownMenuItem>Billing</DropdownMenuItem>
                 <DropdownMenuItem>Team</DropdownMenuItem>

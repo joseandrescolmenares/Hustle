@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { TableItem } from "./components/Contact";
 import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
 
+
 type TeamData = {
   nameTeam: string;
   id_integrations: {
