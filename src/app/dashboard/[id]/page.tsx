@@ -1,7 +1,7 @@
 import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
 import { score } from "@/app/ai/score/score";
-import { Input } from "@/app/components/ui/input";
+import { Input } from "@/app/components/ui/Input";
 import { getIdNotes } from "@/service/hubspot/activity/notes/getIdNotes";
 const { JSDOM } = require("jsdom");
 

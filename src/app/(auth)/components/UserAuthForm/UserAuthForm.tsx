@@ -8,7 +8,7 @@ import { UserAuthFormProp } from "@/lib/types/authForm";
 import { supabase } from "@/lib/ClientSupabase";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { Button } from "../../../components/ui/button";
+import { Button } from "../../../components/ui/Button";
 import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
 import { Toaster, toast } from "sonner";
 import {
@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../../../components/ui/form";
-import { Input } from "../../../components/ui/input";
+import { Input } from "../../../components/ui/Input";
 import { redirect } from "next/dist/server/api-utils";
 
 export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
