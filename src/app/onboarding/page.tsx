@@ -2,8 +2,10 @@
 
 import * as React from "react";
 import { supabase } from "@/lib/ClientSupabase";
+import { useRouter } from "next/navigation";
 
 import { Button } from "../components/ui/button";
+import axios from "axios";
 
 import {
   Dialog,
@@ -26,12 +28,25 @@ import {
 } from "../components/ui/select";
 
 export default function TeamSwitcher() {
+  const router = useRouter();
   const [inputTeam, setInputTeam] = React.useState({
     nameTeam: "",
     statusAccount: "free",
   });
-  console.log(inputTeam, "dssa");
+
   const [guestLink, setGuestLink] = React.useState("");
+
+  const handleCreateTeam = async () => {
+    const data = await axios.post("/api/supabase/db/createTeam", {
+      nameTeam: inputTeam?.nameTeam,
+      statusAccout: inputTeam?.statusAccount,
+    });
+    const result = data?.data
+   if(result.response  == "success"){
+    router.push("/dashboard")
+   }
+  };
+ 
 
   const handleGuestLink = async (e: any) => {};
   return (
@@ -59,13 +74,15 @@ export default function TeamSwitcher() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="plan">Subscription plan</Label>
-                <Select  onValueChange={(value) => setInputTeam({ ...inputTeam, statusAccount: value })}>
-                  <SelectTrigger  >
+                <Select
+                  onValueChange={(value) =>
+                    setInputTeam({ ...inputTeam, statusAccount: value })
+                  }
+                >
+                  <SelectTrigger>
                     <SelectValue placeholder="Select a plan" />
                   </SelectTrigger>
-                  <SelectContent
-                  
-                  >
+                  <SelectContent>
                     <SelectItem value="free">
                       <span className="font-medium">Free</span> -{" "}
                       <span className="text-muted-foreground">
@@ -84,7 +101,9 @@ export default function TeamSwitcher() {
             </div>
             <DialogFooter className="border-b border-gray-400 rounded-md px-4 py-2">
               {/* <Button variant="outline">Cancel</Button> */}
-              <Button type="submit">Continue</Button>
+              <Button type="submit" onClick={handleCreateTeam}>
+                Continue
+              </Button>
             </DialogFooter>
             <div className="space-y-2 mt-6 mb-5">
               <Label htmlFor="name">

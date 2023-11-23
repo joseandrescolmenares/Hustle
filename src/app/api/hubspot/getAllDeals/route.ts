@@ -100,6 +100,7 @@ export async function GET(request: Request) {
         console.log(data,"tre",error, "error")
       }
      
+      
    
     }
  
