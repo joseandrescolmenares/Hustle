@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from "../components/ui/dialog";
 import { Input } from "../components/ui/Input";
-import { Label } from "../components/ui/label";
+import { Label } from "../components/ui/Label";
 
 import {
   Select,
