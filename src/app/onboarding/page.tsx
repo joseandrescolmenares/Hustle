@@ -43,7 +43,7 @@ export default function TeamSwitcher() {
         statusAccount: inputTeam?.statusAccount?.trim(),
       };
   
-      const data = await axios.post("/api/supabase/db/createTeam", cleanedData);
+      const data = await axios.post("/api/supabase/createTeam", cleanedData);
       const result = data?.data;
   
       if (result) {

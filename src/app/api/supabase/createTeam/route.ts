@@ -52,7 +52,6 @@ export async function POST(request: Request) {
           rol: "creator",
         },
       ])
-      .select();
 
     if (errorUser) {
       throw new Error(`Error during user insertion: ${errorUser.message}`);
