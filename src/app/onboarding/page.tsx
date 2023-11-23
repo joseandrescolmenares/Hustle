@@ -42,7 +42,7 @@ export default function TeamSwitcher() {
       statusAccout: inputTeam?.statusAccount,
     });
     const result = data?.data
-   if(result.response  == "success"){
+   if(result){
     router.push("/dashboard")
    }
   };
