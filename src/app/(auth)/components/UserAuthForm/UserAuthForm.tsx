@@ -8,7 +8,7 @@ import { UserAuthFormProp } from "@/lib/types/authForm";
 import { supabase } from "@/lib/ClientSupabase";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { Button } from "../../../components/ui/Button";
+import { Button } from "../../../components/ui/button";
 import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
@@ -20,8 +20,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../../components/ui/Form";
-import { Input } from "../../../components/ui/Input";
+} from "../../../components/ui/form";
+import { Input } from "../../../components/ui/input";
 import { redirect } from "next/dist/server/api-utils";
 
 export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
@@ -57,7 +57,7 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
       Cookies.set("access_token", dataAuth?.data?.session.access_token);
       Cookies.set("userId", dataAuth?.data.user?.id);
       toast.success("Welcome to Hustle");
-      router.push("/dashboard");
+      router.push("/onboarding");
     } else {
       toast.error(
         login ? "Invalid login credentials" : "User already registered"

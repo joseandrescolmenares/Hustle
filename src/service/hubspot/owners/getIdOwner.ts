@@ -32,6 +32,7 @@ export const getIOwner = async (
     };
     if (!idOwner) {
       const data = {
+        nameOnwer: "",
         dealname: dealsName,
         id_deals: dealsId,
         dealContacts: num_associated_contacts,

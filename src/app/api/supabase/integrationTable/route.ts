@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     ])
     .select();
 
-console.log(error, "errorr")
+
   return new NextResponse(
     JSON.stringify({ response: "success" }),
     { status: 200 }

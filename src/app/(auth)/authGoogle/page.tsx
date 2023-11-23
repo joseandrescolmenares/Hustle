@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
 
 export default function AuthGoogle() {
-    const router = useRouter();
+  const router = useRouter();
   useEffect(() => {
     // Get the current URL
     const currentURL = window.location.href;
@@ -45,26 +45,8 @@ export default function AuthGoogle() {
           }: any = await supabase.auth.getUser();
 
           if (user) {
-            Cookies.set("userId", user?.id);
-            let { data: integrations, error } = await supabase
-              .from("integrations")
-              .select("*")
-              .eq("userId", user.id);
-
-            if (!integrations?.length) {
-              const dataTableIntegration = await axios.post(
-                "/api/supabase/integrationTable",
-                {
-                  userId: user?.id,
-                }
-              );
-              const result = dataTableIntegration.data;
-              router.push("/dashboard");
-            }
-            router.push("/dashboard");
-          } 
-       
-
+            router.push("/onboarding");
+          }
         };
 
         getUser();

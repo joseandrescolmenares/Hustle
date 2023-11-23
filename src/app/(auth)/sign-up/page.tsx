@@ -12,19 +12,10 @@ const SignUp = () => {
     const data = await supabase.auth.signUp({
       email: email,
       password: password,
-    });
-    if (data?.data?.user) {
-      const dataTableIntegration = await axios.post(
-        "/api/supabase/integrationTable",
-        {
-          userId: data.data.user?.id,
-        }
-      );
-      const result = dataTableIntegration.data;
-    }
+    })
     return data;
   };
-  return <UserAuthForm handleAuth={handleAuthSignup}  login={false}/>;
+  return <UserAuthForm handleAuth={handleAuthSignup} login={false} />;
 };
 
 export default SignUp;
