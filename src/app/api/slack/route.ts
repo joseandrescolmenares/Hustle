@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
   const cookieStore = cookies();
-  const userId = cookieStore.get("userId")?.value;
+  const idIntegrations = cookieStore.get("idIntegrations")?.value;
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
           channelSlack: result?.incoming_webhook?.channel,
           teamSlack: result?.team,
         })
-        .eq("userId", userId)
+        .eq("id_integrations", idIntegrations)
         .select();
       const dataMessage = {
         text: "¡Gracias por conectar Hustle a Slack! Estaré enviándote alertas por aquí. ¡Gracias!"

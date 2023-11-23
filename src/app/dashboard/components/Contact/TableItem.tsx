@@ -23,7 +23,8 @@ const MainTable = () => {
   const [allDeals, setAllDeals] = useState<any[] | null>([]);
   const [agreementStatus, setAgreementStatus] = useState<boolean>(true);
 
-  const userId = Cookies.get("userId");
+  const idIntegrations = Cookies.get("idIntegrations");
+  const idTeam = Cookies.get("team")
 
   useEffect(() => {
     const integrationCompleted = localStorage.getItem("integrationCompleted");
@@ -38,7 +39,7 @@ const MainTable = () => {
       let { data, error } = await supabase
         .from("integrations")
         .select("dealsAlll")
-        .eq("userId", userId);
+        .eq("id_integrations", idIntegrations);
       if (data == null) return;
       if (!data[0]?.dealsAlll) {
         const resultDeals = await axios.get(`/api/hubspot/getAllDeals`);
@@ -48,7 +49,7 @@ const MainTable = () => {
         let { data: dataDeals, error } = await supabase
           .from("deals")
           .select("*")
-          .eq("user_id", userId);
+          .eq("id_team", idTeam);
         console.log(dataDeals, "data", error, "error");
         setAllDeals(dataDeals);
       }
@@ -92,9 +93,7 @@ const MainTable = () => {
                     </div>
                   </TableCell>
                   <TableCell>{deals.nameOnwer}</TableCell>
-                  <TableCell>
-                    {"Dectectado"}
-                  </TableCell>
+                  <TableCell>{"Dectectado"}</TableCell>
                   <TableCell>
                     <Link
                       className=" cursor-pointer"

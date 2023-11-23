@@ -78,14 +78,15 @@ export async function GET(request: Request) {
   // const params = await request.json();
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-  const userId = cookieStore.get("userId")?.value;
+  const idTeam  = cookieStore.get("team")?.value;
+  const idIntegrations = cookieStore.get("idIntegrations")?.value
 
   try {
     const result = await fetchAllDeals();
     if(result){
       const { data:dataAllDeals, error } = await supabase
       .from("deals")
-      .insert(result).eq("userId",userId)
+      .insert(result).eq("id_team", idTeam )
       .select();
       console.log(dataAllDeals,"dataa", error,"error")
 
@@ -95,7 +96,7 @@ export async function GET(request: Request) {
         .update({
           dealsAlll: true
         })
-        .eq("userId", userId)
+        .eq("id_integrations",idIntegrations )
         .select();
         console.log(data,"tre",error, "error")
       }

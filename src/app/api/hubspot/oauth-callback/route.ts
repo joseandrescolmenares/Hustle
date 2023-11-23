@@ -36,13 +36,15 @@ export async function GET(request: Request) {
     cookieStore.set("accessTokenHubspot", access_token);
     cookieStore.set("expires_in", expires_in);
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-    const userId = cookieStore.get("userId");
+    const idIntegrations = cookieStore.get("idIntegrations")?.value;
 
     const { data, error } = await supabase
       .from("integrations")
       .update({ isHubspot: true })
-      .eq("userId", userId?.value)
+      .eq("id_integrations", idIntegrations)
       .select();
+      console.log(data, "team", error,"error")
+
 
   } catch (error) {
     return Response.json({

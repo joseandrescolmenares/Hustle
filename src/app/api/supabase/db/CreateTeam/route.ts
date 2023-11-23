@@ -16,12 +16,14 @@ export async function POST(request: Request) {
       .insert([{ isHubspot: false, isSlack: false }])
       .select();
 
+      
+
     if (errorIntegrations) {
       throw new Error(`Error during integration insertion: ${errorIntegrations.message}`);
     }
 
     console.log(dataIntegrations, "Integration ID");
-
+    cookieStore.set("idIntegrations",  dataIntegrations[0]?.id_integrations);
     // Inserción en la tabla "teams"
     const { data: dataTeam, error: errorTeam } = await supabase
       .from("teams")

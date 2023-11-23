@@ -24,7 +24,7 @@ export const getIOwner = async (
 ) => {
   const cookiesStore = cookies();
   const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
-  const userId = cookiesStore.get("userId")?.value;
+  const idTeam = cookiesStore.get("team")?.value;
   try {
     const headers = {
       Authorization: `Bearer ${cookieToken}`,
@@ -52,7 +52,7 @@ export const getIOwner = async (
         hs_next_step:hs_next_step,
         hs_priority: hs_priority,
         num_contacted_notes:num_contacted_notes,
-        user_id : userId 
+        id_team : idTeam
       };
       return data;
     }
@@ -83,7 +83,7 @@ export const getIOwner = async (
         hs_next_step:hs_next_step,
         hs_priority: hs_priority,
         num_contacted_notes:num_contacted_notes,
-        user_id :userId 
+        id_team :idTeam
 
       };
       return newDataDeals;
