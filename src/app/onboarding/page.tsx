@@ -26,6 +26,14 @@ import {
 } from "../components/ui/select";
 
 export default function TeamSwitcher() {
+  const [inputTeam, setInputTeam] = React.useState({
+    nameTeam: "",
+    statusAccount: "free",
+  });
+  console.log(inputTeam, "dssa");
+  const [guestLink, setGuestLink] = React.useState("");
+
+  const handleGuestLink = async (e: any) => {};
   return (
     <>
       <Dialog open={true}>
@@ -40,15 +48,24 @@ export default function TeamSwitcher() {
             <div className="space-y-4 py-2 pb-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Team name</Label>
-                <Input id="name" placeholder="Meta" />
+                <Input
+                  id="name"
+                  placeholder="Meta"
+                  value={inputTeam.nameTeam}
+                  onChange={(e) =>
+                    setInputTeam({ ...inputTeam, nameTeam: e.target.value })
+                  }
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="plan">Subscription plan</Label>
-                <Select>
-                  <SelectTrigger>
+                <Select  onValueChange={(value) => setInputTeam({ ...inputTeam, statusAccount: value })}>
+                  <SelectTrigger  >
                     <SelectValue placeholder="Select a plan" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent
+                  
+                  >
                     <SelectItem value="free">
                       <span className="font-medium">Free</span> -{" "}
                       <span className="text-muted-foreground">
@@ -65,21 +82,24 @@ export default function TeamSwitcher() {
                 </Select>
               </div>
             </div>
-            <div className="space-y-2 mt-5 mb-5">
+            <DialogFooter className="border-b border-gray-400 rounded-md px-4 py-2">
+              {/* <Button variant="outline">Cancel</Button> */}
+              <Button type="submit">Continue</Button>
+            </DialogFooter>
+            <div className="space-y-2 mt-6 mb-5">
               <Label htmlFor="name">
                 Join a team with the invitation link here.{" "}
                 <span className=" text-lg">👇</span>
               </Label>
-              <Input
-                id="name"
-                placeholder="https://www.Hustle.com/meta?codigo=ABCDEFGHIJKLM"
-              />
+              <div className="flex gap-3">
+                <Input
+                  id="name"
+                  placeholder="https://www.Hustle.com/meta?codigo=ABCDEFGHIJKLM"
+                />
+                <Button>enviar</Button>
+              </div>
             </div>
           </div>
-          <DialogFooter>
-            {/* <Button variant="outline">Cancel</Button> */}
-            <Button type="submit">Continue</Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

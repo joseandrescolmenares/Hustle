@@ -10,7 +10,6 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/button";
 import { Icons } from "@/app/components/Icons/IconsAuth/IconsAuth";
-import axios from "axios";
 import { Toaster, toast } from "sonner";
 import {
   Form,

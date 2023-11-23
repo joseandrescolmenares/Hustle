@@ -6,25 +6,19 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 export async function POST(request: Request) {
 
-    const { userId:id } = await request.json()
+    const { nameTeam, statusAccout } = await request.json()
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-  const { data: integrations, error } = await supabase
-    .from("integrations")
-    .insert([
-      {
-        userId: id,
-        isHubspot: false,
-        isSlack: false,
-        webhookUrlSlack: "",
-        accessTokenSlack : "",
-         channelSlack: "",
-        teamSlack: {},
+  console.timeLog(nameTeam, statusAccout, "status")
+  // const { data , error } = await supabase
+  //   .from("integrations")
+  //   .insert([
+  //     {
      
 
-      },
-    ])
-    .select();
+  //     },
+  //   ])
+  //   .select();
 
 
   return new NextResponse(
