@@ -22,9 +22,10 @@ import { Toaster, toast } from "sonner";
 const MainTable = () => {
   const [allDeals, setAllDeals] = useState<any[] | null>([]);
   const [agreementStatus, setAgreementStatus] = useState<boolean>(true);
+  const [loandingData, setLoandingData] = useState(false);
 
   const idIntegrations = Cookies.get("idIntegrations");
-  const idTeam = Cookies.get("team")
+  const idTeam = Cookies.get("team");
 
   useEffect(() => {
     const integrationCompleted = localStorage.getItem("integrationCompleted");
@@ -36,6 +37,7 @@ const MainTable = () => {
   useEffect(() => {
     const getDeals = async () => {
       // try {
+      setLoandingData(true);
       let { data, error } = await supabase
         .from("integrations")
         .select("dealsAlll")
@@ -45,6 +47,7 @@ const MainTable = () => {
         const resultDeals = await axios.get(`/api/hubspot/getAllDeals`);
         const deals = resultDeals.data;
         setAllDeals(deals.dealsData);
+        setLoandingData(false);
       } else {
         let { data: dataDeals, error } = await supabase
           .from("deals")
@@ -52,6 +55,7 @@ const MainTable = () => {
           .eq("id_team", idTeam);
         console.log(dataDeals, "data", error, "error");
         setAllDeals(dataDeals);
+        setLoandingData(false);
       }
     };
 
@@ -59,6 +63,12 @@ const MainTable = () => {
   }, []);
 
   if (!allDeals) return;
+  if (loandingData)
+    return (
+      <div className="flex justify-center items-center mt-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-customPurple  border-t-customPurple border-r-blue-300 border-r-2"></div>
+      </div>
+    );
   return (
     <>
       {" "}
@@ -86,14 +96,25 @@ const MainTable = () => {
                   <TableCell className="font-medium">
                     {score(deals.dealContacts).flag}
                   </TableCell>
-                  <TableCell>{deals?.dealname}</TableCell>
+                  <TableCell>
+                    <p className="scroll-m-20 text-xl font-semibold tracking-tight">
+                      {deals?.dealname}{" "}
+                    </p>
+                  </TableCell>
                   <TableCell className="lex justify-center items-center">
                     <div className="flex gap-4 justify-center ">
-                      {score(deals.dealContacts)?.reason}
+                      <p className="p-2 bg-customPurple text-white rounded-xl ">
+                        {" "}
+                        {score(deals.dealContacts)?.reason}
+                      </p>
                     </div>
                   </TableCell>
                   <TableCell>{deals.nameOnwer}</TableCell>
-                  <TableCell>{"Dectectado"}</TableCell>
+                  <TableCell>
+                    <p className="p-2 bg-red-500 opacity-50 text-white rounded-xl  w-max">
+                      {"Dectectado"}
+                    </p>
+                  </TableCell>
                   <TableCell>
                     <Link
                       className=" cursor-pointer"

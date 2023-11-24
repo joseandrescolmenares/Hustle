@@ -4,7 +4,6 @@ import { Dialog } from "./components/Dialog";
 import { cookies } from "next/headers";
 import { TableItem } from "./components/Contact";
 
-
 type TeamData = {
   nameTeam: string;
   id_integrations: {
@@ -29,6 +28,7 @@ const dashboard = async () => {
     return (
       <div className=" w-full flex  justify-center items-center ml-7 flex-col">
         <TableItem />
+     
       </div>
     );
   }

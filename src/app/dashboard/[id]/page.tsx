@@ -3,6 +3,7 @@ import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
 import { score } from "@/app/ai/score/score";
 import { Input } from "@/app/components/ui/Input";
 import { getIdNotes } from "@/service/hubspot/activity/notes/getIdNotes";
+import { Button } from "@/app/components/ui/Button";
 const { JSDOM } = require("jsdom");
 
 type NoteData = {
@@ -55,7 +56,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </h2>
           </div>
           <div className="flex gap-4">
-            <h2 className="">${dataDeals.properties.amount}</h2>
+            <h2 className="p-4  bg-slate-200 text-black rounded-xl ">${dataDeals.properties.amount}</h2>
           </div>
         </div>
         <div className="shadow-md border-slate-200 p-4 rounded-md  w-full flex flex-col gap-4">
@@ -73,8 +74,9 @@ export default async function Page({ params }: { params: { id: string } }) {
             Workspace
           </h2>
           <div>
-            <div>
-              <Input placeholder="adds progress notes " />
+            <div className="flex gap-3">
+              <Input placeholder="adds progress notes" />
+              <Button>add</Button>
             </div>
             <div>
               <div className=" h-64 overflow-x-scroll  flex flex-col gap-4 mt-5">
@@ -104,13 +106,15 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div className=" mt-8 flex flex-col w-full justify-between items-center h-full ">
             <div className="flex justify-between w-full gap-8">
               <p>Estado del caso </p>
-              <p>detectado</p>
+              <p className="p-2 bg-red-400 text-white rounded-xl">detectado</p>
             </div>
             <div className="flex justify-between  w-full gap-8">
               <p> Severidad </p>
+              <p className="p-2 bg-red-400 text-white rounded-xl ">Alta</p>
             </div>
             <div className="flex justify-between w-full gap-8">
               <p>Detectado</p>
+              <p>24/11/23</p>
             </div>
             <div className="flex justify-between gap-8 w-full">
               {" "}
