@@ -35,6 +35,7 @@ export default function TeamSwitcher() {
   });
 
   const [guestLink, setGuestLink] = React.useState("");
+  console.log(guestLink, "lisn");
 
   const handleCreateTeam = async () => {
     try {
@@ -42,21 +43,33 @@ export default function TeamSwitcher() {
         nameTeam: inputTeam?.nameTeam?.trim(),
         statusAccount: inputTeam?.statusAccount?.trim(),
       };
-  
+
       const data = await axios.post("/api/supabase/createTeam", cleanedData);
       const result = data?.data;
-  
+
       if (result) {
-     
         router.push("/dashboard");
       }
     } catch (error) {
-      console.error("Error al crear el equipo:", error)
+      console.error("Error al crear el equipo:", error);
     }
   };
-  
 
-  const handleGuestLink = async (e: any) => {};
+  const handleGuestLink = async () => {
+    try {
+      const dataLink = {
+        link: guestLink,
+      };
+      const data = await axios.post("/api/supabase/joinTeam", dataLink);
+      const result = data?.data;
+
+      // if (result) {
+      //   router.push("/dashboard");
+      // }
+    } catch (error) {
+      console.error("Error al crear el equipo:", error);
+    }
+  };
   return (
     <>
       <Dialog open={true}>
@@ -122,8 +135,9 @@ export default function TeamSwitcher() {
                 <Input
                   id="name"
                   placeholder="https://www.Hustle.com/meta?codigo=ABCDEFGHIJKLM"
+                  onChange={(e) => setGuestLink(e.target.value)}
                 />
-                <Button>enviar</Button>
+                <Button type="submit" onClick={handleGuestLink}>enviar</Button>
               </div>
             </div>
           </div>

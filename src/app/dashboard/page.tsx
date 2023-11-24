@@ -3,7 +3,6 @@ import { supabase } from "@/lib/ClientSupabase";
 import { Dialog } from "./components/Dialog";
 import { cookies } from "next/headers";
 import { TableItem } from "./components/Contact";
-import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
 
 
 type TeamData = {
@@ -16,24 +15,15 @@ type TeamData = {
 
 const dashboard = async () => {
   const Cookies = cookies();
-  const teamId = Cookies.get("team")?.value;
+  const idIntegrations = Cookies.get("idIntegrations")?.value;
 
-  let { data: teams, error } = await supabase
-    .from("teams")
-    .select(
-      `
-nameTeam,
-id_integrations (
-  isSlack,
-  isHubspot
-)
-`
-    )
-    .eq("id_team", teamId);
+  let { data: integrations, error } = await supabase
+    .from("integrations")
+    .select("isHubspot")
+    .eq("id_integrations", idIntegrations);
+  if (integrations == null) return;
 
-  if (teams == null) return;
-
-  const { isHubspot }: any = teams[0]?.id_integrations;
+  const isHubspot: any = integrations[0]?.isHubspot;
 
   if (isHubspot) {
     return (
