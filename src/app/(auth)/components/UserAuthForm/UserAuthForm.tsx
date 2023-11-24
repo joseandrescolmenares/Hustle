@@ -56,6 +56,9 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
       Cookies.set("access_token", dataAuth?.data?.session.access_token);
       Cookies.set("userId", dataAuth?.data.user?.id);
       toast.success("Welcome to Hustle");
+      if(login){
+        router.push("/dashboard");
+      }
       router.push("/onboarding");
     } else {
       toast.error(
