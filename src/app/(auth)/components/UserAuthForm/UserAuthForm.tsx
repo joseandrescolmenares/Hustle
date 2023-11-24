@@ -59,7 +59,7 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
       if(login){
         router.push("/dashboard");
       }
-      router.push("/onboarding");
+      else router.push("/onboarding");
     } else {
       toast.error(
         login ? "Invalid login credentials" : "User already registered"
