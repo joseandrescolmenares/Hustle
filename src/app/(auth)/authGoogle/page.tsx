@@ -45,6 +45,7 @@ export default function AuthGoogle() {
           }: any = await supabase.auth.getUser();
 
           if (user) {
+            console.log(user,"user")
             router.push("/onboarding");
           }
         };
