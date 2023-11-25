@@ -45,8 +45,21 @@ export default function AuthGoogle() {
           }: any = await supabase.auth.getUser();
 
           if (user) {
-            console.log(user,"user")
-            router.push("/onboarding");
+            Cookies.set("userId", user.id);
+            let { data: dataUsers, error } = await supabase
+              .from("users")
+              .select("*")
+              .eq("id_user", user.id);
+  
+            if (dataUsers?.length) {
+              let { data: dataTeam, error } = await supabase
+              .from("teams")
+              .select("id_integrations")
+              .eq("id_team", dataUsers[0].id_team);
+              if(!dataTeam) return
+              Cookies.set("idIntegrations", dataTeam[0].id_integrations);
+              router.push("/dashboard");
+            } else router.push("/onboarding");
           }
         };
 

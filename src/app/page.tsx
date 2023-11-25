@@ -1,5 +1,8 @@
 import { redirect } from "next/navigation";
 
 export default function Home() {
-  redirect("https://meethustle.io/");
+  return(<div>
+    jose
+  </div>)
+  // redirect("https://meethustle.io/");
 }
