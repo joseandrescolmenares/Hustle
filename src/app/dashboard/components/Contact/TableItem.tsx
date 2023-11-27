@@ -23,6 +23,7 @@ const MainTable = () => {
   const [allDeals, setAllDeals] = useState<any[] | null>([]);
   const [agreementStatus, setAgreementStatus] = useState<boolean>(true);
   const [loandingData, setLoandingData] = useState(true);
+  const [notes, setNotes] = React.useState<string[]>([]);
 
   const idIntegrations = Cookies.get("idIntegrations");
   const idTeam = Cookies.get("team");
@@ -62,7 +63,7 @@ const MainTable = () => {
               const dataAlert = alertUrl.data;
             };
             sentAlert();
-          }, 8000);
+          }, 9000);
         }
       } else {
         let { data: dataDeals, error } = await supabase
@@ -72,23 +73,12 @@ const MainTable = () => {
         setAllDeals(dataDeals);
         setLoandingData(false);
       
-        if (data[0].isSlack) {
-          setTimeout(() => {
-            if (data == null) return;
-
-            const dataSentAlert = {
-              webUrl: data[0].webhookUrlSlack
-            };
-            const sentAlert = async () => {
-              const alertUrl = await axios.post("api/slack/sentAlert",dataSentAlert);
-              const dataAlert = alertUrl.data;
-              console.log(dataAlert, "alert");
-            };
-            sentAlert();
-          }, 7000);
-        }
       }
     };
+    const storedNotes = localStorage.getItem("notes");
+    if (storedNotes) {
+      setNotes(JSON.parse(storedNotes));
+    }
     getDeals();
   }, []);
 
@@ -158,8 +148,8 @@ const MainTable = () => {
                   </TableCell>
                   <TableCell>{deals.nameOnwer}</TableCell>
                   <TableCell>
-                    <p className="p-2 bg-red-500 opacity-50 text-white rounded-xl  w-max">
-                      {"Dectectado"}
+                    <p className={`p-2 ${notes.length ?  " bg-orange-300" : " bg-red-500 opacity-50" } text-white rounded-xl  w-max`}>
+                      { notes.length ? "in process":  "Dectectado"}
                     </p>
                   </TableCell>
                   <TableCell>
