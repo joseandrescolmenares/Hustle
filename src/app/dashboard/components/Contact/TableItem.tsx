@@ -149,7 +149,7 @@ const MainTable = () => {
                   <TableCell>{deals.nameOnwer}</TableCell>
                   <TableCell>
                     <p className={`p-2 ${notes.length ?  " bg-orange-300" : " bg-red-500 opacity-50" } text-white rounded-xl  w-max`}>
-                      { notes.length ? "in process":  "Dectectado"}
+                      {"Dectectado"}
                     </p>
                   </TableCell>
                   <TableCell>
