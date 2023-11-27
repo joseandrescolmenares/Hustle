@@ -1,12 +1,17 @@
-import { cookies } from "next/headers";
 import axios from "axios";
 
-const clientId = process.env.HUBSPOT_CLIENT_ID;
-const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
-const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
+import { cookies } from "next/headers";
 
-export async function renewToken() {
-  const cookieStore = cookies()
+import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
+
+export async function GET(request : Request){
+
+  const clientId = process.env.HUBSPOT_CLIENT_ID;
+  const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
+  const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
+
+  const cookieStore = cookies();
   const refresh_token = cookieStore.get("refresh_token")?.value;
 
   try {
@@ -25,13 +30,16 @@ export async function renewToken() {
     );
 
     if (response.data.access_token) {
-      cookieStore.set("access_token", response.data.access_token);
+      cookieStore.set("accessTokenHubspot", response.data.access_token);
       cookieStore.set("refresh_token", response.data.refresh_token);
       cookieStore.set("expires_in", response.data.expires_in);
     }
+    cookieStore.set("jose", "jose");
+    console.log(response, "res");
+  
 
-    console.log(response,"res")
   } catch (error) {
     console.error("Error al renovar el token de acceso:", error);
   }
+  redirect("/dashboard")
 }

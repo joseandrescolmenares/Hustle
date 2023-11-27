@@ -22,7 +22,7 @@ import { Toaster, toast } from "sonner";
 const MainTable = () => {
   const [allDeals, setAllDeals] = useState<any[] | null>([]);
   const [agreementStatus, setAgreementStatus] = useState<boolean>(true);
-  const [loandingData, setLoandingData] = useState(false);
+  const [loandingData, setLoandingData] = useState(true);
 
   const idIntegrations = Cookies.get("idIntegrations");
   const idTeam = Cookies.get("team");
@@ -58,7 +58,6 @@ const MainTable = () => {
         setLoandingData(false);
       }
     };
-
     getDeals();
   }, []);
 

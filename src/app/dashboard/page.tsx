@@ -28,7 +28,6 @@ const dashboard = async () => {
     return (
       <div className=" w-full flex  justify-center items-center ml-7 flex-col">
         <TableItem />
-     
       </div>
     );
   }
