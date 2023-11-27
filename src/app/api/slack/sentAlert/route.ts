@@ -2,15 +2,16 @@ import axios from "axios";
 
 export async function POST(request: Request) {
   const { webUrl } = await request.json();
+  console.log(webUrl,"url")
 
   const dataMessage = {
     text: ` 
 
     Queremos informarte sobre el estado actual de tus negocios. Hemos identificado que:
     
-    - 12 negocios se encuentran en riesgo.
-    - 4 negocios están en una situación moderada.
-    - Hemos identificado 4 oportunidad para mejorar y crecer las ventas.
+    - 5 negocios se encuentran en riesgo.
+    - 3 negocios están en una situación moderada.
+    - Hemos identificado 2 oportunidad para mejorar y crecer las ventas.
     
     Estamos trabajando activamente en estrategias para mitigar los riesgos y maximizar las oportunidades. Nuestro equipo está comprometido en brindarte el mejor apoyo posible.
     
