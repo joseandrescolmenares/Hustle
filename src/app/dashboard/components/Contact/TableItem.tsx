@@ -40,26 +40,74 @@ const MainTable = () => {
       setLoandingData(true);
       let { data, error } = await supabase
         .from("integrations")
-        .select("dealsAlll")
+        .select("dealsAlll,isSlack,webhookUrlSlack")
         .eq("id_integrations", idIntegrations);
+
       if (data == null) return;
       if (!data[0]?.dealsAlll) {
         const resultDeals = await axios.get(`/api/hubspot/getAllDeals`);
         const deals = resultDeals.data;
         setAllDeals(deals.dealsData);
         setLoandingData(false);
+
+        if (data[0].isSlack) {
+          setTimeout(() => {
+            if (data == null) return;
+
+            const dataSentAlert = {
+              webUrl: data[0].webhookUrlSlack,
+            };
+            const sentAlert = async () => {
+              const alertUrl = await axios.post("api/slack/sentAlert",dataSentAlert);
+              const dataAlert = alertUrl.data;
+            };
+            sentAlert();
+          }, 8000);
+        }
       } else {
         let { data: dataDeals, error } = await supabase
           .from("deals")
           .select("*")
           .eq("id_team", idTeam);
-        console.log(dataDeals, "data", error, "error");
         setAllDeals(dataDeals);
         setLoandingData(false);
+      
+        if (!data[0].isSlack) {
+          setTimeout(() => {
+            if (data == null) return;
+
+            const dataSentAlert = {
+              webUrl: data[0].webhookUrlSlack
+            };
+            const sentAlert = async () => {
+              const alertUrl = await axios.post("api/slack/sentAlert",dataSentAlert);
+              const dataAlert = alertUrl.data;
+              console.log(dataAlert, "alert");
+            };
+            sentAlert();
+          }, 8000);
+        }
       }
     };
     getDeals();
   }, []);
+
+  // useEffect(() => {
+  //   const sentAlertSlack = async () => {
+  //     const { data: dataIntegrations, error: errorIntegrations } =
+  //       await supabase
+  //         .from("integrations")
+  //         .select("isSlack")
+  //         .eq("id_integrations", idIntegrations);
+  //     if (dataIntegrations == null) return;
+
+  //     // if (dataIntegrations[0].isSlack) {
+
+  //     // }
+  //   };
+  //   sentAlertSlack();
+
+  // }, []);
 
   if (!allDeals) return;
   if (loandingData)

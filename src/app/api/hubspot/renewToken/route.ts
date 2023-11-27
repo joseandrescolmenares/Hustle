@@ -23,7 +23,7 @@ export async function GET(request : Request){
           grant_type: "refresh_token",
           client_id: clientId,
           client_secret: clientSecret,
-          redirect_uri: "http://localhost:3000/api/hubspot/oauth-callback",
+          redirect_uri: redirectUri,
           refresh_token: refresh_token,
         },
       }
@@ -34,8 +34,6 @@ export async function GET(request : Request){
       cookieStore.set("refresh_token", response.data.refresh_token);
       cookieStore.set("expires_in", response.data.expires_in);
     }
-    cookieStore.set("jose", "jose");
-    console.log(response, "res");
   
 
   } catch (error) {
