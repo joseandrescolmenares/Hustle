@@ -72,6 +72,7 @@ export default function AuthGoogle() {
               Cookies.set("refresh_token", refresh_token);
               Cookies.set("team", dataUsers[0]?.id_team);
               router.push("/dashboard");
+           
             } else router.push("/onboarding");
           }
         };
