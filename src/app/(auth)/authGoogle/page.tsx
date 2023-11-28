@@ -58,7 +58,8 @@ export default function AuthGoogle() {
                   `
                 id_integrations (
                   id_integrations,
-                   tokenHubspot
+                   tokenHubspot,
+                   refresh_token
                   )
                 `
                 )
