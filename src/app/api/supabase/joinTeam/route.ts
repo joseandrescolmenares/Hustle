@@ -24,6 +24,8 @@ export async function POST(request: Request) {
     .eq("inviteCode", code);
 
   if (dataTeam) {
+    cookieStore.set("refresh_token", dataTeam[0].id_team);
+    cookieStore.set("accessTokenHubspot", )
     cookieStore.set("team", dataTeam[0].id_team);
     cookieStore.set("idIntegrations", dataTeam[0].id_integrations);
     const { data: dataUser, error: errorUser } = await supabase
