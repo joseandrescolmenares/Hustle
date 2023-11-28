@@ -65,7 +65,6 @@ export default function TeamSwitcher() {
       const result = data?.data;
 
       if (result) {
-        setLoandingData(false);
         router.push("/dashboard");
       }
     } catch (error) {
