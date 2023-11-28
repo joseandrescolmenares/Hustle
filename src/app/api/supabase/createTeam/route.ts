@@ -10,21 +10,19 @@ export async function POST(request: Request) {
     const userId = cookieStore.get("userId")?.value;
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    // Inserción en la tabla "integrations"
     const { data: dataIntegrations, error: errorIntegrations } = await supabase
       .from("integrations")
       .insert([{ isHubspot: false, isSlack: false }])
       .select();
 
-      
-
     if (errorIntegrations) {
-      throw new Error(`Error during integration insertion: ${errorIntegrations.message}`);
+      throw new Error(
+        `Error during integration insertion: ${errorIntegrations.message}`
+      );
     }
 
-    console.log(dataIntegrations, "Integration ID");
-    cookieStore.set("idIntegrations",  dataIntegrations[0]?.id_integrations);
-    // Inserción en la tabla "teams"
+    cookieStore.set("idIntegrations", dataIntegrations[0]?.id_integrations);
+
     const { data: dataTeam, error: errorTeam } = await supabase
       .from("teams")
       .insert([
@@ -40,9 +38,7 @@ export async function POST(request: Request) {
       throw new Error(`Error during team insertion: ${errorTeam.message}`);
     }
 
-    console.log(dataTeam, "Team Data");
 
-    // Inserción en la tabla "users"
     const { data: dataUser, error: errorUser } = await supabase
       .from("users")
       .insert([
@@ -50,16 +46,14 @@ export async function POST(request: Request) {
           id_user: userId,
           id_team: dataTeam[0]?.id_team,
           rol: "creator",
+          isOnboarding: true,
         },
-      ])
+      ]);
 
     if (errorUser) {
       throw new Error(`Error during user insertion: ${errorUser.message}`);
     }
 
-    console.log(dataUser, "User Data");
-
-    // Establecer la cookie "team"
     if (dataTeam) {
       cookieStore.set("team", dataTeam[0].id_team);
     }

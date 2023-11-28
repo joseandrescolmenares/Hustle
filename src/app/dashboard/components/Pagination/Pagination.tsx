@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const Pagination = ({ lastDealId, setAllDeals,setLastDealId}: any) => {
-  console.log(lastDealId, "id")
+
   const handleNext = async () => {
     try {
       const response = await axios.post(
@@ -14,8 +14,6 @@ const Pagination = ({ lastDealId, setAllDeals,setLastDealId}: any) => {
       const data = response.data;
       setAllDeals(data.dealsData)
       setLastDealId(data?.link)
-
-      console.log(data, "res");
     } catch (error) {
       console.error("Error al manejar la paginación hacia atrás:", error);
     }
@@ -35,7 +33,7 @@ const Pagination = ({ lastDealId, setAllDeals,setLastDealId}: any) => {
         setAllDeals(data);
         setLastDealId(data?.link);
       }
-      console.log(data, "ressult");
+   
     } catch (error) {
       console.error("Error al manejar la paginación hacia adelante:", error);
     }

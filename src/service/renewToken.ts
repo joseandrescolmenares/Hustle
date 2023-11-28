@@ -30,7 +30,6 @@ export async function renewToken() {
       cookieStore.set("expires_in", response.data.expires_in);
     }
 
-    console.log(response,"res")
   } catch (error) {
     console.error("Error al renovar el token de acceso:", error);
   }

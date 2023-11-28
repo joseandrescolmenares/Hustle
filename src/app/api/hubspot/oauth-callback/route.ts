@@ -43,7 +43,6 @@ export async function GET(request: Request) {
       .update({ isHubspot: true })
       .eq("id_integrations", idIntegrations)
       .select();
-      console.log(data, "team", error,"error")
 
 
   } catch (error) {

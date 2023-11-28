@@ -36,7 +36,6 @@ export default function TeamSwitcher() {
   });
 
   const [guestLink, setGuestLink] = React.useState("");
-  console.log(guestLink, "lisn");
 
   const handleCreateTeam = async () => {
     try {

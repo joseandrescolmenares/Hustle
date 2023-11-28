@@ -2,7 +2,6 @@ import axios from "axios";
 
 export async function POST(request: Request) {
   const { webUrl } = await request.json();
-  console.log(webUrl,"url")
 
   const dataMessage = {
     text: ` 
@@ -24,7 +23,7 @@ export async function POST(request: Request) {
       "Content-type": "application/json",
     },
   });
-  console.log(resultSlack, "slack");
+
 
   return Response.json({ ok: "ok" });
 }

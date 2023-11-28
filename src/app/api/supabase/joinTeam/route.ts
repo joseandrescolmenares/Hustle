@@ -14,7 +14,6 @@ const getCodeFromQueryString = (link: string) => {
 
 export async function POST(request: Request) {
   const { link } = await request.json();
-  console.log(link);
   const cookieStore = cookies();
   const userId = cookieStore.get("userId")?.value;
   const code = getCodeFromQueryString(link);
@@ -29,9 +28,8 @@ export async function POST(request: Request) {
     cookieStore.set("idIntegrations", dataTeam[0].id_integrations);
     const { data: dataUser, error: errorUser } = await supabase
       .from("users")
-      .insert([{ id_user: userId, rol: "guest", id_team: dataTeam[0].id_team }])
+      .insert([{ id_user: userId, rol: "guest", id_team: dataTeam[0].id_team,  isOnboarding: true, }])
       .select();
-    console.log(dataUser, "datauser", errorUser,"erro");
   }
 
   return new NextResponse(JSON.stringify({ response: "success" }), {

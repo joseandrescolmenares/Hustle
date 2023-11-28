@@ -6,7 +6,6 @@ import { Button } from "@/app/components/ui/Button";
 const Clipboard = ({ code }: any) => {
   const defaulValue = `https://hustle-beta.vercel.app/dashboard?${code}`
   const [copied, setCopied] = useState(false);
-  console.log(code,"codee");
   return (
     <div className=" mt-5 w-full">
       <input className=" outline-none w-full " value={defaulValue} />

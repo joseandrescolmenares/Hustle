@@ -4,7 +4,7 @@ import { Input } from "@/app/components/ui/Input";
 import { Button } from "@/app/components/ui/Button";
 
 const AddNotes = () => {
-  const [inputValue, setInputValue] = React.useState<string>({});
+  const [inputValue, setInputValue] = React.useState<string>("");
   const [notes, setNotes] = React.useState<string[]>([]);
 
   React.useEffect(() => {

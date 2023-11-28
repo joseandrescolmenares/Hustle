@@ -50,13 +50,13 @@ export default function AuthGoogle() {
               .from("users")
               .select("*")
               .eq("id_user", user.id);
-  
-            if (dataUsers?.length) {
+            if (dataUsers == null) return;
+            if (dataUsers[0]?.isOnboarding) {
               let { data: dataTeam, error } = await supabase
-              .from("teams")
-              .select("id_integrations")
-              .eq("id_team", dataUsers[0].id_team);
-              if(!dataTeam) return
+                .from("teams")
+                .select("id_integrations")
+                .eq("id_team", dataUsers[0].id_team);
+              if (!dataTeam) return;
               Cookies.set("idIntegrations", dataTeam[0].id_integrations);
               router.push("/dashboard");
             } else router.push("/onboarding");

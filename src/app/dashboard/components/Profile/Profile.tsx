@@ -44,7 +44,7 @@ export default function SheetSide() {
       .eq("id_team", team);
       if(dataTeam == null) return
       setInviteCode(dataTeam[0].inviteCode)
-    console.log(dataTeam, "data", error,"erro");
+  
   };
 
   useEffect(() => {

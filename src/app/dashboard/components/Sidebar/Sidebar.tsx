@@ -30,6 +30,8 @@ function Sidebar() {
     Cookies.remove("access_token");
     Cookies.remove("accessTokenHubspot");
     Cookies.remove("refresh_token");
+    Cookies.remove("idIntegrations")
+    Cookies.remove("team")
     router.refresh();
   };
   return (

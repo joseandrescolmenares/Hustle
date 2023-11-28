@@ -56,10 +56,15 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
       Cookies.set("access_token", dataAuth?.data?.session.access_token);
       Cookies.set("userId", dataAuth?.data.user?.id);
       toast.success("Welcome to Hustle");
-      if(login){
+
+      const { data: dataUser, error: errorUser } = await supabase
+        .from("users")
+        .select("isOnboarding")
+        .eq("id_user", dataAuth?.data.user?.id);
+      if (dataUser == null) return;
+      if (dataUser[0]?.isOnboarding) {
         router.push("/dashboard");
-      }
-      else router.push("/onboarding");
+      } else router.push("/onboarding");
     } else {
       toast.error(
         login ? "Invalid login credentials" : "User already registered"

@@ -64,7 +64,7 @@ async function fetchAllDeals(): Promise<any> {
 
       await sleep(1000); // Simulación de trabajo
     }
-  console.log(allData,'all')
+
     return allData;
   } catch (error) {
     console.error("Error:", error);
@@ -88,7 +88,6 @@ export async function GET(request: Request) {
       .from("deals")
       .insert(result).eq("id_team", idTeam )
       .select();
-      console.log(dataAllDeals,"dataa", error,"error")
 
       if(dataAllDeals){
         const { data, error } = await supabase
@@ -98,7 +97,6 @@ export async function GET(request: Request) {
         })
         .eq("id_integrations",idIntegrations )
         .select();
-        console.log(data,"tre",error, "error")
       }
      
       
