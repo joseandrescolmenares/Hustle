@@ -64,9 +64,13 @@ export default function AuthGoogle() {
                 )
                 .eq("id_team", dataUsers[0].id_team);
               if (!dataTeam) return;
-              const { id_integrations, tokenHubspot }: any =
+
+              const { tokenHubspot, id_integrations, refresh_token }: any =
                 dataTeam[0].id_integrations;
+              Cookies.set("accessTokenHubspot", tokenHubspot);
               Cookies.set("idIntegrations", id_integrations);
+              Cookies.set("refresh_token", refresh_token);
+              Cookies.set("team", dataUsers[0]?.id_team);
               router.push("/dashboard");
             } else router.push("/onboarding");
           }
