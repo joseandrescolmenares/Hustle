@@ -20,14 +20,23 @@ export async function POST(request: Request) {
 
   const { data: dataTeam, error } = await supabase
     .from("teams")
-    .select("id_team,nameTeam, id_integrations")
+    .select(  `
+    id_team,
+    id_integrations (
+      id_integrations,
+       tokenHubspot,
+       refresh_token
+      )
+    `)
     .eq("inviteCode", code);
 
   if (dataTeam) {
-    cookieStore.set("refresh_token", dataTeam[0].id_team);
-    cookieStore.set("accessTokenHubspot", )
+    const { tokenHubspot, id_integrations, refresh_token }: any =
+    dataTeam[0].id_integrations;
+    cookieStore.set("refresh_token", refresh_token);
+    cookieStore.set("accessTokenHubspot",tokenHubspot )
     cookieStore.set("team", dataTeam[0].id_team);
-    cookieStore.set("idIntegrations", dataTeam[0].id_integrations);
+    cookieStore.set("idIntegrations", id_integrations);
     const { data: dataUser, error: errorUser } = await supabase
       .from("users")
       .insert([{ id_user: userId, rol: "guest", id_team: dataTeam[0].id_team,  isOnboarding: true, }])
