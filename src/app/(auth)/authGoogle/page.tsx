@@ -54,10 +54,19 @@ export default function AuthGoogle() {
             if (dataUsers[0]?.isOnboarding) {
               let { data: dataTeam, error } = await supabase
                 .from("teams")
-                .select("id_integrations")
+                .select(
+                  `
+                id_integrations (
+                  id_integrations,
+                   tokenHubspot
+                  )
+                `
+                )
                 .eq("id_team", dataUsers[0].id_team);
               if (!dataTeam) return;
-              Cookies.set("idIntegrations", dataTeam[0].id_integrations);
+              const { id_integrations, tokenHubspot }: any =
+                dataTeam[0].id_integrations;
+              Cookies.set("idIntegrations", id_integrations);
               router.push("/dashboard");
             } else router.push("/onboarding");
           }

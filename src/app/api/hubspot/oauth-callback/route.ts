@@ -22,7 +22,7 @@ export async function GET(request: Request) {
           grant_type: "authorization_code",
           client_id: clientId,
           client_secret: clientSecret,
-          redirect_uri: redirectUri,
+          redirect_uri: "http://localhost:3000/api/hubspot/oauth-callback",
           code: code,
         },
         headers: {
@@ -40,11 +40,13 @@ export async function GET(request: Request) {
 
     const { data, error } = await supabase
       .from("integrations")
-      .update({ isHubspot: true })
+      .update({
+        isHubspot: true,
+        tokenHubspot: access_token,
+        refresh_token: refresh_token,
+      })
       .eq("id_integrations", idIntegrations)
       .select();
-
-
   } catch (error) {
     return Response.json({
       error: "Hubo un error al obtener el token de acceso.",

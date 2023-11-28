@@ -57,14 +57,39 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
       Cookies.set("userId", dataAuth?.data.user?.id);
       toast.success("Welcome to Hustle");
 
-      const { data: dataUser, error: errorUser } = await supabase
-        .from("users")
-        .select("isOnboarding")
-        .eq("id_user", dataAuth?.data.user?.id);
-      if (dataUser == null) return;
-      if (dataUser[0]?.isOnboarding) {
-        router.push("/dashboard");
+      if (login) {
+        const { data: dataUser, error: errorUser } = await supabase
+          .from("users")
+          .select("isOnboarding, id_team")
+          .eq("id_user", dataAuth?.data?.user?.id);
+
+
+        if (dataUser == null) return;
+        if (dataUser[0]?.isOnboarding) {
+          let { data: teams, error } = await supabase
+            .from("teams")
+            .select(
+              `
+            id_integrations (
+              id_integrations,
+               tokenHubspot,
+               refresh_token
+              )
+            `
+            )
+            .eq("id_team", dataUser[0]?.id_team);
+            if(teams == null) return
+            const { tokenHubspot, id_integrations, refresh_token} : any = teams[0].id_integrations
+            Cookies.set("accessTokenHubspot", tokenHubspot);
+            Cookies.set("idIntegrations", id_integrations);
+            Cookies.set("refresh_token",refresh_token)
+            Cookies.set("team", dataUser[0]?.id_team);
+            router.push("/dashboard");
+        }
+       
+        
       } else router.push("/onboarding");
+
     } else {
       toast.error(
         login ? "Invalid login credentials" : "User already registered"
