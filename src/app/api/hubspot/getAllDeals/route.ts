@@ -62,7 +62,7 @@ async function fetchAllDeals(): Promise<any> {
         break;
       }
 
-      await sleep(1500); // Simulación de trabajo
+      await sleep(990); // Simulación de trabajo
     }
 
     return allData;
