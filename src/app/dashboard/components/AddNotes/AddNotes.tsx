@@ -1,28 +1,57 @@
-"use client"
+"use client";
 import React from "react";
 import { Input } from "@/app/components/ui/Input";
 import { Button } from "@/app/components/ui/Button";
+import { supabase } from "@/lib/ClientSupabase";
 
-const AddNotes = () => {
+const AddNotes = ({ idOwner, idDeals }: any) => {
   const [inputValue, setInputValue] = React.useState<string>("");
+  const [dealId, setDealId] = React.useState("");
   const [notes, setNotes] = React.useState<string[]>([]);
 
   React.useEffect(() => {
-    // Cargar notas desde el localStorage al montar el componente
-    const storedNotes = localStorage.getItem("notes");
-    if (storedNotes) {
-      setNotes(JSON.parse(storedNotes));
-    }
-  }, []); 
+    const getIdDeals = async () => {
+      const { data, error } = await supabase
+        .from("deals")
+        .select("id_deals")
+        .eq("id_deals", idDeals);
+      if (data == null) return;
+      setDealId(data[0]?.id_deals);
+    };
+    getIdDeals();
+  }, [idDeals]);
+
+  React.useEffect(() => {
+    const getDeals = async () => {
+      const { data, error } = await supabase
+        .from("notes_activity")
+        .select("noteContent")
+        .eq("id_deals", idDeals);
+      if (data == null) return;
+      const allNotes = data.map((note: any) => note.noteContent);
+      setNotes(allNotes);
+    };
+    getDeals();
+  }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
-  const addNote = () => {
+  const addNote = async () => {
     if (inputValue.trim() !== "") {
+      const { data, error: errorNotes } = await supabase
+        .from("notes_activity")
+        .insert([
+          {
+            noteContent: inputValue,
+            idOwner: idOwner,
+            id_deals: dealId,
+          },
+        ]);
+
       const newNotes = [...notes, inputValue];
       setNotes(newNotes);
-      localStorage.setItem("notes", JSON.stringify(newNotes));
+      console.log(data, "notes", errorNotes, "erro");
       setInputValue("");
     }
   };

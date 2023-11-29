@@ -75,10 +75,7 @@ const MainTable = () => {
       
       }
     };
-    const storedNotes = localStorage.getItem("notes");
-    if (storedNotes) {
-      setNotes(JSON.parse(storedNotes));
-    }
+    
     getDeals();
   }, []);
 

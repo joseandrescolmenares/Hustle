@@ -3,7 +3,8 @@ import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
 import { score } from "@/app/ai/score/score";
 import { getIdNotes } from "@/service/hubspot/activity/notes/getIdNotes";
 import { AddnNotes } from "../components/AddNotes";
-const { JSDOM } = require("jsdom");
+import { supabase } from "@/lib/ClientSupabase";
+// const { JSDOM } = require("jsdom");
 
 type NoteData = {
   id: string;
@@ -13,17 +14,19 @@ type NoteData = {
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  function extractTextFromHTML(htmlString: any) {
-    const dom = new JSDOM(htmlString);
-    return dom.window.document.body.textContent || "";
-  }
+  // function extractTextFromHTML(htmlString: any) {
+  //   const dom = new JSDOM(htmlString);
+  //   return dom.window.document.body.textContent || "";
+  // }
 
   const dataDeals = await getIdDeals(params.id);
+  console.log(dataDeals, "dataid");
   if (!dataDeals) return;
   const idOwner = dataDeals.properties.hubspot_owner_id;
   const dataOwner = await getIOwner(idOwner);
-  
 
+
+  
   // const getNotesData = async () => {
   //   if (!dataDeals.associations) return [];
 
@@ -34,7 +37,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   //   const notesData = await Promise.all(
   //     notesIds.map((id: string) => getIdNotes(id))
   //   );
-    
 
   //   return notesData;
   // };
@@ -70,7 +72,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             </p>
           </div>
         </div>
-        <AddnNotes />
+        <AddnNotes idOwner={idOwner} idDeals={params.id} />
       </div>
       <div className="mt-20 flex justify-start items-center shadow-lg border-slate-200  p-2 rounded-md  flex-col w-5/12 h-3/5 ml-8">
         <div className=" pl-3 flex  flex-col h-full">
