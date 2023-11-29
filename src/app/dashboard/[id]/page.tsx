@@ -96,9 +96,9 @@ export default async function Page({ params }: { params: { id: string } }) {
               <p className="p-2  bg-slate-200 text-black rounded-xl ">Alta</p>
             </div>
             <div className="flex justify-between w-full gap-8">
-              <p>Detectado</p>
+              <p>Ultima Interacción</p>
               <p className="p-2  bg-slate-200 text-black rounded-xl l">
-                24/11/23
+                {dataDeals?.properties?.notes_last_contacted}
               </p>
             </div>
             <div className="flex justify-between gap-8 w-full">
