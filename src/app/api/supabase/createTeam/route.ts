@@ -7,6 +7,7 @@ export async function POST(request: Request) {
   try {
     const { nameTeam, statusAccout } = await request.json();
     const cookieStore = cookies();
+    const token = cookieStore.get("access_token")?.value
     const userId = cookieStore.get("userId")?.value;
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
@@ -38,6 +39,10 @@ export async function POST(request: Request) {
       throw new Error(`Error during team insertion: ${errorTeam.message}`);
     }
 
+    const {
+      data: { user },
+    }: any = await supabase.auth.getUser(token)
+console.log(user,"user")
 
     const { data: dataUser, error: errorUser } = await supabase
       .from("users")
@@ -47,6 +52,7 @@ export async function POST(request: Request) {
           id_team: dataTeam[0]?.id_team,
           rol: "creator",
           isOnboarding: true,
+          correo: user.email
         },
       ]);
 
