@@ -23,7 +23,7 @@ export async function GET(request: Request) {
           grant_type: "authorization_code",
           client_id: clientId,
           client_secret: clientSecret,
-          redirect_uri: "http://localhost:3000/api/hubspot/oauth-callback",
+          redirect_uri: redirectUri,
           code: code,
         },
         headers: {
@@ -38,6 +38,31 @@ export async function GET(request: Request) {
     cookieStore.set("expires_in", expires_in);
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const idIntegrations = cookieStore.get("idIntegrations")?.value;
+    const teamId = cookieStore.get("team")?.value;
+
+    try {
+      const resulAccount = await axios.get(
+        "https://api.hubapi.com/account-info/v3/details",
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+
+      const { portalId } = resulAccount.data;
+
+      const { data, error } = await supabase
+        .from("teams")
+        .update({
+          hubspotAccount: portalId,
+        })
+        .eq("id_team", teamId)
+
+        console.log(data,"data", error,"error")
+    } catch (error) {
+      console.error("Error al realizar la solicitud:", error);
+    }
 
     const { data, error } = await supabase
       .from("integrations")

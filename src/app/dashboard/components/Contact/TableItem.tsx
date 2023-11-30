@@ -51,7 +51,7 @@ const MainTable = () => {
         setAllDeals(deals.dealsData);
         setLoandingData(false);
 
-        if (data[0].isSlack) {
+        if (data[0]?.isSlack) {
           setTimeout(() => {
             if (data == null) return;
 
