@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   const { data: dataIntegrations, error: integrations } = await supabase
   .from("integrations")
   .select("tokenHubspot,refresh_token")
-  .eq("id_team", dataTeam[0].id_team);
+  .eq("id_integrations", dataTeam[0].id_integrations);
 
   console.log(dataIntegrations,"integartimns", integrations, "erro")
 
