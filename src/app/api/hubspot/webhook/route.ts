@@ -20,9 +20,9 @@ export async function POST(request: Request) {
   //   })
   //   .eq("id_team", teamId);
   // }
-
+  console.log(requestBody, "bodu");
   console.log(portalId, "result");
-  console.log(dataTeam, "supabase")
+  console.log(dataTeam, "supabase");
 
   return Response.json({ hola: "hola" });
 }
