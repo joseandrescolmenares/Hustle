@@ -17,8 +17,8 @@ export async function POST(request: Request) {
 
   if (dataTeam == null) return;
   if (event?.subscriptionType == "deal.creation") {
-    const deals = await getIdDeals(event?.objectId);
-    console.log(deals, "dealsss");
+    // const deals = await getIdDeals(event?.objectId);
+    console.log(event.objectId, "dealsss");
   }
 
   // if (dataTeam ) {
