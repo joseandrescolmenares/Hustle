@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   .select("tokenHubspot,refresh_token")
   .eq("id_team", dataTeam[0].id_team);
 
-  console.log(dataIntegrations,"integartimns")
+  console.log(dataIntegrations,"integartimns", integrations, "erro")
 
   // if (event?.subscriptionType == "deal.creation") {
   //   const id = event.objectId;
