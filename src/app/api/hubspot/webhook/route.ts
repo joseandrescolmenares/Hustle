@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/ClientSupabase";
+import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
@@ -7,23 +8,29 @@ export async function POST(request: Request) {
   const teamId = cookiesStore.get("team")?.value;
   // associationType
 
-  const event  = requestBody[0]
+  const event = requestBody[0];
 
-    // const { data: dataTeam, error: errorTeam } = await supabase
-    //   .from("teams")
-    //   .select("hubspotAccount, id_team")
-    //   .eq("hubspotAccount", event.portalId);
+  const { data: dataTeam, error: errorTeam } = await supabase
+    .from("teams")
+    .select("hubspotAccount, id_team")
+    .eq("hubspotAccount", event?.portalId);
 
-    // if (dataTeam ) {
-    //   const { data: dataTeam, error: errorTeam } = await supabase
-    //   .from("")
-    //   .update({
-    //     hubspotAccount: portalId,
-    //   })
-    //   .eq("id_team", teamId);
-    // }
+  if (dataTeam == null) return;
+  if (event?.subscriptionType == "deal.creation") {
+    const deals = await getIdDeals(event?.objectId);
+    console.log(deals, "dealsss");
+  }
+
+  // if (dataTeam ) {
+  //   const { data: dataTeam, error: errorTeam } = await supabase
+  //   .from("")
+  //   .update({
+  //     hubspotAccount: portalId,
+  //   })
+  //   .eq("id_team", teamId);
+  // }
   console.log(event, "bodu");
-  console.log(requestBody , "result");
+  // console.log(requestBody, "result");
   // console.log(dataTeam, "supabase");
 
   return Response.json({ hola: "hola" });
