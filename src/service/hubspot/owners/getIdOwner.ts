@@ -2,7 +2,7 @@ import axios from "axios";
 import { cookies } from "next/headers";
 
 export const getIOwner = async (
-  idOwner: string,
+  idOwner?: string,
   dealsName?: string,
   dealsId?: string,
   num_associated_contacts?: string,
@@ -37,22 +37,22 @@ export const getIOwner = async (
         id_deals: dealsId,
         dealContacts: num_associated_contacts,
         amount: amount,
-        idOwner : idOwner,
+        idOwner: idOwner,
         closed_lost_reason: closed_lost_reason,
-        closed_won_reason:closed_won_reason,
+        closed_won_reason: closed_won_reason,
         closedate: closedate,
         createdate: createdate,
         dealstage: dealstage,
         description: description,
         hs_all_collaborator_owner_ids: hs_all_collaborator_owner_ids,
-        hs_deal_stage_probability:hs_deal_stage_probability,
-        hs_forecast_probability:hs_forecast_probability,
-        hs_is_closed_won:hs_is_closed_won,
-        hs_lastmodifieddate:hs_lastmodifieddate,
-        hs_next_step:hs_next_step,
+        hs_deal_stage_probability: hs_deal_stage_probability,
+        hs_forecast_probability: hs_forecast_probability,
+        hs_is_closed_won: hs_is_closed_won,
+        hs_lastmodifieddate: hs_lastmodifieddate,
+        hs_next_step: hs_next_step,
         hs_priority: hs_priority,
-        num_contacted_notes:num_contacted_notes,
-        id_team : idTeam
+        num_contacted_notes: num_contacted_notes,
+        id_team: idTeam,
       };
       return data;
     }
@@ -63,28 +63,27 @@ export const getIOwner = async (
 
     if (dealsName) {
       const newDataDeals = {
-        nameOnwer : `${dataDeals.firstName} ${dataDeals.lastName}`,
-        idOwner : idOwner,
+        nameOnwer: `${dataDeals.firstName} ${dataDeals.lastName}`,
+        idOwner: idOwner,
         dealname: dealsName,
         id_deals: dealsId,
         dealContacts: num_associated_contacts,
         amount: amount,
         closed_lost_reason: closed_lost_reason,
-        closed_won_reason:closed_won_reason,
+        closed_won_reason: closed_won_reason,
         closedate: closedate,
         createdate: createdate,
         dealstage: dealstage,
         description: description,
         hs_all_collaborator_owner_ids: hs_all_collaborator_owner_ids,
-        hs_deal_stage_probability:hs_deal_stage_probability,
-        hs_forecast_probability:hs_forecast_probability,
-        hs_is_closed_won:hs_is_closed_won,
-        hs_lastmodifieddate:hs_lastmodifieddate,
-        hs_next_step:hs_next_step,
+        hs_deal_stage_probability: hs_deal_stage_probability,
+        hs_forecast_probability: hs_forecast_probability,
+        hs_is_closed_won: hs_is_closed_won,
+        hs_lastmodifieddate: hs_lastmodifieddate,
+        hs_next_step: hs_next_step,
         hs_priority: hs_priority,
-        num_contacted_notes:num_contacted_notes,
-        id_team :idTeam
-
+        num_contacted_notes: num_contacted_notes,
+        id_team: idTeam,
       };
       return newDataDeals;
     }

@@ -20,10 +20,10 @@ export default async function Page({ params }: { params: { id: string } }) {
   // }
 
   const dataDeals = await getIdDeals(params.id);
-  console.log(dataDeals, "dataid");
-  if (!dataDeals) return;
-  const idOwner = dataDeals.properties.hubspot_owner_id;
+
+  const idOwner = dataDeals?.properties?.hubspot_owner_id;
   const dataOwner = await getIOwner(idOwner);
+
 
 
   
@@ -53,12 +53,12 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div>
             <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0">
               {score(dataDeals?.properties?.num_associated_contacts).flag}{" "}
-              {dataDeals.properties.dealname}
+              {dataDeals?.properties?.dealname ? dataDeals?.properties?.dealname : "no asignado" }
             </h2>
           </div>
           <div className="flex gap-4">
             <h2 className="p-4  bg-slate-200 text-black rounded-xl ">
-              ${dataDeals.properties.amount}
+              { dataDeals?.properties.amount ?`$ ${dataDeals?.properties.amount}` : "---"}
             </h2>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               propietario
             </h2>
             <p className="p-4  bg-slate-200 text-black rounded-xl ">
-              {dataOwner.firstName} {dataOwner.lastName}
+            {dataOwner.firstName ? ` ${dataOwner.firstName} ${dataOwner.lastName} ` : "no asignado"} 
             </p>
           </div>
           <div className=" mt-8 flex flex-col w-full justify-between items-center h-full ">
@@ -96,9 +96,9 @@ export default async function Page({ params }: { params: { id: string } }) {
               <p className="p-2  bg-slate-200 text-black rounded-xl ">Alta</p>
             </div>
             <div className="flex justify-between w-full gap-8">
-              <p>Ultima Interacción</p>
+              <p> Ultima Interacción</p>
               <p className="p-2  bg-slate-200 text-black rounded-xl l">
-                {dataDeals?.properties?.notes_last_contacted}
+                {dataDeals?.properties?.notes_last_contacted ? dataDeals?.properties?.notes_last_contacted : "---"}
               </p>
             </div>
             <div className="flex justify-between gap-8 w-full">

@@ -3,6 +3,7 @@ import { supabase } from "@/lib/ClientSupabase";
 import { Dialog } from "./components/Dialog";
 import { cookies } from "next/headers";
 import { TableItem } from "./components/Contact";
+import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
 
 type TeamData = {
   nameTeam: string;
@@ -23,6 +24,7 @@ const dashboard = async () => {
   if (integrations == null) return;
 
   const isHubspot: any = integrations[0]?.isHubspot;
+
 
   if (isHubspot) {
     return (
