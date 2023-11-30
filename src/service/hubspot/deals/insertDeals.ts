@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { supabase } from "@/lib/ClientSupabase";
 
 
-export const isertIdDeals = async (idDeals: string, token: string) => {
+export const insertIdDeals = async (idDeals: string, token: string) => {
 //   const cookiesStore = cookies();
 //   const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
   try {
