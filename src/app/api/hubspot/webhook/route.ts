@@ -24,16 +24,13 @@ export async function POST(request: Request) {
     )
     .eq("hubspotAccount", event?.portalId);
 
-  console.log(dataTeam, "team");
 
   if (dataTeam == null) return;
   const token = dataTeam[0]?.id_integrations[0].tokenHubspot;
   const refresh_token = dataTeam[0].id_integrations[0].refresh_token;
 
   console.log(token, "token")
-     const id = event.objectId;
-     const deals = await insertIdDeals(id, token);
-     console.log(deals,"dealssss")
+
   // if (event?.subscriptionType == "deal.creation") {
   //   const id = event.objectId;
 
