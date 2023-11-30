@@ -13,27 +13,20 @@ export async function POST(request: Request) {
 
   const { data: dataTeam, error: errorTeam } = await supabase
     .from("teams")
-    .select(
-      `
-   id_team,
-    id_integrations (
-      tokenHubspot,
-      refresh_token
-    )
-  `
-    )
+    .select("id_team,id_integrations")
     .eq("hubspotAccount", event?.portalId);
 
-
   if (dataTeam == null) return;
-  const token = dataTeam[0]?.id_integrations[0].tokenHubspot;
-  const refresh_token = dataTeam[0].id_integrations[0].refresh_token;
 
-  console.log(token, "token")
+  const { data: dataIntegrations, error: integrations } = await supabase
+  .from("integrations")
+  .select("tokenHubspot,refresh_token")
+  .eq("id_team", dataTeam[0].id_team);
+
+  console.log(dataIntegrations,"integartimns")
 
   // if (event?.subscriptionType == "deal.creation") {
   //   const id = event.objectId;
-
 
   //   const deals = await insertIdDeals(id, token);
   //   if (deals == "expired_token") {
@@ -70,6 +63,6 @@ export async function POST(request: Request) {
   //     }
   //   }
   // }
- 
+
   return Response.json({ hola: "hola" });
 }
