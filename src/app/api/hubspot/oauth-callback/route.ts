@@ -32,7 +32,6 @@ export async function GET(request: Request) {
       }
     );
     const { access_token, refresh_token, expires_in } = responseToken.data;
-    console.log(responseToken.data,"data")
     const cookieStore = cookies();
     cookieStore.set("refresh_token", refresh_token);
     cookieStore.set("accessTokenHubspot", access_token);
