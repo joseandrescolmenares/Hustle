@@ -3,14 +3,16 @@ import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   const requestBody = await request.json();
-  const { portalId } = requestBody;
   const cookiesStore = cookies();
   const teamId = cookiesStore.get("team")?.value;
+  // associationType
 
-  const { data: dataTeam, error: errorTeam } = await supabase
-    .from("teams")
-    .select("hubspotAccount")
-    .eq("hubspotAccount", portalId);
+  const event = requestBody.map((e: any) => e);
+
+  // const { data: dataTeam, error: errorTeam } = await supabase
+  //   .from("teams")
+  //   .select("hubspotAccount")
+  //   .eq("hubspotAccount", portalId);
 
   // if (dataTeam) {
   //   const { data: dataTeam, error: errorTeam } = await supabase
@@ -21,8 +23,8 @@ export async function POST(request: Request) {
   //   .eq("id_team", teamId);
   // }
   console.log(requestBody, "bodu");
-  console.log(portalId, "result");
-  console.log(dataTeam, "supabase");
+  console.log(event, "result");
+  // console.log(dataTeam, "supabase");
 
   return Response.json({ hola: "hola" });
 }
