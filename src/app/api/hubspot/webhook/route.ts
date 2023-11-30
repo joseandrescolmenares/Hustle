@@ -7,23 +7,23 @@ export async function POST(request: Request) {
   const teamId = cookiesStore.get("team")?.value;
   // associationType
 
-  const event = requestBody.map((e: any) => e);
+  const event  = requestBody[0]
 
-  // const { data: dataTeam, error: errorTeam } = await supabase
-  //   .from("teams")
-  //   .select("hubspotAccount")
-  //   .eq("hubspotAccount", portalId);
+    const { data: dataTeam, error: errorTeam } = await supabase
+      .from("teams")
+      .select("hubspotAccount, id_team")
+      .eq("hubspotAccount", event.portalId);
 
-  // if (dataTeam) {
-  //   const { data: dataTeam, error: errorTeam } = await supabase
-  //   .from("")
-  //   .update({
-  //     hubspotAccount: portalId,
-  //   })
-  //   .eq("id_team", teamId);
-  // }
-  console.log(requestBody, "bodu");
-  console.log(event, "result");
+    if (dataTeam) {
+      const { data: dataTeam, error: errorTeam } = await supabase
+      .from("")
+      .update({
+        hubspotAccount: portalId,
+      })
+      .eq("id_team", teamId);
+    }
+  console.log(dataTeam, "bodu");
+  console.log(event.portalId , "result");
   // console.log(dataTeam, "supabase");
 
   return Response.json({ hola: "hola" });
