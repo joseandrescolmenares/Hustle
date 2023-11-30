@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     //   })
     //   .eq("id_team", teamId);
     // }
-  console.log(dataTeam, "bodu");
+  console.log(event, "bodu");
   console.log(requestBody , "result");
   // console.log(dataTeam, "supabase");
 
