@@ -29,12 +29,16 @@ export async function POST(request: Request) {
   if (dataTeam == null) return;
   const token: any = dataTeam[0]?.id_integrations?.tokenHubspot;
   const refresh_token: any = dataTeam[0].id_integrations?.refresh_token;
-  if (event?.subscriptionType == "deal.creation") {
-    const id = event.objectId;
-    console.log(token ," token")
 
-    const deals = await insertIdDeals(id, token);
-    console.log(deals,"deals")
+  console.log(token, "token")
+     const id = event.objectId;
+     const deals = await insertIdDeals(id, token);
+     console.log(deals,"dealssss")
+  // if (event?.subscriptionType == "deal.creation") {
+  //   const id = event.objectId;
+
+
+  //   const deals = await insertIdDeals(id, token);
   //   if (deals == "expired_token") {
   //     const clientId = process.env.HUBSPOT_CLIENT_ID;
   //     const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
@@ -69,6 +73,6 @@ export async function POST(request: Request) {
   //     }
   //   }
   // }
-  console.log("dealsss");
+ 
   return Response.json({ hola: "hola" });
 }
