@@ -27,8 +27,8 @@ export async function POST(request: Request) {
   console.log(dataTeam, "team");
 
   if (dataTeam == null) return;
-  const token: any = dataTeam[0]?.id_integrations?.tokenHubspot;
-  const refresh_token: any = dataTeam[0].id_integrations?.refresh_token;
+  const token = dataTeam[0]?.id_integrations[0].tokenHubspot;
+  const refresh_token = dataTeam[0].id_integrations[0].refresh_token;
 
   console.log(token, "token")
      const id = event.objectId;
