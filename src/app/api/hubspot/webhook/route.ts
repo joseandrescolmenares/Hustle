@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/ClientSupabase";
 import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 import { cookies } from "next/headers";
+import axios from "axios";
 
 export async function POST(request: Request) {
   const requestBody = await request.json();
@@ -12,26 +13,66 @@ export async function POST(request: Request) {
 
   const { data: dataTeam, error: errorTeam } = await supabase
     .from("teams")
-    .select("hubspotAccount, id_team")
+    .select(`
+   id_team,
+    id_integrations (
+      tokenHubspot,
+      refresh_token
+    )
+  `)
     .eq("hubspotAccount", event?.portalId);
+
+    console.log(dataTeam,"team")
 
   if (dataTeam == null) return;
   if (event?.subscriptionType == "deal.creation") {
-    // const deals = await getIdDeals(event?.objectId);
-    console.log(event.objectId, "dealsss");
+    const id = event.objectId
+    // const deals = await getIdDeals(id,token);
+  // if(deals == "expired_token"){
+
+  //   const clientId = process.env.HUBSPOT_CLIENT_ID;
+  //   const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
+  //   const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
+  
+  
+  //   try {
+  //     const response = await axios.post(
+  //       "https://api.hubapi.com/oauth/v1/token",
+  //       null,
+  //       {
+  //         params: {
+  //           grant_type: "refresh_token",
+  //           client_id: clientId,
+  //           client_secret: clientSecret,
+  //           redirect_uri: redirectUri,
+  //           refresh_token: refresh_token,
+  //         },
+  //       }
+  //     );
+  
+  //     if (response.data.access_token) {
+
+  //              const { data: dataTeam, error: errorTeam } = await supabase
+  //   .from("integrations")
+  //   .update([{
+  //     tokenHubspot : response.data.access_token},
+  //    { refresh_token : response.data.refresh_token}
+  //    ] )
+  //   .eq("id_team", teamId);
+  //     }
+    
+  //   } catch (error) {
+  //     console.error("Error al renovar el token de acceso:", error);
+  //   }
+ 
+  // }
+  }
+    console.log( "dealsss");
+    return Response.json({ hola: "hola" });
   }
 
-  // if (dataTeam ) {
-  //   const { data: dataTeam, error: errorTeam } = await supabase
-  //   .from("")
-  //   .update({
-  //     hubspotAccount: portalId,
-  //   })
-  //   .eq("id_team", teamId);
-  // }
-  console.log(event, "bodu");
-  // console.log(requestBody, "result");
-  // console.log(dataTeam, "supabase");
 
-  return Response.json({ hola: "hola" });
-}
+
+
+
+
