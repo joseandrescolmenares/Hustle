@@ -14,14 +14,14 @@ export async function POST(request: Request) {
       .select("hubspotAccount, id_team")
       .eq("hubspotAccount", event.portalId);
 
-    if (dataTeam) {
-      const { data: dataTeam, error: errorTeam } = await supabase
-      .from("")
-      .update({
-        hubspotAccount: portalId,
-      })
-      .eq("id_team", teamId);
-    }
+    // if (dataTeam) {
+    //   const { data: dataTeam, error: errorTeam } = await supabase
+    //   .from("")
+    //   .update({
+    //     hubspotAccount: portalId,
+    //   })
+    //   .eq("id_team", teamId);
+    // }
   console.log(dataTeam, "bodu");
   console.log(event.portalId , "result");
   // console.log(dataTeam, "supabase");
