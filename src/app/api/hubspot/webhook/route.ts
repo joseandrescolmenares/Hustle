@@ -9,10 +9,10 @@ export async function POST(request: Request) {
 
   const event  = requestBody[0]
 
-    const { data: dataTeam, error: errorTeam } = await supabase
-      .from("teams")
-      .select("hubspotAccount, id_team")
-      .eq("hubspotAccount", event.portalId);
+    // const { data: dataTeam, error: errorTeam } = await supabase
+    //   .from("teams")
+    //   .select("hubspotAccount, id_team")
+    //   .eq("hubspotAccount", event.portalId);
 
     // if (dataTeam ) {
     //   const { data: dataTeam, error: errorTeam } = await supabase
