@@ -9,8 +9,8 @@ export async function POST(request: Request) {
     Queremos informarte sobre el estado actual de tus negocios. Hemos identificado que:
     
     - ${redFlags} negocios se encuentran en riesgo.
-    - ${greenFlags} negocios están en una situación moderada.
-    - Hemos identificado ${neutralFlags} oportunidad para mejorar y crecer las ventas.
+    - ${neutralFlags} negocios están en una situación moderada.
+    - Hemos identificado ${greenFlags} oportunidad para mejorar y crecer las ventas.
     
     Estamos trabajando activamente en estrategias para mitigar los riesgos y maximizar las oportunidades. Nuestro equipo está comprometido en brindarte el mejor apoyo posible.
     
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       "Content-type": "application/json",
     },
   });
-  
+
   console.log(resultSlack,"slack")
 
   console.log(webUrl,redFlags,neutralFlags,greenFlags,'backent slack')
