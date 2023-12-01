@@ -24,6 +24,12 @@ const MainTable = () => {
   const [agreementStatus, setAgreementStatus] = useState<boolean>(true);
   const [loandingData, setLoandingData] = useState(true);
   const [notes, setNotes] = React.useState<string[]>([]);
+  const [slackData, setSlackData] = useState("")
+  // const [countScore, setCountScore] = useState({
+  //   redFlags: 0,
+  //   greenFlags: 0,
+  //   neutralFlags: 0,
+  // });
 
   const idIntegrations = Cookies.get("idIntegrations");
   const idTeam = Cookies.get("team");
@@ -53,21 +59,7 @@ const MainTable = () => {
         setLoandingData(false);
 
         if (data[0]?.isSlack) {
-          setTimeout(() => {
-            if (data == null) return;
-
-            const dataSentAlert = {
-              webUrl: data[0].webhookUrlSlack,
-            };
-            const sentAlert = async () => {
-              const alertUrl = await axios.post(
-                "api/slack/sentAlert",
-                dataSentAlert
-              );
-              const dataAlert = alertUrl.data;
-            };
-            sentAlert();
-          }, 9000);
+          setSlackData(data[0]?.webhookUrlSlack)
         }
       } else {
         let { data: dataDeals, error } = await supabase
@@ -82,22 +74,73 @@ const MainTable = () => {
     getDeals();
   }, []);
 
-  // useEffect(() => {
-  //   const sentAlertSlack = async () => {
-  //     const { data: dataIntegrations, error: errorIntegrations } =
-  //       await supabase
-  //         .from("integrations")
-  //         .select("isSlack")
-  //         .eq("id_integrations", idIntegrations);
-  //     if (dataIntegrations == null) return;
+  useEffect(() => {
+    // const sentAlertSlack = async () => {
+    //   const { data: dataIntegrations, error: errorIntegrations } =
+    //     await supabase
+    //       .from("integrations")
+    //       .select("isSlack")
+    //       .eq("id_integrations", idIntegrations);
+    //   if (dataIntegrations == null) return;
 
-  //     // if (dataIntegrations[0].isSlack) {
+    //   // if (dataIntegrations[0].isSlack) {
 
-  //     // }
-  //   };
-  //   sentAlertSlack();
+    //   // }
+    // };
+    // sentAlertSlack();
 
-  // }, []);
+    // Reemplaza esto con tus datos reales
+
+    // Contadores para cada tipo de bandera
+    let redFlags = 0;
+    let greenFlags = 0;
+    let neutralFlags = 0;
+
+    if(allDeals){ 
+
+    allDeals.forEach((deal) => {
+      const result = score({
+        numberOfContacts: deal?.dealContacts,
+        numberOfSalesActivities: deal?.num_contacted_notes,
+      });
+
+      // Incrementa el contador correspondiente según la bandera
+      if (result.flag === "🔴") {
+        redFlags++;
+      } else if (result.flag === "🟢") {
+        greenFlags++;
+      } else if (result.flag === "🟠") {
+        neutralFlags++;
+      }
+    });
+  }
+
+  setTimeout(() => {
+    if(slackData && allDeals?.length){ 
+   
+    const dataSentAlert = {
+      webUrl: slackData,
+      redFlags,
+      greenFlags,
+      neutralFlags,
+    };
+    const sentAlert = async () => {
+      const alertUrl = await axios.post(
+        "api/slack/sentAlert",
+        dataSentAlert
+      );
+      const dataAlert = alertUrl.data;
+      console.log(dataAlert,'slack')
+    };
+    sentAlert();
+  }
+    
+  }, 14000);
+
+    // console.log("Red Flags:", redFlags);
+    // console.log("Green Flags:", greenFlags);
+    // console.log("Neutral Flags:", neutralFlags);
+  }, [allDeals,slackData]);
 
   if (!allDeals) return;
   if (loandingData)
@@ -130,8 +173,8 @@ const MainTable = () => {
           {allDeals?.map((deal) => {
             // Asegúrate de pasar los valores correctos a la función score
             const evaluation = score({
-              numberOfContacts: deal.dealContacts,
-              numberOfSalesActivities: deal.numberOfSalesActivities,
+              numberOfContacts: deal?.dealContacts,
+              numberOfSalesActivities: deal?.num_contacted_notes,
             });
 
             return (

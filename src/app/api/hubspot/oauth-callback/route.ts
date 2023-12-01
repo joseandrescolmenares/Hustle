@@ -23,7 +23,7 @@ export async function GET(request: Request) {
           grant_type: "authorization_code",
           client_id: clientId,
           client_secret: clientSecret,
-          redirect_uri: "http://localhost:3000/api/hubspot/oauth-callback",
+          redirect_uri: redirectUri,
           code: code,
         },
         headers: {

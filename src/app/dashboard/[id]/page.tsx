@@ -45,7 +45,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
    const dealScore = score({
     numberOfContacts: dataDeals?.properties?.num_associated_contacts,
-    numberOfSalesActivities: dataDeals.properties.num_contacted_notes
+    numberOfSalesActivities: dataDeals?.properties?.num_contacted_notes
 });
 
 

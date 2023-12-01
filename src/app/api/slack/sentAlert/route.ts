@@ -1,16 +1,16 @@
 import axios from "axios";
 
 export async function POST(request: Request) {
-  const { webUrl } = await request.json();
+  const { webUrl, redFlags, greenFlags, neutralFlags } = await request.json();
 
   const dataMessage = {
     text: ` 
 
     Queremos informarte sobre el estado actual de tus negocios. Hemos identificado que:
     
-    - 5 negocios se encuentran en riesgo.
-    - 3 negocios están en una situación moderada.
-    - Hemos identificado 2 oportunidad para mejorar y crecer las ventas.
+    - ${redFlags} negocios se encuentran en riesgo.
+    - ${greenFlags} negocios están en una situación moderada.
+    - Hemos identificado ${neutralFlags} oportunidad para mejorar y crecer las ventas.
     
     Estamos trabajando activamente en estrategias para mitigar los riesgos y maximizar las oportunidades. Nuestro equipo está comprometido en brindarte el mejor apoyo posible.
     
@@ -23,7 +23,10 @@ export async function POST(request: Request) {
       "Content-type": "application/json",
     },
   });
+  
+  console.log(resultSlack,"slack")
 
+  console.log(webUrl,redFlags,neutralFlags,greenFlags,'backent slack')
 
   return Response.json({ ok: "ok" });
 }

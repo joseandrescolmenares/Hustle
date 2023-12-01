@@ -7,9 +7,10 @@ export interface DealProperties {
 }
 
 export const score = (dealsProperties: DealProperties) => {
+    // console.log(dealsProperties,"propertie")
     const factors = {
         contact: dealsProperties.numberOfContacts,
-        salesActivities: dealsProperties.numberOfSalesActivities,
+        salesActivities: dealsProperties.numberOfSalesActivities ,
         activityContactRatio: dealsProperties.numberOfSalesActivities / Math.max(dealsProperties.numberOfContacts, 1)
     };
 
