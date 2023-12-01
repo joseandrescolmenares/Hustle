@@ -51,16 +51,15 @@ const MainTable = () => {
         .eq("id_integrations", idIntegrations);
 
       if (data == null) return;
+      if (data[0]?.isSlack) {
+        setSlackData(data[0]?.webhookUrlSlack)
+      }
       if (!data[0]?.dealsAlll) {
         const resultDeals = await axios.get(`/api/hubspot/getAllDeals`);
         const deals = resultDeals.data;
-
         setAllDeals(deals.dealsData);
         setLoandingData(false);
 
-        if (data[0]?.isSlack) {
-          setSlackData(data[0]?.webhookUrlSlack)
-        }
       } else {
         let { data: dataDeals, error } = await supabase
           .from("deals")
