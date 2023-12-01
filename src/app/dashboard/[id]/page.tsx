@@ -43,16 +43,25 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   // const allNotesData = await getNotesData();
 
+   const dealScore = score({
+    numberOfContacts: dataDeals?.properties?.num_associated_contacts,
+    numberOfSalesActivities: dataDeals.properties.num_contacted_notes
+});
+
+
+
   return (
+    
     <div className="w-full flex  h-full ">
       <div className=" ml-6 w-3/5 flex flex-col gap-10 mt-14">
         <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-3xl">
           Detalle del caso
         </h1>
         <div className="w-full shadow-md border-slate-200 p-4 rounded-md  flex flex-col gap-4">
-          <div>
-            <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0">
-              {score(dataDeals?.properties?.num_associated_contacts).flag}{" "}
+          <div className="flex gap-1">
+            <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0"> {dealScore?.flag} </h2>
+            <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0 ">
+             
               {dataDeals?.properties?.dealname ? dataDeals?.properties?.dealname : "no asignado" }
             </h2>
           </div>
@@ -66,10 +75,12 @@ export default async function Page({ params }: { params: { id: string } }) {
           <h2 className="scroll-m-20  pb-2 text-2xl font-semibold tracking-tight first:mt-0">
             Razones
           </h2>
-          <div className="flex gap-4">
-            <p className="p-4 bg-customPurple text-white rounded-xl ">
-              {score(dataDeals?.properties?.num_associated_contacts).reason}
-            </p>
+          <div className="flex gap-4 flex-col ">
+            <div className="flex gap-3">
+             {dealScore.shortReason.map((el, i) => <p className="p-2 bg-customPurple text-white rounded-xl flex justify-center " key={i}>{el}</p>)}
+            
+            </div>
+            <p className="p-4 bg-customPurple text-white rounded-xl ">{dealScore.detailedReason}</p>
           </div>
         </div>
         <AddnNotes idOwner={idOwner} idDeals={params.id} />

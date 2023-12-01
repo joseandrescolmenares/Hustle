@@ -1,76 +1,82 @@
 
 
-export const score = (dealsProperties: any) => {
+
+export interface DealProperties {
+    numberOfContacts: number;
+    numberOfSalesActivities: number;
+}
+
+export const score = (dealsProperties: DealProperties) => {
     const factors = {
-        contact: dealsProperties
-       
-        // interactions:
+        contact: dealsProperties.numberOfContacts,
+        salesActivities: dealsProperties.numberOfSalesActivities,
+        activityContactRatio: dealsProperties.numberOfSalesActivities / Math.max(dealsProperties.numberOfContacts, 1)
     };
 
-    const rules = [
-        {
-            condition: (factors: any) => factors.contact <= 2 ,
-            flag: "🔴",
-            reason: "Contacto bajo "
-        },
-        {
-            condition: (factors: any) => factors.contact >= 3 && factors.contact <= 5,
-            flag: "🟠",
-            reason: "Contacto moderado y pocas interacciones."
-        },
-        {
-            condition: (factors: any) => factors.contact > 5,
-            flag: "🟢",
-            reason: "Contacto alto y pocas interacciones."
-        },
-        {
-            condition: (factors: any) => factors.contact <= 2 && factors.interactions >= 10,
-            flag: "🟠",
-            reason: "Contacto bajo y interacciones moderadas."
-        },
-        {
-            condition: (factors: any) => factors.contact >= 3 && factors.contact <= 5,
-            flag: "🔴",
-            reason: "Contacto moderado y interacciones moderadas."
-        },
-        {
-            condition: (factors: any) => factors.contact > 5 ,
-            flag: "🟢",
-            reason: "Contacto alto y interacciones moderadas."
-        },
-        {
-            condition: (factors: any) => factors.contact <= 2,
-            flag: "🟢",
-            reason: "Contacto bajo y muchas interacciones."
-        },
-        {
-            condition: (factors: any) => factors.contact >= 3 && factors.contact <= 5,
-            flag: "🟢",
-            reason: "Contacto moderado y muchas interacciones."
-        },
-        {
-            condition: (factors: any) => factors.contact > 5,
-            flag: "🟢",
-            reason: "Contacto alto y muchas interacciones."
-        }
-    ];
+    let score = 0;
+    let shortReasons = [];
+    let detailedReasons = [];
 
-    let result = {
-        flag: "🟠",
-        reason: "No se pudo determinar el estado."
-    };
+    // Ajustes en la puntuación y razones para los contactos
+    if (factors.contact > 7) {
+        score += 6; // Peso alto pero equilibrado
+        shortReasons.push("Red de contactos excepcional");
+        detailedReasons.push("Una red de contactos extensa es un indicativo clave de potencial de mercado y oportunidades de negocio.");
+    } else if (factors.contact > 4) {
+        score += 4;
+        shortReasons.push("Contactos sólidos");
+        detailedReasons.push("Una red de contactos sólida es crucial para mantener la continuidad del negocio y explorar nuevas oportunidades.");
+    } else if (factors.contact > 2) {
+        score += 1;
+        shortReasons.push("Contactos adecuados");
+        detailedReasons.push("Una cantidad moderada de contactos sugiere una necesidad de mayor enfoque en el desarrollo de la red.");
+    } else {
+        score -= 2;
+        shortReasons.push("Insuficientes contactos");
+        detailedReasons.push("Un número bajo de contactos podría ser una señal para reevaluar estrategias de networking y engagement.");
+    }
 
-    for (const rule of rules) {
-        if (rule.condition(factors)) {
-            result = {
-                flag: rule.flag,
-                reason: rule.reason
-            };
-            break;
+    // Ajustes en la puntuación y razones para las actividades de ventas
+    if (factors.salesActivities > 50) {
+        score += 3;
+        shortReasons.push("Actividad de ventas alta");
+        detailedReasons.push("Una actividad de ventas muy alta refleja un compromiso intenso con el seguimiento y la conversión de clientes.");
+    } else if (factors.salesActivities > 20) {
+        score += 2;
+        shortReasons.push("Buena actividad de ventas");
+        detailedReasons.push("Un nivel saludable de actividad de ventas indica un proceso de ventas activo y una buena gestión de relaciones.");
+    } else if (factors.salesActivities <= 5) {
+        score -= 1;
+        shortReasons.push("Baja actividad de ventas");
+        detailedReasons.push("Una actividad de ventas baja puede señalar áreas de mejora en la estrategia de ventas y el compromiso con los clientes.");
+    }
+    // Interpretación final de la puntuación
+    let flag = score > 4 ? "🟢" : score > 1 ? "🟠" : "🔴";
+    let combinedShortReason = shortReasons
+    let combinedDetailedReason = detailedReasons.join(" ");
+
+    return { flag, shortReason: combinedShortReason, detailedReason: combinedDetailedReason };
+};
+
+export const evaluateAllScenarios = () => {
+    const scenarios = [];
+
+    for (let contacts = 0; contacts <= 10; contacts++) {
+        for (let activities = 0; activities <= 100; activities++) {
+            const result = score({ numberOfContacts: contacts, numberOfSalesActivities: activities });
+            scenarios.push({
+                numberOfContacts: contacts,
+                numberOfSalesActivities: activities,
+                flag: result.flag,
+                shortReason: result.shortReason,
+                detailedReason: result.detailedReason
+            });
         }
     }
 
-    return result;
+    return scenarios;
 };
+
+
 
 

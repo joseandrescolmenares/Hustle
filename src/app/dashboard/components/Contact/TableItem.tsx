@@ -35,10 +35,10 @@ const MainTable = () => {
       localStorage.setItem("integrationCompleted", "true");
     }
   }, []);
+
   useEffect(() => {
     const getDeals = async () => {
       // try {
-      setLoandingData(true);
       let { data, error } = await supabase
         .from("integrations")
         .select("dealsAlll,isSlack,webhookUrlSlack")
@@ -48,6 +48,7 @@ const MainTable = () => {
       if (!data[0]?.dealsAlll) {
         const resultDeals = await axios.get(`/api/hubspot/getAllDeals`);
         const deals = resultDeals.data;
+
         setAllDeals(deals.dealsData);
         setLoandingData(false);
 
@@ -59,7 +60,10 @@ const MainTable = () => {
               webUrl: data[0].webhookUrlSlack,
             };
             const sentAlert = async () => {
-              const alertUrl = await axios.post("api/slack/sentAlert",dataSentAlert);
+              const alertUrl = await axios.post(
+                "api/slack/sentAlert",
+                dataSentAlert
+              );
               const dataAlert = alertUrl.data;
             };
             sentAlert();
@@ -72,10 +76,9 @@ const MainTable = () => {
           .eq("id_team", idTeam);
         setAllDeals(dataDeals);
         setLoandingData(false);
-      
       }
     };
-    
+
     getDeals();
   }, []);
 
@@ -124,44 +127,58 @@ const MainTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {allDeals
-            ? allDeals?.map((deals: any) => (
-                <TableRow key={deals.id}>
-                  <TableCell className="font-medium">
-                    {score(deals.dealContacts).flag}
-                  </TableCell>
-                  <TableCell>
-                    <p className="scroll-m-20 text-xl font-semibold tracking-tight">
-                      {deals?.dealname}{" "}
-                    </p>
-                  </TableCell>
-                  <TableCell className="lex justify-center items-center">
-                    <div className="flex gap-4 justify-center ">
-                      <p className="p-2 bg-customPurple text-white rounded-xl ">
-                        {" "}
-                        {score(deals.dealContacts)?.reason}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell>{deals.nameOnwer}</TableCell>
-                  <TableCell>
-                    <p className={`p-2 ${notes.length ?  " bg-orange-300" : " bg-red-500 opacity-50" } text-white rounded-xl  w-max`}>
-                      {"Dectectado"}
-                    </p>
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      className=" cursor-pointer"
-                      href={`/dashboard/${deals?.id_deals}`}
-                    >
-                      <div className=" ml-3">
-                        <CiLogin size={24} />
+          {allDeals?.map((deal) => {
+            // Asegúrate de pasar los valores correctos a la función score
+            const evaluation = score({
+              numberOfContacts: deal.dealContacts,
+              numberOfSalesActivities: deal.numberOfSalesActivities,
+            });
+
+            return (
+              <TableRow key={deal.id}>
+                <TableCell className="font-medium">
+                  {evaluation.flag} {/* Muestra la bandera como un emoji */}
+                </TableCell>
+                <TableCell>
+                  <p className="scroll-m-20 text-xl font-semibold tracking-tight">
+                    {deal?.dealname}{" "}
+                  </p>
+                </TableCell>
+                <TableCell className="flex justify-center items-center">
+                  <div className="flex gap-4 justify-center">
+                    {/* Aquí puedes mostrar las razones cortas o detalladas */}
+                    {evaluation.shortReason.map((el, i): any => (
+                      <div className="flex" key={i}>
+                        <p className="p-2 bg-customPurple text-white rounded-xl ">
+                          {el}
+                        </p>
                       </div>
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))
-            : null}
+                    ))}
+                  </div>
+                </TableCell>
+                <TableCell>{deal.nameOnwer}</TableCell>
+                <TableCell>
+                  <p
+                    className={`p-2 ${
+                      notes.length ? "bg-orange-300" : "bg-red-500 opacity-50"
+                    } text-white rounded-xl w-max`}
+                  >
+                    {"Detectado"}
+                  </p>
+                </TableCell>
+                <TableCell>
+                  <Link
+                    className="cursor-pointer"
+                    href={`/dashboard/${deal?.id_deals}`}
+                  >
+                    <div className="ml-3">
+                      <CiLogin size={24} />
+                    </div>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       {/* <Pagination
