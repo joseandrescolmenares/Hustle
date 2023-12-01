@@ -135,7 +135,7 @@ const MainTable = () => {
     sentAlert();
   }
     
-  }, 14000);
+  }, 12000);
 
     // console.log("Red Flags:", redFlags);
     // console.log("Green Flags:", greenFlags);
