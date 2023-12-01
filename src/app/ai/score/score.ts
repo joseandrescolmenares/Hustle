@@ -19,16 +19,16 @@ export const score = (dealsProperties: DealProperties) => {
     let detailedReasons = [];
 
     // Ajustes en la puntuación y razones para los contactos
-    if (factors.contact > 7) {
-        score += 6; // Peso alto pero equilibrado
+    if (factors.contact > 5) {
+        score += 7; // Peso alto pero equilibrado
         shortReasons.push("Red de contactos excepcional");
         detailedReasons.push("Una red de contactos extensa es un indicativo clave de potencial de mercado y oportunidades de negocio.");
-    } else if (factors.contact > 4) {
+    } else if (factors.contact > 3) {
         score += 4;
         shortReasons.push("Contactos sólidos");
         detailedReasons.push("Una red de contactos sólida es crucial para mantener la continuidad del negocio y explorar nuevas oportunidades.");
     } else if (factors.contact > 2) {
-        score += 1;
+        score += 3;
         shortReasons.push("Contactos adecuados");
         detailedReasons.push("Una cantidad moderada de contactos sugiere una necesidad de mayor enfoque en el desarrollo de la red.");
     } else {
@@ -38,21 +38,21 @@ export const score = (dealsProperties: DealProperties) => {
     }
 
     // Ajustes en la puntuación y razones para las actividades de ventas
-    if (factors.salesActivities > 50) {
-        score += 3;
+    if (factors.salesActivities > 15) {
+        score += 6;
         shortReasons.push("Actividad de ventas alta");
         detailedReasons.push("Una actividad de ventas muy alta refleja un compromiso intenso con el seguimiento y la conversión de clientes.");
-    } else if (factors.salesActivities > 20) {
+    } else if (factors.salesActivities > 7) {
         score += 2;
         shortReasons.push("Buena actividad de ventas");
         detailedReasons.push("Un nivel saludable de actividad de ventas indica un proceso de ventas activo y una buena gestión de relaciones.");
-    } else if (factors.salesActivities <= 5) {
+    } else if (factors.salesActivities < 5) {
         score -= 1;
         shortReasons.push("Baja actividad de ventas");
         detailedReasons.push("Una actividad de ventas baja puede señalar áreas de mejora en la estrategia de ventas y el compromiso con los clientes.");
     }
     // Interpretación final de la puntuación
-    let flag = score > 4 ? "🟢" : score > 1 ? "🟠" : "🔴";
+    let flag = score > 5 ? "🟢" : score > 3 ? "🟠" : "🔴";
     let combinedShortReason = shortReasons
     let combinedDetailedReason = detailedReasons.join(" ");
 
