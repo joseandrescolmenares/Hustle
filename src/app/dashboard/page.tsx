@@ -39,5 +39,6 @@ const dashboard = async () => {
       <Dialog />
     </div>
   );
+  
 };
 export default dashboard;
