@@ -22,7 +22,8 @@ export const insertDealowner = async (
   hs_priority?: string,
   num_contacted_notes?: string,
   token?: string,
-  idTeam?:string
+  idTeam?:string,
+  resultScore?: any
 ) => {
 
   try {
@@ -53,6 +54,10 @@ export const insertDealowner = async (
         hs_priority: hs_priority,
         num_contacted_notes: num_contacted_notes,
         id_team: idTeam,
+        score: resultScore?.score,
+        scoreFlag: resultScore?.flag,
+        scoreReason: resultScore?.shortReason.join(", "),
+        scoreDetails: resultScore?.detailedReason,
       };
       return data;
     }
@@ -84,6 +89,10 @@ export const insertDealowner = async (
         hs_priority: hs_priority,
         num_contacted_notes: num_contacted_notes,
         id_team: idTeam,
+        score: resultScore?.score,
+        scoreFlag: resultScore?.flag,
+        scoreReason: resultScore?.shortReason.join(", "),
+        scoreDetails: resultScore?.detailedReason,
       };
       return newDataDeals;
     }

@@ -6,6 +6,7 @@ import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
 import axios from "axios";
 import { insertIdDeals } from "@/service/hubspot/deals/insertDeals";
 import { insertDealowner } from "@/service/hubspot/owners/insertDealOwner";
+import { score } from "@/app/ai/score/score";
 
 let isExecuting = false; // Variable de estado compartida
 let lock = false;
@@ -45,6 +46,11 @@ async function fetchAllDeals(token: any, idTeam: any): Promise<any[]> {
       const results = resultDeals?.results;
 
       for (const deal of results) {
+        const resultScore: any = score({
+          numberOfContacts: deal.properties.num_associated_contacts,
+          numberOfSalesActivities: deal.properties.num_contacted_notes,
+        });
+        console.log(deal, "deals")
         const ownerInfo = await insertDealowner(
           deal.properties.hubspot_owner_id || "",
           deal.properties.dealname,
@@ -66,7 +72,8 @@ async function fetchAllDeals(token: any, idTeam: any): Promise<any[]> {
           deal.properties.hs_priority,
           deal.properties.num_contacted_notes,
           token,
-          idTeam
+          idTeam,
+          resultScore
         );
         allData.push(ownerInfo);
       }
