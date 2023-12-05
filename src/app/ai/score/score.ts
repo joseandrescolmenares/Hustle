@@ -10,7 +10,7 @@ export const score = (dealsProperties: DealProperties) => {
     // console.log(dealsProperties,"propertie")
     const factors = {
         contact: dealsProperties.numberOfContacts,
-        salesActivities: dealsProperties.numberOfSalesActivities ,
+        salesActivities: dealsProperties.numberOfSalesActivities,
         activityContactRatio: dealsProperties.numberOfSalesActivities / Math.max(dealsProperties.numberOfContacts, 1)
     };
 
@@ -56,10 +56,11 @@ export const score = (dealsProperties: DealProperties) => {
     let combinedShortReason = shortReasons
     let combinedDetailedReason = detailedReasons.join(" ");
 
-    return { flag, shortReason: combinedShortReason, detailedReason: combinedDetailedReason };
+    return { flag, shortReason: combinedShortReason, detailedReason: combinedDetailedReason,score };
 };
 
 export const evaluateAllScenarios = () => {
+
     const scenarios = [];
 
     for (let contacts = 0; contacts <= 10; contacts++) {

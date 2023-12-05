@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+  const { searchParams, host } = new URL(request.url);
   const code = searchParams.get("code");
   const clientId = process.env.HUBSPOT_CLIENT_ID;
   const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
@@ -13,7 +13,6 @@ export async function GET(request: Request) {
   if (!code || !clientId || !clientSecret || !redirectUri) {
     return Response.json({ error: "Faltan variables de configuración." });
   }
-  // "http://localhost:3000/api/hubspot/oauth-callback
   try {
     const responseToken: any = await axios.post(
       "https://api.hubapi.com/oauth/v1/token",
@@ -23,7 +22,9 @@ export async function GET(request: Request) {
           grant_type: "authorization_code",
           client_id: clientId,
           client_secret: clientSecret,
-          redirect_uri: redirectUri,
+          redirect_uri: host.includes("localhost:3000")
+            ? "http://localhost:3000/api/hubspot/oauth-callback"
+            : redirectUri,
           code: code,
         },
         headers: {
@@ -57,9 +58,9 @@ export async function GET(request: Request) {
         .update({
           hubspotAccount: portalId,
         })
-        .eq("id_team", teamId)
+        .eq("id_team", teamId);
 
-        console.log(data,"data", error,"error")
+      console.log(data, "data", error, "error");
     } catch (error) {
       console.error("Error al realizar la solicitud:", error);
     }

@@ -26,7 +26,7 @@ import { date } from "zod";
 
 export default function SheetSide() {
   const [users, setUsers] = React.useState<any | []>([]);
-  const [inviteCode, setInviteCode] = React.useState<string>("")
+  const [inviteCode, setInviteCode] = React.useState<string>("");
 
   const team = Cookies.get("team");
   const getUser = async () => {
@@ -42,9 +42,8 @@ export default function SheetSide() {
       .from("teams")
       .select("inviteCode")
       .eq("id_team", team);
-      if(dataTeam == null) return
-      setInviteCode(dataTeam[0].inviteCode)
-  
+    if (dataTeam == null) return;
+    setInviteCode(dataTeam[0].inviteCode);
   };
 
   useEffect(() => {
@@ -73,7 +72,7 @@ export default function SheetSide() {
               </Label>
               <p className="text-sm font-medium leading-none">
                 {/* josecolmenaes02@gmail.com */}
-                 Creator User
+                Creator User
               </p>
               {/* <Input id="name" value="Pedro Duarte" className="col-span-3" /> */}
             </div>
@@ -92,7 +91,7 @@ export default function SheetSide() {
                     </Avatar>
                     <div className="ml-4 space-y-1">
                       <p className="text-sm font-medium leading-none">
-                      guest user
+                        guest user
                       </p>
                       <p className="text-sm text-muted-foreground">
                         USER@email.com
@@ -107,9 +106,8 @@ export default function SheetSide() {
               <Button type="submit">Save changes</Button>
             </SheetClose> */}
           <div className=" mt-9">
-            <Label>invitation code</Label>
+            {/* <Label>invitation code</Label> */}
             <ClipBoard code={inviteCode} />
-            
           </div>
         </SheetContent>
       </Sheet>

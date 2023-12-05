@@ -1,5 +1,13 @@
 import axios from "axios";
+import { Flag, Type } from "lucide-react";
 import { cookies } from "next/headers";
+
+type ResultScore = {
+  flag: string;
+  shortReason: string[];
+  detailedReason: string;
+  score: number;
+}
 
 export const getIOwner = async (
   idOwner?: string,
@@ -20,7 +28,9 @@ export const getIOwner = async (
   hs_lastmodifieddate?: string,
   hs_next_step?: string,
   hs_priority?: string,
-  num_contacted_notes?: string
+  num_contacted_notes?: string,
+  notes_last_contacted?: string,
+  resultScore?: any,
 ) => {
   const cookiesStore = cookies();
   const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
@@ -53,6 +63,12 @@ export const getIOwner = async (
         hs_priority: hs_priority,
         num_contacted_notes: num_contacted_notes,
         id_team: idTeam,
+        score: resultScore?.score,
+        scoreFlag: resultScore?.flag,
+        scoreReason: resultScore?.shortReason.join(", "),
+        scoreDetails: resultScore?.detailedReason,
+        last_activity: notes_last_contacted,
+
       };
       return data;
     }
@@ -84,6 +100,11 @@ export const getIOwner = async (
         hs_priority: hs_priority,
         num_contacted_notes: num_contacted_notes,
         id_team: idTeam,
+        score: resultScore?.score,
+        scoreFlag: resultScore?.flag,
+        scoreReason: resultScore?.shortReason.join(", "),
+        scoreDetails: resultScore?.detailedReason,
+        last_activity: notes_last_contacted,
       };
       return newDataDeals;
     }

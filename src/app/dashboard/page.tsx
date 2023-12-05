@@ -2,7 +2,7 @@ import React from "react";
 import { supabase } from "@/lib/ClientSupabase";
 import { Dialog } from "./components/Dialog";
 import { cookies } from "next/headers";
-import { TableItem } from "./components/Contact";
+import { TableItem } from "./components/TableDeals";
 import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
 
 type TeamData = {
