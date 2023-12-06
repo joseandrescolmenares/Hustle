@@ -77,7 +77,7 @@ export default function SheetSide() {
                   .find(
                     (userGuest: { rol: string }): any =>
                       userGuest.rol == "creator"
-                  ).correo}
+                  )?.correo}
               </p>
               {/* <Input id="name" value="Pedro Duarte" className="col-span-3" /> */}
             </div>
@@ -87,11 +87,10 @@ export default function SheetSide() {
             <Label htmlFor="name" className="text-right">
               Team
             </Label>
-            {users
-              ? users
+            { users
                   .filter(
                     (userGuest: { rol: string }): any =>
-                      userGuest.rol == "guest"
+                      userGuest?.rol == "guest"
                   )
                   .map((user: any) => (
                     <div className="flex items-center" key={user.id_user}>
@@ -103,15 +102,15 @@ export default function SheetSide() {
                       </Avatar>
                       <div className="ml-4 space-y-1">
                         <p className="text-sm font-medium leading-none">
-                          {user.rol}
+                          {user?.rol}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          {user.correo}
+                          {user?.correo}
                         </p>
                       </div>
                     </div>
                   ))
-              : <p>no collaborators</p>}
+}
           </div>
 
           {/* <SheetClose asChild>
