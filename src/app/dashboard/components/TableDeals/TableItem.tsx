@@ -39,21 +39,20 @@ const MainTable = () => {
   const idIntegrations = Cookies.get("idIntegrations");
   const idTeam = Cookies.get("team");
 
-
   const handleFilterChange = (value: string) => {
-    const resultFilter : any = filteredDeals?.filter((deal) => {
+    const resultFilter: any = filteredDeals?.filter((deal) => {
       if (value === "risk") {
-        return deal.score <= 3; 
+        return deal.score <= 3;
       } else if (value === "neutral") {
         return deal.score > 3 && deal.score < 5;
       } else if (value === "opportunity") {
         return deal.score > 5;
+      } else if (value == "all") {
+        return true;
       }
-
     });
-  setAllDeals(resultFilter)
+    setAllDeals(resultFilter);
   };
-
 
   useEffect(() => {
     const integrationCompleted = localStorage.getItem("integrationCompleted");
@@ -61,7 +60,6 @@ const MainTable = () => {
       toast.success("Integration completed");
       localStorage.setItem("integrationCompleted", "true");
     }
-
   }, []);
 
   useEffect(() => {
@@ -79,9 +77,9 @@ const MainTable = () => {
       if (!data[0]?.dealsAlll) {
         const resultDeals = await axios.get(`/api/hubspot/getAllDeals`);
         const deals = resultDeals.data;
-        
+
         setAllDeals(deals.dealsData);
-        setFilteredDeals(deals.dealsData)
+        setFilteredDeals(deals.dealsData);
         setLoandingData(false);
       } else {
         let { data: dataDeals, error } = await supabase
@@ -89,15 +87,13 @@ const MainTable = () => {
           .select("*")
           .eq("id_team", idTeam);
         setAllDeals(dataDeals);
-        setFilteredDeals(dataDeals)
+        setFilteredDeals(dataDeals);
         setLoandingData(false);
       }
     };
 
     getDeals();
   }, []);
-
-
 
   if (!allDeals) return;
   if (loandingData)
@@ -117,9 +113,10 @@ const MainTable = () => {
         </div> */}
         <Select onValueChange={(value) => handleFilterChange(value)}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="cases at risk" />
+            <SelectValue placeholder="All Cases" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="all">All Cases</SelectItem>
             <SelectItem value="risk">🔴 Risk</SelectItem>
             <SelectItem value="neutral">🟠 Neutral</SelectItem>
             <SelectItem value="opportunity">🟢 Opportunity</SelectItem>
