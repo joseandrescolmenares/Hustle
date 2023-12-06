@@ -27,6 +27,7 @@ import { date } from "zod";
 export default function SheetSide() {
   const [users, setUsers] = React.useState<any | []>([]);
   const [inviteCode, setInviteCode] = React.useState<string>("");
+  console.log(users, "users");
 
   const team = Cookies.get("team");
   const getUser = async () => {
@@ -36,6 +37,7 @@ export default function SheetSide() {
       .eq("id_team", team);
 
     setUsers(dataUsers);
+    console.log(error, "erropr");
   };
   const codeTeam = async () => {
     let { data: dataTeam, error } = await supabase
@@ -70,9 +72,12 @@ export default function SheetSide() {
               <Label htmlFor="name" className="text-right">
                 Team creator :
               </Label>
-              <p className="text-sm font-medium leading-none">
-                {/* josecolmenaes02@gmail.com */}
-                Creator User
+              <p className="text-sm font-medium leading-none p-2 bg-slate-200/50 rounded-sm">
+                {users
+                  .find(
+                    (userGuest: { rol: string }): any =>
+                      userGuest.rol == "creator"
+                  ).correo}
               </p>
               {/* <Input id="name" value="Pedro Duarte" className="col-span-3" /> */}
             </div>
@@ -83,23 +88,30 @@ export default function SheetSide() {
               Team
             </Label>
             {users
-              ? users.map((user: any) => (
-                  <div className="flex items-center" key={user.id_user}>
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage src="/avatars/01.png" alt="Avatar" />
-                      <AvatarFallback>US</AvatarFallback>
-                    </Avatar>
-                    <div className="ml-4 space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        guest user
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        USER@email.com
-                      </p>
+              ? users
+                  .filter(
+                    (userGuest: { rol: string }): any =>
+                      userGuest.rol == "guest"
+                  )
+                  .map((user: any) => (
+                    <div className="flex items-center" key={user.id_user}>
+                      <Avatar className="h-9 w-9">
+                        <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                        <AvatarFallback>
+                          {user.correo.slice(0, 1).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="ml-4 space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {user.rol}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {user.correo}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))
-              : null}
+                  ))
+              : <p>no collaborators</p>}
           </div>
 
           {/* <SheetClose asChild>
