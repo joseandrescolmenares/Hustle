@@ -101,8 +101,9 @@ const MainTable = () => {
       .from("integrations")
       .update({
         alert_reloading: false,
-      });
-      return dataSlack
+      })
+      .eq("id_integrations", idIntegrations);
+    return dataSlack;
   };
 
   useEffect(() => {
@@ -131,22 +132,19 @@ const MainTable = () => {
 
         const alertSlack = await axios.post("api/slack/sentAlert", data);
         const result = alertSlack?.data;
-        if (result) {
-        const resltDbSlack = await setAlertSlack()
-        console.log(resltDbSlack,"slackF")
-        }
 
-        console.log(result, "result");
+        const resltDbSlack = await setAlertSlack();
+        console.log(resltDbSlack, "slackF");
       } catch (error) {
         console.error("Error sending alert to Slack:");
       }
     };
-    if (alertReloading && slackData) {
+    if (alertReloading) {
       setTimeout(() => {
         sentAlert();
       }, 13000);
     }
-  }, [allDeals, alertReloading]);
+  }, [allDeals]);
 
   if (!allDeals) return;
   if (loandingData)
