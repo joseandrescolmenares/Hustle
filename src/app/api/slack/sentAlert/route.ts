@@ -28,5 +28,5 @@ export async function POST(request: Request) {
 
   console.log(webUrl,redFlags,neutralFlags,greenFlags,'backent slack')
 
-  return Response.json({ ok: "ok" });
+  return Response.json({ sucess: "sucess" });
 }

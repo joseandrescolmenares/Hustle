@@ -31,7 +31,7 @@ import { Value } from "@radix-ui/react-select";
 const MainTable = () => {
   const [allDeals, setAllDeals] = useState<any[] | null>([]);
   const [filteredDeals, setFilteredDeals] = useState<any[] | null>([]);
-  const [agreementStatus, setAgreementStatus] = useState<boolean>(true);
+  const [alertReloading, setAlertReloading] = useState<boolean>(false);
   const [loandingData, setLoandingData] = useState(true);
   const [notes, setNotes] = React.useState<string[]>([]);
   const [slackData, setSlackData] = useState("");
@@ -67,12 +67,13 @@ const MainTable = () => {
       // try {
       let { data, error } = await supabase
         .from("integrations")
-        .select("dealsAlll,isSlack,webhookUrlSlack")
+        .select("dealsAlll,isSlack,webhookUrlSlack,alert_reloading")
         .eq("id_integrations", idIntegrations);
 
       if (data == null) return;
       if (data[0]?.isSlack) {
         setSlackData(data[0]?.webhookUrlSlack);
+        setAlertReloading(data[0]?.alert_reloading);
       }
       if (!data[0]?.dealsAlll) {
         const resultDeals = await axios.get(`/api/hubspot/getAllDeals`);
@@ -94,6 +95,58 @@ const MainTable = () => {
 
     getDeals();
   }, []);
+
+  const setAlertSlack = async () => {
+    const { data: dataSlack, error: errorSlack } = await supabase
+      .from("integrations")
+      .update({
+        alert_reloading: false,
+      });
+      return dataSlack
+  };
+
+  useEffect(() => {
+    const sentAlert = async () => {
+      try {
+        let redFlags = 0;
+        let greenFlags = 0;
+        let neutralFlags = 0;
+
+        allDeals?.forEach((el) => {
+          if (el.score < 3) {
+            redFlags++;
+          } else if (el.score > 5) {
+            greenFlags++;
+          } else {
+            neutralFlags++;
+          }
+        });
+
+        const data = {
+          webUrl: slackData,
+          redFlags: redFlags,
+          greenFlags: greenFlags,
+          neutralFlags: neutralFlags,
+        };
+
+        const alertSlack = await axios.post("api/slack/sentAlert", data);
+        const result = alertSlack?.data;
+        if (result) {
+        const resltDbSlack = await setAlertSlack()
+        console.log(resltDbSlack,"slackF")
+        }
+
+        console.log(result, "result");
+      } catch (error) {
+        console.error("Error sending alert to Slack:");
+      }
+    };
+    if (alertReloading && slackData) {
+      setTimeout(() => {
+        sentAlert();
+      }, 13000);
+    }
+  }, [allDeals, alertReloading]);
 
   if (!allDeals) return;
   if (loandingData)
