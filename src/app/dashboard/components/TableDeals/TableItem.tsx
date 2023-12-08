@@ -142,7 +142,7 @@ const MainTable = () => {
     if (alertReloading) {
       setTimeout(() => {
         sentAlert();
-      }, 13000);
+      }, 20000);
     }
   }, [allDeals]);
 
