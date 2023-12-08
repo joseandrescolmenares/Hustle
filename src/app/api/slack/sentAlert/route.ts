@@ -13,6 +13,8 @@ export async function POST(request: Request) {
     - Hemos identificado ${greenFlags} oportunidad para mejorar y crecer las ventas.
     
     Estamos trabajando activamente en estrategias para mitigar los riesgos y maximizar las oportunidades. Nuestro equipo está comprometido en brindarte el mejor apoyo posible.
+
+    puedes ver tus casos acá : https://hustle-beta.vercel.app/dashboard
     
     Si tienes alguna pregunta o necesitas más detalles sobre la situación específica de cada negocio, no dudes en ponerte en contacto con nosotros.
     
