@@ -157,19 +157,19 @@ type ResultScore = {
   score: number;
 };
 
-const maxRequestsPerInterval = 100;
-const intervalDuration = 10 * 1000;
-const batchSize = 10; // Número de elementos a procesar en cada lote
-let lastRequestTimestamp = 0;
+let isExecuting = false; // Variable de estado compartida
+let lock = false;
+const batchSize = 10; // Define el tamaño del lote
+const intervalDuration = 10000; // 10 segundos, según el límite de la API
+let allData: any[] = []; // Variable para almacenar los datos
 
 async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function processBatch(deals: any[]): Promise<void> {
-  // Procesa cada elemento en el lote
   for (const deal of deals) {
-    const resultScore: any = score({
+    const resultScore: ResultScore = score({
       numberOfContacts: deal.properties.num_associated_contacts,
       numberOfSalesActivities: deal.properties.num_contacted_notes,
     });
@@ -177,28 +177,29 @@ async function processBatch(deals: any[]): Promise<void> {
     if (resultScore) {
       const ownerInfo = await getIOwner(
         deal.properties.hubspot_owner_id || "",
-                    deal.properties.dealname,
-                    deal.properties.hs_object_id,
-                    deal.properties.num_associated_contacts,
-                    deal.properties.amount,
-                    deal.properties.closed_lost_reason,
-                    deal.properties.closed_won_reason,
-                    deal.properties.closedate,
-                    deal.properties.createdate,
-                    deal.properties.dealstage,
-                    deal.properties.description,
-                    deal.properties.hs_all_collaborator_owner_ids,
-                    deal.properties.hs_deal_stage_probability,
-                    deal.properties.hs_forecast_probability,
-                    deal.properties.hs_is_closed_won,
-                    deal.properties.hs_lastmodifieddate,
-                    deal.properties.hs_next_step,
-                    deal.properties.hs_priority,
-                    deal.properties.num_contacted_notes,
-                    deal.properties.notes_last_contacted,
-                    resultScore,
+        deal.properties.dealname,
+        deal.properties.hs_object_id,
+        deal.properties.num_associated_contacts,
+        deal.properties.amount,
+        deal.properties.closed_lost_reason,
+        deal.properties.closed_won_reason,
+        deal.properties.closedate,
+        deal.properties.createdate,
+        deal.properties.dealstage,
+        deal.properties.description,
+        deal.properties.hs_all_collaborator_owner_ids,
+        deal.properties.hs_deal_stage_probability,
+        deal.properties.hs_forecast_probability,
+        deal.properties.hs_is_closed_won,
+        deal.properties.hs_lastmodifieddate,
+        deal.properties.hs_next_step,
+        deal.properties.hs_priority,
+        deal.properties.num_contacted_notes,
+        deal.properties.notes_last_contacted,
+        resultScore
       );
       // Almacena el resultado o realiza otras operaciones necesarias
+      allData.push(ownerInfo);
     }
   }
 }
@@ -207,26 +208,26 @@ async function fetchAllDeals(): Promise<void> {
   try {
     let url =
       "https://api.hubapi.com/crm/v3/objects/deals?properties=...&associations=notes&limit=15";
+    let lastRequestTimestamp = Date.now();
 
     while (url) {
-      const currentTime = Date.now();
-      const timeSinceLastRequest = currentTime - lastRequestTimestamp;
-
-      if (timeSinceLastRequest < intervalDuration) {
-        const timeToWait = intervalDuration - timeSinceLastRequest;
-        await sleep(timeToWait);
+      if (isExecuting) {
+        console.log("Otra instancia en curso, abortando...");
+        return;
       }
+
+      isExecuting = true;
+
+      if (lock) {
+        console.log("Esperando a que se libere el bloqueo...");
+        while (lock) {
+          await sleep(1000);
+        }
+      }
+
+      lock = true;
 
       const resultDeals = await getAllDeals(url);
-
-      if (resultDeals.statusCode === 429) {
-        console.error("Límite de tasa alcanzado. Esperando...");
-        const retryAfter =
-          parseInt(resultDeals.headers["retry-after"] || "1", 10) * 1000;
-        await sleep(retryAfter);
-        continue; // Reintentar la solicitud después de esperar
-      }
-
       const results = resultDeals.results;
 
       // Divide los resultados en lotes
@@ -236,11 +237,20 @@ async function fetchAllDeals(): Promise<void> {
       }
 
       url = resultDeals?.paging?.next?.link || "";
-      lastRequestTimestamp = Date.now();
+      lastRequestTimestamp = Date.now(); // Actualiza el tiempo de la última solicitud
+
+      lock = false;
+      isExecuting = false;
+
+      // Espera antes de la siguiente iteración
+      await sleep(intervalDuration);
     }
   } catch (error) {
     console.error("Error al obtener las negociaciones:", error);
     throw new Error("Hubo un error al obtener las negociaciones");
+  } finally {
+    lock = false;
+    isExecuting = false;
   }
 }
 
@@ -251,7 +261,7 @@ export async function GET(request: Request) {
   const idIntegrations = cookieStore.get("idIntegrations")?.value;
 
   try {
-    const result: any = await fetchAllDeals();
+    const result : any = await fetchAllDeals();
 
     if (result) {
       const { data: insertData, error: insertError } = await supabase
