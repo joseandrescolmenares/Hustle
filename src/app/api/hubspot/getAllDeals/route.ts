@@ -5,15 +5,12 @@
 // import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
 // import { score } from "@/app/ai/score/score";
 
-
-
 // type ResultScore = {
 //   flag: string;
 //   shortReason: string[];
 //   detailedReason: string;
 //   score: number;
 // }
-
 
 // let isExecuting = false; // Variable de estado compartida
 // let lock = false;
@@ -58,7 +55,7 @@
 //           numberOfSalesActivities: deal.properties.num_contacted_notes,
 //         });
 //         console.log(deal, "deals")
-      
+
 //         if (resultScore) {
 //           const ownerInfo = await getIOwner(
 //             deal.properties.hubspot_owner_id || "",
@@ -81,7 +78,7 @@
 //             deal.properties.hs_priority,
 //             deal.properties.num_contacted_notes,
 //             deal.properties.notes_last_contacted,
-//             resultScore,          
+//             resultScore,
 //           );
 //           allData.push(ownerInfo);
 //         }
@@ -145,6 +142,7 @@
 //     throw new Error();
 //   }
 // }
+
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -157,10 +155,8 @@ type ResultScore = {
   shortReason: string[];
   detailedReason: string;
   score: number;
-}
+};
 
-let isExecuting = false;
-let lock = false;
 const maxRequestsPerInterval = 100;
 const intervalDuration = 10 * 1000;
 let lastRequestTimestamp = 0;
@@ -171,25 +167,9 @@ async function sleep(ms: number) {
 
 async function fetchAllDeals(): Promise<any[]> {
   try {
-    if (isExecuting) {
-      console.log("Otra instancia en curso, abortando...");
-      return [];
-    }
-
-    isExecuting = true;
-
-    if (lock) {
-      console.log("Esperando a que se libere el bloqueo...");
-      while (lock) {
-        await sleep(1000);
-      }
-    }
-
-    lock = true;
-
     let allData: any[] = [];
     let url =
-      "https://api.hubapi.com/crm/v3/objects/deals?properties=hubspot_owner_id,dealname,dealstage,amount,num_associated_contacts,closedate,hs_priority,notes_last_contacted,hs_all_collaborator_owner_ids,hs_is_closed_won,description,hubspot_owner_assigneddate,notes_last_updated,closed_won_reason,closed_lost_reason,num_contacted_notes,hs_next_step,hs_forecast_probability,hs_deal_stage_probability&associations=notes&limit=15";
+      "https://api.hubapi.com/crm/v3/objects/deals?properties=...&associations=notes&limit=15";
 
     while (url) {
       const currentTime = Date.now();
@@ -204,9 +184,10 @@ async function fetchAllDeals(): Promise<any[]> {
 
       if (resultDeals.statusCode === 429) {
         console.error("Límite de tasa alcanzado. Esperando...");
-        const retryAfter = parseInt(resultDeals.headers['retry-after'] || '1', 10) * 1000;
+        const retryAfter =
+          parseInt(resultDeals.headers["retry-after"] || "1", 10) * 1000;
         await sleep(retryAfter);
-        continue;  // Reintentar la solicitud después de esperar
+        continue; // Reintentar la solicitud después de esperar
       }
 
       const results = resultDeals.results;
@@ -216,8 +197,7 @@ async function fetchAllDeals(): Promise<any[]> {
           numberOfContacts: deal.properties.num_associated_contacts,
           numberOfSalesActivities: deal.properties.num_contacted_notes,
         });
-        console.log(deal, "deals");
-      
+
         if (resultScore) {
           const ownerInfo = await getIOwner(
             deal.properties.hubspot_owner_id || "",
@@ -240,7 +220,7 @@ async function fetchAllDeals(): Promise<any[]> {
             deal.properties.hs_priority,
             deal.properties.num_contacted_notes,
             deal.properties.notes_last_contacted,
-            resultScore,
+            resultScore
           );
           allData.push(ownerInfo);
         }
@@ -254,9 +234,6 @@ async function fetchAllDeals(): Promise<any[]> {
   } catch (error) {
     console.error("Error al obtener las negociaciones:", error);
     throw new Error("Hubo un error al obtener las negociaciones");
-  } finally {
-    isExecuting = false;
-    lock = false;
   }
 }
 
