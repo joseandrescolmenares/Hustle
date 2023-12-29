@@ -159,7 +159,7 @@ type ResultScore = {
 
 let isExecuting = false;
 let lock = false;
-const batchSize = 10;
+const batchSize = 9;
 const intervalDuration = 10000;
 let allData: any[] = [];
 
