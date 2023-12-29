@@ -157,50 +157,56 @@ type ResultScore = {
   score: number;
 };
 
-let isExecuting = false; // Variable de estado compartida
+let isExecuting = false;
 let lock = false;
-const batchSize = 10; // Define el tamaño del lote
-const intervalDuration = 10000; // 10 segundos, según el límite de la API
-let allData: any[] = []; // Variable para almacenar los datos
+const batchSize = 10;
+const intervalDuration = 10000;
+let allData: any[] = [];
 
 async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function processBatch(deals: any[]): Promise<void> {
-  for (const deal of deals) {
-    const resultScore: ResultScore = score({
-      numberOfContacts: deal.properties.num_associated_contacts,
-      numberOfSalesActivities: deal.properties.num_contacted_notes,
-    });
+  try {
+    await Promise.all(
+      deals.map(async (deal) => {
+        const resultScore: ResultScore = score({
+          numberOfContacts: deal.properties.num_associated_contacts,
+          numberOfSalesActivities: deal.properties.num_contacted_notes,
+        });
 
-    if (resultScore) {
-      const ownerInfo = await getIOwner(
-        deal.properties.hubspot_owner_id || "",
-        deal.properties.dealname,
-        deal.properties.hs_object_id,
-        deal.properties.num_associated_contacts,
-        deal.properties.amount,
-        deal.properties.closed_lost_reason,
-        deal.properties.closed_won_reason,
-        deal.properties.closedate,
-        deal.properties.createdate,
-        deal.properties.dealstage,
-        deal.properties.description,
-        deal.properties.hs_all_collaborator_owner_ids,
-        deal.properties.hs_deal_stage_probability,
-        deal.properties.hs_forecast_probability,
-        deal.properties.hs_is_closed_won,
-        deal.properties.hs_lastmodifieddate,
-        deal.properties.hs_next_step,
-        deal.properties.hs_priority,
-        deal.properties.num_contacted_notes,
-        deal.properties.notes_last_contacted,
-        resultScore
-      );
-      // Almacena el resultado o realiza otras operaciones necesarias
-      allData.push(ownerInfo);
-    }
+        if (resultScore) {
+          const ownerInfo = await getIOwner(
+            deal.properties.hubspot_owner_id || "",
+            deal.properties.dealname,
+            deal.properties.hs_object_id,
+            deal.properties.num_associated_contacts,
+            deal.properties.amount,
+            deal.properties.closed_lost_reason,
+            deal.properties.closed_won_reason,
+            deal.properties.closedate,
+            deal.properties.createdate,
+            deal.properties.dealstage,
+            deal.properties.description,
+            deal.properties.hs_all_collaborator_owner_ids,
+            deal.properties.hs_deal_stage_probability,
+            deal.properties.hs_forecast_probability,
+            deal.properties.hs_is_closed_won,
+            deal.properties.hs_lastmodifieddate,
+            deal.properties.hs_next_step,
+            deal.properties.hs_priority,
+            deal.properties.num_contacted_notes,
+            deal.properties.notes_last_contacted,
+            resultScore
+          );
+          allData.push(ownerInfo);
+        }
+      })
+    );
+  } catch (error) {
+    console.error("Error en processBatch:", error);
+    // Puedes manejar el error según tus necesidades
   }
 }
 
@@ -230,19 +236,17 @@ async function fetchAllDeals(): Promise<void> {
       const resultDeals = await getAllDeals(url);
       const results = resultDeals.results;
 
-      // Divide los resultados en lotes
       for (let i = 0; i < results.length; i += batchSize) {
         const batch = results.slice(i, i + batchSize);
         await processBatch(batch);
       }
 
       url = resultDeals?.paging?.next?.link || "";
-      lastRequestTimestamp = Date.now(); // Actualiza el tiempo de la última solicitud
+      lastRequestTimestamp = Date.now();
 
       lock = false;
       isExecuting = false;
 
-      // Espera antes de la siguiente iteración
       await sleep(intervalDuration);
     }
   } catch (error) {
@@ -253,7 +257,6 @@ async function fetchAllDeals(): Promise<void> {
     isExecuting = false;
   }
 }
-
 export async function GET(request: Request) {
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
@@ -261,7 +264,7 @@ export async function GET(request: Request) {
   const idIntegrations = cookieStore.get("idIntegrations")?.value;
 
   try {
-    const result : any = await fetchAllDeals();
+    const result: any = await fetchAllDeals();
 
     if (result) {
       const { data: insertData, error: insertError } = await supabase
