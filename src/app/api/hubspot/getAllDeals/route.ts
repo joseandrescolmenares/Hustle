@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
 import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
 import { score } from "@/app/ai/score/score";
+export const runtime = 'nodejs'
 
 
 type ResultScore = {

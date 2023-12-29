@@ -7,8 +7,9 @@ import axios from "axios";
 import { insertIdDeals } from "@/service/hubspot/deals/insertDeals";
 import { insertDealowner } from "@/service/hubspot/owners/insertDealOwner";
 import { score } from "@/app/ai/score/score";
+export const runtime = 'nodejs'
 
-let isExecuting = false; // Variable de estado compartida
+let isExecuting = false; 
 let lock = false;
 
 async function sleep(ms: number) {
