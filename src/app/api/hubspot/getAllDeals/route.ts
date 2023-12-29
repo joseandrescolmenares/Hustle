@@ -12,7 +12,7 @@
 //   score: number;
 // }
 
-// let isExecuting = false; // Variable de estado compartida
+// let isExecuting = false; 
 // let lock = false;
 
 // async function sleep(ms: number) {
@@ -143,6 +143,7 @@
 //   }
 // }
 
+
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -159,96 +160,94 @@ type ResultScore = {
 
 let isExecuting = false;
 let lock = false;
-const batchSize = 9;
-const intervalDuration = 10000;
-let allData: any[] = [];
+const batchSize = 10;
+const intervalDuration = 10 * 1000;
 
 async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function processBatch(deals: any[]): Promise<void> {
-  try {
-    await Promise.all(
-      deals.map(async (deal) => {
-        const resultScore: ResultScore = score({
-          numberOfContacts: deal.properties.num_associated_contacts,
-          numberOfSalesActivities: deal.properties.num_contacted_notes,
-        });
+async function processBatch(deals: any[]): Promise<any[]> {
+  const allData: any[] = [];
 
-        if (resultScore) {
-          const ownerInfo = await getIOwner(
-            deal.properties.hubspot_owner_id || "",
-            deal.properties.dealname,
-            deal.properties.hs_object_id,
-            deal.properties.num_associated_contacts,
-            deal.properties.amount,
-            deal.properties.closed_lost_reason,
-            deal.properties.closed_won_reason,
-            deal.properties.closedate,
-            deal.properties.createdate,
-            deal.properties.dealstage,
-            deal.properties.description,
-            deal.properties.hs_all_collaborator_owner_ids,
-            deal.properties.hs_deal_stage_probability,
-            deal.properties.hs_forecast_probability,
-            deal.properties.hs_is_closed_won,
-            deal.properties.hs_lastmodifieddate,
-            deal.properties.hs_next_step,
-            deal.properties.hs_priority,
-            deal.properties.num_contacted_notes,
-            deal.properties.notes_last_contacted,
-            resultScore
-          );
-          allData.push(ownerInfo);
-        }
-      })
-    );
-  } catch (error) {
-    console.error("Error en processBatch:", error);
-    // Puedes manejar el error según tus necesidades
+  for (const deal of deals) {
+    const resultScore: ResultScore = score({
+      numberOfContacts: deal.properties.num_associated_contacts,
+      numberOfSalesActivities: deal.properties.num_contacted_notes,
+    });
+
+    if (resultScore) {
+      const ownerInfo = await getIOwner(
+        deal.properties.hubspot_owner_id || "",
+        deal.properties.dealname,
+        deal.properties.hs_object_id,
+        deal.properties.num_associated_contacts,
+        deal.properties.amount,
+        deal.properties.closed_lost_reason,
+        deal.properties.closed_won_reason,
+        deal.properties.closedate,
+        deal.properties.createdate,
+        deal.properties.dealstage,
+        deal.properties.description,
+        deal.properties.hs_all_collaborator_owner_ids,
+        deal.properties.hs_deal_stage_probability,
+        deal.properties.hs_forecast_probability,
+        deal.properties.hs_is_closed_won,
+        deal.properties.hs_lastmodifieddate,
+        deal.properties.hs_next_step,
+        deal.properties.hs_priority,
+        deal.properties.num_contacted_notes,
+        deal.properties.notes_last_contacted,
+        resultScore
+      );
+
+      allData.push(ownerInfo);
+    }
   }
+
+  return allData;
 }
 
-async function fetchAllDeals(): Promise<void> {
+async function fetchAllDeals(): Promise<any[]> {
   try {
+    if (isExecuting) {
+      console.log("Otra instancia en curso, abortando...");
+      return [];
+    }
+
+    isExecuting = true;
+
+    if (lock) {
+      console.log("Esperando a que se libere el bloqueo...");
+      while (lock) {
+        await sleep(1000);
+      }
+    }
+
+    lock = true;
+
+    let allData: any[] = [];
     let url =
       "https://api.hubapi.com/crm/v3/objects/deals?properties=...&associations=notes&limit=15";
-    let lastRequestTimestamp = Date.now();
 
     while (url) {
-      if (isExecuting) {
-        console.log("Otra instancia en curso, abortando...");
-        return;
-      }
-
-      isExecuting = true;
-
-      if (lock) {
-        console.log("Esperando a que se libere el bloqueo...");
-        while (lock) {
-          await sleep(1000);
-        }
-      }
-
-      lock = true;
-
       const resultDeals = await getAllDeals(url);
       const results = resultDeals.results;
 
+      // Divide los resultados en lotes
       for (let i = 0; i < results.length; i += batchSize) {
         const batch = results.slice(i, i + batchSize);
-        await processBatch(batch);
+        const processedBatch = await processBatch(batch);
+        allData = allData.concat(processedBatch);
       }
 
       url = resultDeals?.paging?.next?.link || "";
-      lastRequestTimestamp = Date.now();
 
-      lock = false;
-      isExecuting = false;
-
+      // Espera antes de la siguiente iteración
       await sleep(intervalDuration);
     }
+
+    return allData;
   } catch (error) {
     console.error("Error al obtener las negociaciones:", error);
     throw new Error("Hubo un error al obtener las negociaciones");
@@ -257,6 +256,7 @@ async function fetchAllDeals(): Promise<void> {
     isExecuting = false;
   }
 }
+
 export async function GET(request: Request) {
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
