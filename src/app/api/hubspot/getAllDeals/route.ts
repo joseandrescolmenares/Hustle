@@ -5,6 +5,10 @@ import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
 import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
 import { score } from "@/app/ai/score/score";
 
+export const config = {
+  runtime: 'edge'
+}
+
 type ResultScore = {
   flag: string;
   shortReason: string[];
@@ -39,7 +43,7 @@ async function fetchAllDeals(): Promise<any[]> {
 
     let allData: any[] = [];
     let url =
-      "https://api.hubapi.com/crm/v3/objects/deals?properties=hubspot_owner_id,dealname,dealstage,amount,num_associated_contacts,closedate,hs_priority,notes_last_contacted,hs_all_collaborator_owner_ids,hs_is_closed_won,description,hubspot_owner_assigneddate,notes_last_updated,closed_won_reason,closed_lost_reason,num_contacted_notes,hs_next_step,hs_forecast_probability,hs_deal_stage_probability&associations=notes&limit=15";
+      "https://api.hubapi.com/crm/v3/objects/deals?properties=hubspot_owner_id,dealname,dealstage,amount,num_associated_contacts,closedate,hs_priority,notes_last_contacted,hs_all_collaborator_owner_ids,hs_is_closed_won,description,hubspot_owner_assigneddate,notes_last_updated,closed_won_reason,closed_lost_reason,num_contacted_notes,hs_next_step,hs_forecast_probability,hs_deal_stage_probability&associations=notes&limit=20";
 
     let requestCount = 0;
     const maxRequestsPerInterval = 100;
