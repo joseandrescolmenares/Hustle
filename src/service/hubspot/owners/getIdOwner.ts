@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Flag, Type } from "lucide-react";
 import { cookies } from "next/headers";
+export const runtime = "edge"
 
 type ResultScore = {
   flag: string;
