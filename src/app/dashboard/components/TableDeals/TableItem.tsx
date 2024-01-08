@@ -103,7 +103,7 @@ const MainTable = () => {
         alert_reloading: false,
       })
       .eq("id_integrations", idIntegrations);
-    return dataSlack;
+    return { dataSlack, errorSlack };
   };
 
   useEffect(() => {
