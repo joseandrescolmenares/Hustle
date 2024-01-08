@@ -5,7 +5,7 @@ import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
 import { getIOwner } from "@/service/hubspot/owners/getIdOwner";
 import { score } from "@/app/ai/score/score";
 
-export const runtime = "edge"
+// export const runtime = "edge"
 
 type ResultScore = {
   flag: string;
