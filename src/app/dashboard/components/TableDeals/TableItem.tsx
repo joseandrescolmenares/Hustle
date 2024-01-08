@@ -102,7 +102,7 @@ const MainTable = () => {
       .update({
         alert_reloading: false,
       })
-      .eq("id_integrations", idIntegrations);
+      .eq("id_integrations", idIntegrations).select()
     return { dataSlack, errorSlack };
   };
 
