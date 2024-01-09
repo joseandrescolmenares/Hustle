@@ -7,7 +7,7 @@ import axios from "axios";
 import { insertIdDeals } from "@/service/hubspot/deals/insertDeals";
 import { insertDealowner } from "@/service/hubspot/owners/insertDealOwner";
 import { score } from "@/app/ai/score/score";
-export const runtime = 'nodejs'
+
 
 let isExecuting = false; 
 let lock = false;
@@ -51,27 +51,27 @@ async function fetchAllDeals(token: any, idTeam: any): Promise<any[]> {
           numberOfContacts: deal.properties.num_associated_contacts,
           numberOfSalesActivities: deal.properties.num_contacted_notes,
         });
-        console.log(deal, "deals")
+        console.log(deal,"deal")
         const ownerInfo = await insertDealowner(
           deal.properties.hubspot_owner_id || "",
-          deal.properties.dealname,
-          deal.properties.hs_object_id,
-          deal.properties.num_associated_contacts,
-          deal.properties.amount,
-          deal.properties.closed_lost_reason,
-          deal.properties.closed_won_reason,
-          deal.properties.closedate,
-          deal.properties.createdate,
-          deal.properties.dealstage,
-          deal.properties.description,
-          deal.properties.hs_all_collaborator_owner_ids,
-          deal.properties.hs_deal_stage_probability,
-          deal.properties.hs_forecast_probability,
-          deal.properties.hs_is_closed_won,
+          deal.properties.dealname || "",
+          deal.properties.hs_object_id || "",
+          deal.properties.num_associated_contacts || "",
+          deal.properties.amount || "",
+          deal.properties.closed_lost_reason || "",
+          deal.properties.closed_won_reason || "",
+          deal.properties.closedate || "",
+          deal.properties.createdate || "",
+          deal.properties.dealstage || "",
+          deal.properties.description || "",
+          deal.properties.hs_all_collaborator_owner_ids || "",
+          deal.properties.hs_deal_stage_probability || "",
+          deal.properties.hs_forecast_probability || "",
+          deal.properties.hs_is_closed_won || "",
           deal.properties.hs_lastmodifieddate,
-          deal.properties.hs_next_step,
-          deal.properties.hs_priority,
-          deal.properties.num_contacted_notes,
+          deal.properties.hs_next_step || "",
+          deal.properties.hs_priority || "",
+          deal.properties.num_contacted_notes || 0,
           token,
           idTeam,
           resultScore
@@ -110,6 +110,7 @@ export async function GET(request: Request) {
   const idIntegrations = searchParams.get("idItegrations");
   const urlSlack: any = searchParams.get("urlSlack");
   const token = searchParams.get("token");
+  console.log(idTeam,"yeam")
 
   try {
     const { error } = await supabase
@@ -119,6 +120,7 @@ export async function GET(request: Request) {
     console.log(error, "errorSUPABASE");
 
     const result = await fetchAllDeals(token, idTeam);
+
     if(!error){
     if (result) {
       const { data: insertData, error: insertError } = await supabase
@@ -126,6 +128,8 @@ export async function GET(request: Request) {
         .insert(result)
         .eq("id_team", idTeam)
         .select();
+
+        console.log(insertData,"DATA", insertError,"error")
 
       if (insertData) {
         const { data: updateData, error: updateError } = await supabase
@@ -135,6 +139,8 @@ export async function GET(request: Request) {
           })
           .eq("id_integrations", idIntegrations)
           .select();
+          
+          
       }
 
       const dataMessage = {
