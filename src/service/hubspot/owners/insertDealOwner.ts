@@ -61,7 +61,7 @@ export const insertDealowner = async (
       };
       return data;
     }
-    const urlOwner = `https://api.hubapi.com/crm/v3/owners/${idOwner}`;
+    const urlOwner = `https://api.hubapi.com/crm/v3/owners/345537147`;
 
     const responseData: any = await axios.get(urlOwner, { headers });
     const dataDeals = responseData?.data;

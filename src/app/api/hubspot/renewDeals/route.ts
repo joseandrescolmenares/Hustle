@@ -8,8 +8,7 @@ import { insertIdDeals } from "@/service/hubspot/deals/insertDeals";
 import { insertDealowner } from "@/service/hubspot/owners/insertDealOwner";
 import { score } from "@/app/ai/score/score";
 
-
-let isExecuting = false; 
+let isExecuting = false;
 let lock = false;
 
 async function sleep(ms: number) {
@@ -45,13 +44,13 @@ async function fetchAllDeals(token: any, idTeam: any): Promise<any[]> {
     while (url) {
       const resultDeals = await insertIdDeals(url, token);
       const results = resultDeals?.results;
-
+      console.log(results, "deal");
       for (const deal of results) {
         const resultScore: any = score({
           numberOfContacts: deal.properties.num_associated_contacts,
           numberOfSalesActivities: deal.properties.num_contacted_notes,
         });
-        console.log(deal,"deal")
+       
         const ownerInfo = await insertDealowner(
           deal.properties.hubspot_owner_id || "",
           deal.properties.dealname || "",
@@ -108,9 +107,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const idTeam = searchParams.get("team");
   const idIntegrations = searchParams.get("idItegrations");
-  const urlSlack: any = searchParams.get("urlSlack");
+  const urlSlack = searchParams.get("urlSlack");
   const token = searchParams.get("token");
-  console.log(idTeam,"yeam")
 
   try {
     const { error } = await supabase
@@ -121,43 +119,69 @@ export async function GET(request: Request) {
 
     const result = await fetchAllDeals(token, idTeam);
 
-    if(!error){
-    if (result) {
-      const { data: insertData, error: insertError } = await supabase
-        .from("deals")
-        .insert(result)
-        .eq("id_team", idTeam)
-        .select();
-
-        console.log(insertData,"DATA", insertError,"error")
-
-      if (insertData) {
-        const { data: updateData, error: updateError } = await supabase
-          .from("integrations")
-          .update({
-            dealsAlll: true,
-          })
-          .eq("id_integrations", idIntegrations)
+    if (!error) {
+      if (result) {
+        const { data: insertData, error: insertError } = await supabase
+          .from("deals")
+          .insert(result)
+          .eq("id_team", idTeam)
           .select();
-          
-          
-      }
 
-      const dataMessage = {
-        text: "¡Gracias por conectar Hustle a Slack! Estaré enviándote alertas por aquí. ¡Gracias!",
-      };
-      if (urlSlack) {
-        const resultSlack  = await axios.post(urlSlack, dataMessage, {
-          headers: {
-            "Content-type": "application/json",
-          },
+        console.log(insertData, "DATA", insertError, "error");
+
+        if (insertData) {
+          const { data: updateData, error: updateError } = await supabase
+            .from("integrations")
+            .update({
+              dealsAlll: true,
+            })
+            .eq("id_integrations", idIntegrations)
+            .select();
+        }
+
+        let redFlags = 0;
+        let greenFlags = 0;
+        let neutralFlags = 0;
+
+        result?.forEach((el) => {
+          if (el.score < 3) {
+            redFlags++;
+          } else if (el.score > 5) {
+            greenFlags++;
+          } else {
+            neutralFlags++;
+          }
         });
-        console.log(resultSlack);
+
+
+        const dataMessage = {
+          text: ` 
+      
+          Queremos informarte sobre el estado actual de tus negocios. Hemos identificado que:
+          
+          - ${redFlags} negocios se encuentran en riesgo.
+          - ${neutralFlags} negocios están en una situación moderada.
+          - Hemos identificado ${greenFlags} oportunidad para mejorar y crecer las ventas.
+          
+          Estamos trabajando activamente en estrategias para mitigar los riesgos y maximizar las oportunidades. Nuestro equipo está comprometido en brindarte el mejor apoyo posible.
+      
+          puedes ver tus casos acá : https://hustle-beta.vercel.app/dashboard
+          
+          Si tienes alguna pregunta o necesitas más detalles sobre la situación específica de cada negocio, no dudes en ponerte en contacto con nosotros.
+          
+          Agradecemos tu confianza en nosotros y estamos aquí para ayudarte a lograr el éxito.`,
+        };
+
+        if (urlSlack) {
+          const resultSlack: any = await axios.post(urlSlack, dataMessage, {
+            headers: {
+              "Content-type": "application/json",
+            },
+          });
+        
+        }
       }
-
     }
-  }
-
 
     return NextResponse.json({
       dealsData: "tes",
