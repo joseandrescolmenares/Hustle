@@ -7,7 +7,7 @@ export async function GET(request: Request) {
       properties: {
         amount : 0,
         dealname:"jose test",
-        dealstage:"",
+        // dealstage:"",
         closedate:"",
       },
     };
