@@ -62,7 +62,7 @@ export async function GET(request: Request) {
         const response = await fetch(url, {
           method: "POST",
           headers: {
-            Authorization: `Bearer COKK2qfRMRIUAAEAUAAA-SIAAED8BwkA4AcgAAQYp_ebFSD3hJkdKMXiigEyFCXONPQidutWUPs3Bs2EwP4vFoGmOj8AAABBAAAAAAAAAAAAAAAAAIYAAAAAAAAAAAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAgAEAAOABAAhCFAncVukReurz7yI7PlYtxUOiyUJPSgNuYTFSAFoA`,
+            Authorization: `Bearer CMP0vL7RMRIUAAEAUAAA-SIAAED8BwkA4AcgAAQYp_ebFSD3hJkdKMXiigEyFAxgKOwgTAf9_ZGG2TmKVi1NlupvOj8AAABBAAAAAAAAAAAAAAAAAIYAAAAAAAAAAAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAgAEAAOABAAhCFIWV5Rblc3o7PvsFU_5Hriss3zJMSgNuYTFSAFoA`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(requestBody),
@@ -107,7 +107,7 @@ export async function GET(request: Request) {
   });
 
   const result = await agentExecutor.invoke({
-    input: "crea un negocio que se llame Hustle y que de monto de 5000$",
+    input: "crea un negocio que se llame yaFunciona123 y que de monto de 10000$",
     chat_history: [],
   });
 
