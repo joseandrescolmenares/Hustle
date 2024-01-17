@@ -107,7 +107,7 @@ export async function GET(request: Request) {
   });
 
   const result = await agentExecutor.invoke({
-    input: "crea un negocio que se llame yaFunciona123 y que de monto de 10000$",
+    input: "crea un negocio que se llame testDeALS  y que de monto de 10000$ Y tambien  que le coloques en etapa de negociacion",
     chat_history: [],
   });
 
