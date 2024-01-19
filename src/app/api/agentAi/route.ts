@@ -1,3 +1,5 @@
+
+
 // import { ChatOpenAI } from "@langchain/openai";
 // import type { ChatPromptTemplate } from "@langchain/core/prompts";
 // import { createOpenAIToolsAgent, AgentExecutor } from "langchain/agents";
@@ -180,3 +182,6 @@
 
 //   return NextResponse.json({ sucess: result });
 // }
+export async function GET(request: Request) {
+    return Response.json({ok: "oj"})
+}
