@@ -126,7 +126,7 @@ export async function GET(request: Request) {
           .optional(),
       }),
       func: async ({ amount }) => {
-        const url = `https://api.hubapi.com/crm/v4/objects/Deal/${objectId}/associations/company​/${toObjectId}`;
+        const url = `https://api.hubapi.com/crm/v4/objects/deal/16213921559/associations/default/company/18209854732`;
 
         const requestBody = {
           properties: {
