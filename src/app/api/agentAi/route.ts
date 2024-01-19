@@ -2,6 +2,8 @@ import { ChatOpenAI } from "@langchain/openai";
 import type { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createOpenAIToolsAgent, AgentExecutor } from "langchain/agents";
 import { pull } from "langchain/hub";
+import { renewToken } from "@/service/renewToken";
+import { supabase } from "@/lib/ClientSupabase";
 import { ZodObject, string, z } from "zod";
 import {
   DynamicTool,
@@ -12,6 +14,24 @@ import { NextResponse } from "next/server";
 // export const runtime = "edge";
 
 export async function GET(request: Request) {
+  // const requestBody = await request.json();
+
+  const { data, error } = await supabase
+    .from("teams")
+    .select(
+      `id_integrations (
+      refresh_token
+      )`
+    )
+    .eq("hubspotAccount", 44497831);
+  if (data == null) return;
+
+  const { refresh_token }: any = data[0]?.id_integrations;
+
+  const token = await renewToken(refresh_token);
+
+  console.log(token, "data");
+
   const tools = [
     new DynamicStructuredTool({
       name: "createDeals",
@@ -40,7 +60,7 @@ export async function GET(request: Request) {
         closedate: z
           .string()
           .describe("The date the deal was closed")
-          .optional()
+          .optional(),
       }),
       func: async ({
         amount,
@@ -58,18 +78,24 @@ export async function GET(request: Request) {
             closedate,
           },
         };
-
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer CMP0vL7RMRIUAAEAUAAA-SIAAED8BwkA4AcgAAQYp_ebFSD3hJkdKMXiigEyFAxgKOwgTAf9_ZGG2TmKVi1NlupvOj8AAABBAAAAAAAAAAAAAAAAAIYAAAAAAAAAAAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAgAEAAOABAAhCFIWV5Rblc3o7PvsFU_5Hriss3zJMSgNuYTFSAFoA`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        });
-        const data = await response.json();
-        console.log(data);
-        return `se ha creado con exito, puedes ver mas detalle https://app.hubspot.com/contacts/44497831/record/0-3/${data.id}`
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          });
+          const data = await response.json();
+          console.log(data);
+          return `se ha creado con exito, puedes ver mas detalle https://app.hubspot.com/contacts/44497831/record/0-3/${data.id}`;
+        } catch (error: any) {
+          if (error.response.data.category == "EXPIRED_AUTHENTICATION") {
+            return "token expired";
+          }
+          return "error, por favor vuelva a intentarlo";
+        }
       },
     }),
 
@@ -85,6 +111,43 @@ export async function GET(request: Request) {
           .optional(),
       }),
       func: async ({ amount }) => `este es se actulizo `,
+    }),
+
+    new DynamicStructuredTool({
+      name: "createDealBusinessAssociation",
+      description:
+        "this function creates associations between deal and business.",
+      schema: z.object({
+        amount: z
+          .number()
+          .describe(
+            "represents the monetary amount associated with the deal being created."
+          )
+          .optional(),
+      }),
+      func: async ({ amount }) => {
+        const url = `https://api.hubapi.com/crm/v4/objects/Deal/${objectId}/associations/company​/${toObjectId}`;
+
+        const requestBody = {
+          properties: {
+            amount,
+            // dealstage,
+            // dealname,
+            // closedate,
+          },
+        };
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        return "";
+      },
     }),
   ];
 
@@ -107,7 +170,7 @@ export async function GET(request: Request) {
   });
 
   const result = await agentExecutor.invoke({
-    input: "crea un negocio que se llame testDeALS  y que de monto de 10000$ Y tambien  que le coloques en etapa de negociacion",
+    input: "crea un negocio que se llame josecito y que de monto de 10000$",
     chat_history: [],
   });
 

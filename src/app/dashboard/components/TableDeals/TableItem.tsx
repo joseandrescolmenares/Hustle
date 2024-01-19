@@ -27,9 +27,9 @@ import Link from "next/link";
 import { score } from "@/app/ai/score/score";
 import { Toaster, toast } from "sonner";
 import { Value } from "@radix-ui/react-select";
-
 const MainTable = () => {
-  const [allDeals, setAllDeals] = useState<any[] | null>([]);
+const [allDeals, setAllDeals] = useState<any[] | null>([]);
+
   const [filteredDeals, setFilteredDeals] = useState<any[] | null>([]);
   const [alertReloading, setAlertReloading] = useState<boolean>(false);
   const [loandingData, setLoandingData] = useState(true);

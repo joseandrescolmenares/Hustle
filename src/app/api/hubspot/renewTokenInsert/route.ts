@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const redirectUri = process.env.HUBSPOT_REDIRECT_URI;
 
     const refresh_token = searchParams.get("refresh_token");
-    const id_integrations = searchParams.get("id_integrations");
+  
 
     const response = await axios.post(
       "https://api.hubapi.com/oauth/v1/token",

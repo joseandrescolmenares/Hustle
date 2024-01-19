@@ -1,27 +1,52 @@
+import { supabase } from "@/lib/ClientSupabase";
 import { NextResponse } from "next/server";
+import { renewToken } from "@/service/renewToken";
+
+import axios from "axios";
 
 export async function GET(request: Request) {
-    const url = "https://api.hubapi.com/crm/v3/objects/deals";
+  const { data, error } = await supabase
+    .from("teams")
+    .select(
+      `id_integrations (
+      refresh_token
+      )`
+    )
+    .eq("hubspotAccount", 44497831);
+  if (data == null) return;
 
-    const requestBody = {
-      properties: {
-        amount : 0,
-        dealname:"jose test",
-        // dealstage:"",
-        closedate:"",
-      },
-    };
+  const { refresh_token }: any = data[0]?.id_integrations;
+  const token = await renewToken(refresh_token);
+  console.log(token, "data");
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer CJnR24TRMRIUAAEAUAAA-SIAAED8BwkA4AcgAAQYp_ebFSD3hJkdKMXiigEyFP6VFaNs9c12fCVepOVnSyZZZi_MOj8AAABBAAAAAAAAAAAAAAAAAIYAAAAAAAAAAAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAgAEAAOABAAhCFLHXe1KyEwJG4i_d9O3qS5HC2hILSgNuYTFSAFoA`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
-    const data = await response.json();
+  const url = `https://api.hubapi.com/crm/v4/objects/deal/16213921559/associations/default/company/18209854732`; // Replace "dealId" with the actual ID of the deal you want to update  //   properties: {
+
+  // const requestBody = {
+  //     amount: 0,
+  //     dealname: "jose test",
+  //     // dealstage: "",
+  //     closedate: "",
+  //   },
+  // };
+
+  try {
+    const response = await axios.put(
+      url,
+      // requestBody,
+
+      {
+        headers: {
+          Authorization: `Bearer `,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = response.data;
     console.log(data);
-    return NextResponse.json({ok:"secess"})
-
+  return NextResponse.json({ ok: token });
+  } catch (error) {
+    console.error("Error updating deal:", error);
+    return NextResponse.json({ ok: false });
+  }
 }
