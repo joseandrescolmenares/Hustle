@@ -1,4 +1,5 @@
 "use client";
+
 import { supabase } from "@/lib/ClientSupabase";
 import { AuthResponse } from "@supabase/supabase-js";
 import { UserAuthForm } from "@/app/(auth)/components/UserAuthForm";
