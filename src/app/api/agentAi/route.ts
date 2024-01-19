@@ -28,6 +28,8 @@ export async function GET(request: Request) {
 
   const { refresh_token }: any = data[0]?.id_integrations;
 
+  if(!refresh_token) return
+
   const token = await renewToken(refresh_token);
 
   console.log(token, "data");
