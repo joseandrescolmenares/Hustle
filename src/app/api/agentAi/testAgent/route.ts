@@ -65,7 +65,7 @@ export async function GET(request: Request) {
             {
               propertyName: "name",
               operator: "EQ",
-              value: "mo*",
+              value: `${valueName}*`,
             },
           ],
         },
