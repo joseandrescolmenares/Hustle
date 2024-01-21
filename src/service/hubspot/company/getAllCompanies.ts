@@ -6,7 +6,7 @@ export const getAllCompanies = async () => {
   const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
   try {
     const headers = {
-      Authorization: `Bearer CKeCh_zRMRIUAAEAUAAA-SIAAED8BwkA4AcgAAQYp_ebFSD3hJkdKMXiigEyFF5RzYPHsz0WwbNnufZZaZk9HxXdOj8AAABBAAAAAAAAAAAAAAAAAIYAAAAAAAAAAAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAgAEAAOABAAhCFHspzw5bLBNYLE2VlaosiFSvtZuISgNuYTFSAFoA`,
+      Authorization: `Bearer CI7Yn5vSMRIUAAEAUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFFPpN6P0Q96_6ERgkHXOsJ3Es_GOOj0AAABBAAAAAAAAAAAAAAAAAIYAAAAAAAAAAAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhTUAzv_R2cOwytPZkKUufBdn509H0oDbmExUgBaAA`,
       "Content-Type": "application/json",
     };
     const getAllCompanies = "https://api.hubapi.com/crm/v3/objects/companies";
