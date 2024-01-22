@@ -56,16 +56,16 @@ export async function GET(request: Request) {
     //   const data = response.data;
     //   console.log(data,"data");
 
-    const url = "https://api.hubapi.com/crm/v3/objects/companies/search";
+    const url = "https://api.hubapi.com/crm/v3/objects/contacts/search";
 
     const data = {
       filterGroups: [
         {
           filters: [
             {
-              propertyName: "name",
+              propertyName: "firstname",
               operator: "EQ",
-              value: `${valueName}*`,
+              value: `j*`,
             },
           ],
         },
@@ -73,7 +73,7 @@ export async function GET(request: Request) {
     };
 
     const headers = {
-      Authorization: `Bearer COj7ptzSMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFH4umj98T7bZMRoYD0Kz8vs4jlULOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhQzJWOTRWJRMwLxT4nvvh76VB7Sq0oDbmExUgBaAA`,
+      Authorization: `Bearer COjctujSMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFPfdO07imw24qsCTCVoMc5f3zQq8Oj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhRu2A6_f_ZfgIC96IrMf9-6zM2ScEoDbmExUgBaAA`,
       "Content-Type": "application/json",
     };
 

@@ -36,7 +36,7 @@ export async function GET(request: Request) {
   });
 
   const result = await agentExecutor.invoke({
-    input: "crea un negocio que se llame juanita",
+    input: "crea un negocio que se llame ROJOO con monto de 10000",
     chat_history: [],
   });
 

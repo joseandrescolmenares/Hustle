@@ -34,7 +34,8 @@ export const createDeals = new DynamicStructuredTool({
     closedate: z.string().describe("The date the deal was closed").optional(),
   }),
   func: async ({ amount, dealname, dealstage, closedate }): Promise<any> => {
-    const token = await renewTokenAgent();
+    const dataAccount = await renewTokenAgent();
+    console.log(dataAccount,"dataACCOUNT")
 
     const url = "https://api.hubapi.com/crm/v3/objects/deals";
 
@@ -50,14 +51,15 @@ export const createDeals = new DynamicStructuredTool({
       const response = await fetch(url, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${dataAccount?.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
       });
+      console.log(dataAccount?.idAccount,"id")
       const data = await response.json();
       console.log(data);
-      return `se ha creado con exito, puedes ver mas detalle https://app.hubspot.com/contacts/44497831/record/0-3/${data.id}`;
+      return `se ha creado con exito, puedes ver mas detalle https://app.hubspot.com/contacts/${dataAccount?.idAccount}/record/0-3/${data.id}`;
     } catch (error: any) {
       if (error.response.data.category == "EXPIRED_AUTHENTICATION") {
         return "token expired";
