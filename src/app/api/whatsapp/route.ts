@@ -2,6 +2,7 @@ import { Reply } from "lucide-react";
 import { useParams } from "next/navigation";
 import { NextResponse } from "next/server";
 import { sendMessage } from "@/service/whatsapp/sendMessage";
+import { agentAi } from "@/service/agentAi/agentAi";
 
 export async function GET(request: Request) {
   const verificationToken = process.env.WHATSAPP_VERIFICATION_TOKEN;
@@ -19,8 +20,13 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const value = await request.json();
-    const success = await sendMessage(value);
+    const dataMessageWhatsapp = await request.json();
+    const phoneNumber = dataMessageWhatsapp.entry[0].changes[0].value.messages[0].from;
+    const messageBody =  dataMessageWhatsapp.entry[0].changes[0].value.messages[0].text.body;
+    const responseBotWhatsapp = await agentAi(messageBody)
+    const messageResponse = responseBotWhatsapp.output
+    const dataMessage = { phoneNumber,messageResponse}
+    const success = await sendMessage(dataMessage);
     return NextResponse.json({ status: success ? 200 : 500 });
   } catch (error) {
     console.error(`Error en la función principal: ${error}`);

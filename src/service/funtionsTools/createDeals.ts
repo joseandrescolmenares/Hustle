@@ -59,7 +59,7 @@ export const createDeals = new DynamicStructuredTool({
       console.log(dataAccount?.idAccount,"id")
       const data = await response.json();
       console.log(data);
-      return `se ha creado con exito, puedes ver mas detalle https://app.hubspot.com/contacts/${dataAccount?.idAccount}/record/0-3/${data.id}`;
+      return `se ha creado con exito, Puedes ver los detalles en el siguiente enlace : https://app.hubspot.com/contacts/${dataAccount?.idAccount}/record/0-3/${data.id}`;
     } catch (error: any) {
       if (error.response.data.category == "EXPIRED_AUTHENTICATION") {
         return "token expired";
