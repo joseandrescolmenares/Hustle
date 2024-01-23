@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 export  async function renewToken(refresh_token: string) {
-  console.log(refresh_token, "refresh");
+  console.log(refresh_token, "refresh route");
+
   try {
     const cookieStore = cookies();
     const supabaseClient = createRouteHandlerClient({

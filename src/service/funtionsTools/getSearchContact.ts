@@ -15,7 +15,7 @@ import {
       valueNameContact: z.string().describe("dsdsdsdd"),
     }),
     func: async ({ valueNameContact }) => {
-      const token = renewTokenAgent();
+      // const token = renewTokenAgent();
       const url = "https://api.hubapi.com/crm/v3/objects/contacts/search";
   
       const data = {

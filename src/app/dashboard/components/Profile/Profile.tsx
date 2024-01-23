@@ -45,7 +45,7 @@ export default function SheetSide() {
   const [openDialog, setDialog] = useState(false);
   const [numberPhone, setNumberPhoone] = useState("");
   const [userId, setUserId] = useState("");
-  console.log(userId, "iddd");
+  console.log(numberPhone, "iddd");
 
   const handleSwitch = (value: boolean, idUser: string) => {
     setDialog(value);
@@ -203,8 +203,3 @@ export default function SheetSide() {
   );
 }
 
-// import {
-//   Avatar,
-//   AvatarFallback,
-//   AvatarImage,
-// } from "@/registry/new-york/ui/avatar"

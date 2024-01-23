@@ -16,7 +16,7 @@ export async function sendMessage(dataMessage: DATAMESSAGES) {
     const data = {
       messaging_product: "whatsapp",
       recipient_type: "individual",
-      to: '541126336301', // dataMessage.phoneNumber,
+      to:  dataMessage.phoneNumber,
       type: "text",
       text: {
         preview_url: false,
@@ -38,17 +38,4 @@ export async function sendMessage(dataMessage: DATAMESSAGES) {
   }
 }
 
-export async function reply(dataMessage: any) {
-  if('statuses' in dataMessage.entry[0]?.changes[0]?.value){
-    return;
-  }
-  const phoneNumber =
-      dataMessage.entry[0].changes[0].value.messages[0].from;
-    const messageBody =
-      dataMessage.entry[0].changes[0].value.messages[0].text.body;
-    const responseBotWhatsapp = await agentAi(messageBody);
-    const messageResponse = responseBotWhatsapp.output;
-    // const messageResponse = "Hola!! en unos pocos minutos estaremos liberando el asistente!"
-    const response = { phoneNumber, messageResponse };
-    const success = await sendMessage(response);
-}
+
