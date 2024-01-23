@@ -14,7 +14,6 @@ type ResultScore = {
   score: number;
 }
 
-let isExecuting = false; 
 let lock = false;
 
 async function sleep(ms: number) {
@@ -23,12 +22,6 @@ async function sleep(ms: number) {
 
 async function fetchAllDeals(): Promise<any[]> {
   try {
-    if (isExecuting) {
-      console.log("Otra instancia en curso, abortando...");
-      return [];
-    }
-
-    isExecuting = true;
 
     if (lock) {
       console.log("Esperando a que se libere el bloqueo...");
@@ -104,7 +97,6 @@ async function fetchAllDeals(): Promise<any[]> {
     console.error("Error:", error);
     throw new Error("Hubo un error al obtener las negociaciones");
   } finally {
-    isExecuting = false;
     lock = false;
   }
 }

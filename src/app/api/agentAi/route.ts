@@ -6,7 +6,7 @@ import { getAllCompanies } from "@/service/hubspot/company/getAllCompanies";
 
 import axios from "axios";
 
-// export async function GET(request: Request) {
+export async function GET(request: Request) {
   //  const tes =  await getIdDeals()
   // const tes = await getAllCompanies();
 
@@ -15,7 +15,7 @@ import axios from "axios";
   //   .select(
   //     `id_integrations (
   //     refresh_token
-  //     )`
+  //     )` 
   //   )
   //   .eq("hubspotAccount", 44543727);
   // if (data == null) return;
@@ -35,7 +35,7 @@ import axios from "axios";
   // //   },
   // // };
 
-  // try {
+  try {
     //   const response = await axios.put(
     //     url,
     //     {
@@ -56,38 +56,71 @@ import axios from "axios";
     //   const data = response.data;
     //   console.log(data,"data");
 
-//     const url = "https://api.hubapi.com/crm/v3/objects/contacts/search";
+    const url = "https://api.hubapi.com/crm/v3/objects/companies/search";
 
-//     const data = {
-//       filterGroups: [
+    const data = {
+      filterGroups: [
+        {
+          filters: [
+            {
+              propertyName: "name",
+              operator: "EQ",
+              value: `m*`,
+            },
+          ],
+        },
+      ],
+    };
+
+    const headers = {
+      Authorization: `Bearer CIzhsY_TMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFI7Eo9j-AFT9pWwKC1uaN8KoKN6lOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhQyscsEotvSKlADOf-4wTNRC8HVGUoDbmExUgBaAA`,
+      "Content-Type": "application/json",
+    };
+
+  const res =  await axios
+      .post(url, data, { headers })
+
+      const dataurl = res.data
+    
+    return NextResponse.json({ ok:dataurl});
+  } catch (error) {
+    console.error("Error updating deal:", error);
+    return NextResponse.json({ ok: false });
+  }
+}
+// export async function GET(request: Request) {
+//   return Response.json({jose:"ok"})
+// }
+
+
+
+// const token = renewTokenAgent();
+// const url = "https://api.hubapi.com/crm/v3/objects/companies/search";
+
+// const data = {
+//   filterGroups: [
+//     {
+//       filters: [
 //         {
-//           filters: [
-//             {
-//               propertyName: "firstname",
-//               operator: "EQ",
-//               value: `j*`,
-//             },
-//           ],
+//           propertyName: "name",
+//           operator: "EQ",
+//           value: `jo*`,
 //         },
 //       ],
-//     };
+//     },
+//   ],
+// };
 
-//     const headers = {
-//       Authorization: `Bearer COjctujSMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFPfdO07imw24qsCTCVoMc5f3zQq8Oj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhRu2A6_f_ZfgIC96IrMf9-6zM2ScEoDbmExUgBaAA`,
-//       "Content-Type": "application/json",
-//     };
+// const headers = {
+//   Authorization: `Bearer ${token}`,
+//   "Content-Type": "application/json",
+// };
 
-//   const res =  await axios
-//       .post(url, data, { headers })
+// const res = await axios.post(url, data, { headers });
 
-//       const dataurl = res.data
-    
-//     return NextResponse.json({ ok:dataurl});
-//   } catch (error) {
-//     console.error("Error updating deal:", error);
-//     return NextResponse.json({ ok: false });
-//   }
-// }
-export async function GET(request: Request) {
-  return Response.json({jose:"ok"})
-}
+// const dataResult = res.data;
+// const idCompany = dataResult.results[0].id
+// const nameCompany = dataResult.results[0].properties.name
+// console.log(nameCompany,idCompany ,"data resulll")
+
+// return `el id de empresa es : ${idCompany} y el nombre : ${nameCompany}`;

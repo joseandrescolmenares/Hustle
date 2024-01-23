@@ -1,11 +1,26 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { supabase } from "@/lib/ClientSupabase";
 import { Label } from "../../../components/ui/Label";
 import { CiUser } from "react-icons/ci";
 import { ClipBoard } from "../Clipboard";
+import { TbBrandWhatsapp } from "react-icons/tb";
+import { Switch } from "@/app/components/ui/switch";
+import { HiPaperAirplane } from "react-icons/hi2";
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/components/ui/dialog";
+
 import {
   Avatar,
   AvatarFallback,
@@ -27,7 +42,21 @@ import { date } from "zod";
 export default function SheetSide() {
   const [users, setUsers] = React.useState<any | []>([]);
   const [inviteCode, setInviteCode] = React.useState<string>("");
-  console.log(users, "users");
+  const [openDialog, setDialog] = useState(false);
+  const [numberPhone, setNumberPhoone] = useState("");
+  const [userId, setUserId] = useState("");
+  console.log(userId, "iddd");
+
+  const handleSwitch = (value: boolean, idUser: string) => {
+    setDialog(value);
+    setUserId(idUser);
+  };
+  const handleSendNumberPhone = async () => {
+    const { data, error } = await supabase
+      .from("users")
+      .update({ phoneNumber: numberPhone })
+      .eq("id_user", userId);
+  };
 
   const team = Cookies.get("team");
   const getUser = async () => {
@@ -73,11 +102,12 @@ export default function SheetSide() {
                 Team creator :
               </Label>
               <p className="text-sm font-medium leading-none p-2 bg-slate-200/50 rounded-sm">
-                {users
-                  .find(
+                {
+                  users.find(
                     (userGuest: { rol: string }): any =>
                       userGuest.rol == "creator"
-                  )?.correo}
+                  )?.correo
+                }
               </p>
               {/* <Input id="name" value="Pedro Duarte" className="col-span-3" /> */}
             </div>
@@ -87,31 +117,78 @@ export default function SheetSide() {
             <Label htmlFor="name" className="text-right">
               Team
             </Label>
-            { users
-                  .filter(
-                    (userGuest: { rol: string }): any =>
-                      userGuest?.rol == "guest"
-                  )
-                  .map((user: any) => (
-                    <div className="flex items-center" key={user.id_user}>
-                      <Avatar className="h-9 w-9">
-                        <AvatarImage src="/avatars/01.png" alt="Avatar" />
-                        <AvatarFallback>
-                          {user.correo.slice(0, 1).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="ml-4 space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {user?.rol}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {user?.correo}
-                        </p>
-                      </div>
+            {users
+              .filter(
+                (userGuest: { rol: string }): any => userGuest?.rol == "guest"
+              )
+              .map((user: any) => (
+                <div
+                  className="flex items-center justify-between"
+                  key={user.id_user}
+                >
+                  <div className="flex justify-center items-center ">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                      <AvatarFallback>
+                        {user.correo.slice(0, 1).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="ml-4 ">
+                      <p className="text-sm font-medium leading-none m-0">
+                        {user?.rol}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {user?.correo}
+                      </p>
                     </div>
-                  ))
-}
+                  </div>
+                  <div className="flex gap-2">
+                    <Switch
+                      checked={openDialog}
+                      onCheckedChange={(value) =>
+                        handleSwitch(value, user.id_user)
+                      }
+                      aria-readonly
+                    />
+
+                    <TbBrandWhatsapp size={27} color="#36E93C" />
+                  </div>
+                </div>
+              ))}
           </div>
+
+          <Dialog open={openDialog}>
+            <DialogTrigger asChild></DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>add phone number </DialogTitle>
+                <DialogDescription>
+                  add the phone number to start updating the CRM from whatsApp.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex items-center space-x-2">
+                <div className="grid flex-1 gap-2">
+                  <Input
+                    placeholder="+54-222-300"
+                    onChange={(e) => setNumberPhoone(e.target.value)}
+                  />
+                </div>
+                <Button type="submit" size="sm" className="px-3" onClick={handleSendNumberPhone}>
+                  <HiPaperAirplane size={20} />
+                  {/* <CopyIcon className="h-4 w-4" /> */}
+                </Button>
+              </div>
+              <DialogFooter className="sm:justify-start">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setDialog(false)}
+                >
+                  Close
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           {/* <SheetClose asChild>
               <Button type="submit">Save changes</Button>

@@ -10,6 +10,6 @@ export const tools: any = [
   createDeals,
   getSearchCompany,
   createDealBusinessAssociation,
-  updateDealData,
-  getSearchContacts
+  // updateDealData,
+  // getSearchContacts
 ];
