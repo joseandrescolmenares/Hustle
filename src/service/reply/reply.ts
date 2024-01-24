@@ -7,20 +7,17 @@ export async function reply(dataMessage: any) {
     return;
   }
   let phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
-  let messageBody =
-    dataMessage.entry[0].changes[0].value.messages[0].text.body;
-  // Validate the number before processing it
-console.log(!(await validateNumber(phoneNumber)).validate.status,"verr")
-  if (!(await validateNumber(phoneNumber)).validate.status) {
+  let messageBody = dataMessage.entry[0].changes[0].value.messages[0].text.body;
 
-    const message = await validateNumber(phoneNumber)
-    const response = { phoneNumber : '', messageResponse :  message.validate.message};
-    return await sendMessage(response)
+  if (!(await validateNumber(phoneNumber)).validate.status) {
+    const message = await validateNumber(phoneNumber);
+    const response = { phoneNumber, messageResponse: message.validate.message };
+    return await sendMessage(response);
   }
 
   const responseBotWhatsapp = await agentAi(messageBody, phoneNumber);
 
-  const messageResponse = responseBotWhatsapp.output;
+  let messageResponse = responseBotWhatsapp.output;
   // const messageResponse = "Hola!! en unos pocos minutos estaremos liberando el asistente!"
   const response = { phoneNumber, messageResponse };
   const success = await sendMessage(response);

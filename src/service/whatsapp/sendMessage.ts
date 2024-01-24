@@ -9,18 +9,17 @@ interface DATAMESSAGES {
 export async function sendMessage(dataMessage: DATAMESSAGES) {
   try {
     const accessToken = process.env.WHATSAPP_TOKEN;
-    console.log(dataMessage.phoneNumber,"number")
 
     const url = `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_ID_NUMBER}/messages`;
 
     const data = {
       messaging_product: "whatsapp",
       recipient_type: "individual",
-      to:  dataMessage.phoneNumber,
+      to: dataMessage?.phoneNumber,
       type: "text",
       text: {
         preview_url: false,
-        body: dataMessage.messageResponse,
+        body: dataMessage?.messageResponse,
       },
     };
 
@@ -37,5 +36,3 @@ export async function sendMessage(dataMessage: DATAMESSAGES) {
     return false;
   }
 }
-
-

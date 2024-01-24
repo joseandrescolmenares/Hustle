@@ -10,6 +10,9 @@ import { TbBrandWhatsapp } from "react-icons/tb";
 import { Switch } from "@/app/components/ui/switch";
 import { HiPaperAirplane } from "react-icons/hi2";
 
+// import useWindowSize from "react-use/lib/useWindowSize";
+import Confetti from "react-confetti";
+
 import {
   Dialog,
   DialogClose,
@@ -45,7 +48,9 @@ export default function SheetSide() {
   const [openDialog, setDialog] = useState(false);
   const [numberPhone, setNumberPhoone] = useState("");
   const [userId, setUserId] = useState("");
-  console.log(numberPhone, "iddd");
+  const [confetti, setConfetti] = useState(false);
+  const [checked, setChecked] = useState(false);
+  console.log(users, "iddd");
 
   const handleSwitch = (value: boolean, idUser: string) => {
     setDialog(value);
@@ -56,6 +61,13 @@ export default function SheetSide() {
       .from("users")
       .update({ phoneNumber: numberPhone })
       .eq("id_user", userId);
+    setConfetti(true);
+    setDialog(false);
+    setChecked(true)
+
+    setTimeout(() => {
+      setConfetti(false);
+    }, 5000);
   };
 
   const team = Cookies.get("team");
@@ -66,7 +78,6 @@ export default function SheetSide() {
       .eq("id_team", team);
 
     setUsers(dataUsers);
-    console.log(error, "erropr");
   };
   const codeTeam = async () => {
     let { data: dataTeam, error } = await supabase
@@ -144,11 +155,10 @@ export default function SheetSide() {
                   </div>
                   <div className="flex gap-2">
                     <Switch
-                      checked={openDialog}
+                      checked={user.phoneNumber || checked}
                       onCheckedChange={(value) =>
                         handleSwitch(value, user.id_user)
                       }
-                      aria-readonly
                     />
 
                     <TbBrandWhatsapp size={27} color="#36E93C" />
@@ -156,9 +166,21 @@ export default function SheetSide() {
                 </div>
               ))}
           </div>
+          <>
+            {confetti && (
+              <Confetti
+                width={window.innerWidth || 300}
+                height={window.innerHeight || 200}
+                tweenDuration={3000}
+                initialVelocityY={7}
+                initialVelocityX={10}
+              />
+            )}
+          </>
 
           <Dialog open={openDialog}>
             <DialogTrigger asChild></DialogTrigger>
+
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
                 <DialogTitle>add phone number </DialogTitle>
@@ -173,7 +195,12 @@ export default function SheetSide() {
                     onChange={(e) => setNumberPhoone(e.target.value)}
                   />
                 </div>
-                <Button type="submit" size="sm" className="px-3" onClick={handleSendNumberPhone}>
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="px-3"
+                  onClick={handleSendNumberPhone}
+                >
                   <HiPaperAirplane size={20} />
                   {/* <CopyIcon className="h-4 w-4" /> */}
                 </Button>
@@ -202,4 +229,3 @@ export default function SheetSide() {
     </div>
   );
 }
-

@@ -2,7 +2,6 @@ import { renewToken } from "@/service/renewToken";
 import { supabase } from "./ClientSupabase";
 
 export const validateNumber = async (phoneNumber: string) => {
-  console.log(phoneNumber, "phoneee");
   const { data, error } = await supabase
     .from("users")
     .select(
@@ -18,13 +17,12 @@ export const validateNumber = async (phoneNumber: string) => {
     return {
       validate: {
         message:
-          "este numero no esta asociado a ninguna cuenta, Porfavor creé una cuenta en https://meethustle.io/ ",
+          "Este número no está asociado a ninguna cuenta. Te invitamos a crear una cuenta en https://meethustle.io/ para acceder a todas las funciones y beneficios. ¡Es rápido y sencillo! Una vez registrado, podrás disfrutar de todas las herramientas y servicios que ofrecemos. ¡Bienvenido a MeetHustle!  ",
         status: false,
       },
     };
   }
 
-  console.log(data, error, "error");
 
   return { validate: { message: "success", status: true } };
 };
