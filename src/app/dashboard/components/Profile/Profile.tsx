@@ -41,6 +41,7 @@ import {
   SheetTrigger,
 } from "../../../components/ui/sheet";
 import { date } from "zod";
+import { sendMessage } from "@/service/whatsapp/sendMessage";
 
 export default function SheetSide() {
   const [users, setUsers] = React.useState<any | []>([]);
@@ -50,7 +51,24 @@ export default function SheetSide() {
   const [userId, setUserId] = useState("");
   const [confetti, setConfetti] = useState(false);
   const [checked, setChecked] = useState(false);
-  console.log(users, "iddd");
+
+  const channels = supabase
+    .channel("custom-all-channel")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "users" },
+      (payload) => {
+        const { phoneNumber }: any = payload.new;
+        const messageResponse =
+          "¡Hola! Soy Hustle, tu asistente personal 🚀. ¿Listo para mantener tu CRM al día con solo un mensaje por WhatsApp? ¡Vamos allá! 💬✨";
+        const dataMessage = { phoneNumber, messageResponse };
+
+        if (phoneNumber) {
+          sendMessage(dataMessage);
+        }
+      }
+    )
+    .subscribe();
 
   const handleSwitch = (value: boolean, idUser: string) => {
     setDialog(value);
@@ -92,6 +110,7 @@ export default function SheetSide() {
     getUser();
     codeTeam();
   }, []);
+
   return (
     <div>
       <Sheet>
@@ -178,8 +197,7 @@ export default function SheetSide() {
                 width={window.innerWidth || 300}
                 height={window.innerHeight || 200}
                 tweenDuration={3000}
-                initialVelocityY={7}
-                initialVelocityX={10}
+                initialVelocityY={20}
               />
             )}
           </>
