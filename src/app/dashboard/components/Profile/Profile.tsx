@@ -63,7 +63,7 @@ export default function SheetSide() {
       .eq("id_user", userId);
     setConfetti(true);
     setDialog(false);
-    setChecked(true)
+    setChecked(true);
 
     setTimeout(() => {
       setConfetti(false);
@@ -108,19 +108,25 @@ export default function SheetSide() {
               </SheetDescription> */}
           </SheetHeader>
           <div className="flex justify-center items-start flex-col gap-6 mt-8">
-            <div className="flex flex-col justify-center items-start gap-3">
-              <Label htmlFor="name" className="text-right">
-                Team creator :
-              </Label>
-              <p className="text-sm font-medium leading-none p-2 bg-slate-200/50 rounded-sm">
-                {
-                  users.find(
-                    (userGuest: { rol: string }): any =>
-                      userGuest.rol == "creator"
-                  )?.correo
-                }
-              </p>
-              {/* <Input id="name" value="Pedro Duarte" className="col-span-3" /> */}
+            <div className="flex justify-between w-full items-end">
+              <div className="flex flex-col justify-center items-start gap-3">
+                <Label htmlFor="name" className="text-right">
+                  Team creator :
+                </Label>
+                <p className="text-sm font-medium leading-none p-2 bg-slate-200/50 rounded-sm">
+                  {
+                    users.find(
+                      (userGuest: { rol: string }): any =>
+                        userGuest.rol == "creator"
+                    )?.correo
+                  }
+                </p>
+                {/* <Input id="name" value="Pedro Duarte" className="col-span-3" /> */}
+              </div>
+              <div className="flex gap-2">
+                <Switch checked={true} />
+                <TbBrandWhatsapp size={27} color="#36E93C" />
+              </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4"></div>
           </div>
