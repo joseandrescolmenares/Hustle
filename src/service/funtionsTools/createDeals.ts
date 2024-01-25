@@ -1,69 +1,40 @@
-// import {
-//   DynamicTool,
-//   DynamicStructuredTool,
-// } from "@langchain/community/tools/dynamic";
-// import { supabase } from "@/lib/ClientSupabase";
-// import { renewTokenAgent } from "./renewTokenAgent";
+interface DataProps {
+  token?: string;
+  amount?: number;
+  dealname?: string;
+  closedate?: string;
+  idAccount?: string;
+}
 
-// import { ZodObject, string, z } from "zod";
+export const createNewDeals = async (dataProp: DataProps) => {
+  const { amount, dealname, closedate, token, idAccount } = dataProp;
+  const url = "https://api.hubapi.com/crm/v3/objects/deals";
 
-// export const createDeals = new DynamicStructuredTool({
-//   name: "createDeals",
-//   description:
-//     "This function creates a deal with the given properties. The function ensures that all information is accurately recorded to enable effective management and tracking of the newly created deal.",
-//   schema: z.object({
-//     amount: z
-//       .number()
-//       .describe(
-//         "represents the monetary amount associated with the deal being created."
-//       )
-//       .optional()
-//       .default(0),
-//     dealname: z
-//       .string()
-//       .describe("represents the name of the deal.")
-//       .optional()
-//       .default(""),
-//     dealstage: z
-//       .string()
-//       .describe(
-//         "The stage of the deal. The business stages allow you to classify and monitor the progress of the businesses you are working on."
-//       )
-//       .optional()
-//       .default(""),
-//     closedate: z.string().describe("The date the deal was closed").optional(),
-//   }),
-//   func: async ({ amount, dealname, dealstage, closedate }): Promise<any> => {
-//     const dataAccount = await renewTokenAgent();
+  const requestBody = {
+    properties: {
+      amount,
+      // dealstage,
+      dealname,
+      closedate,
+    },
+  };
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
 
-//     const url = "https://api.hubapi.com/crm/v3/objects/deals";
+    const data = await response.json();
 
-//     const requestBody = {
-//       properties: {
-//         amount,
-//         // dealstage,
-//         dealname,
-//         closedate,
-//       },
-//     };
-//     try {
-//       const response = await fetch(url, {
-//         method: "POST",
-//         headers: {
-//           Authorization: `Bearer ${dataAccount?.token}`,
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(requestBody),
-//       });
-//       console.log(dataAccount?.idAccount,"id")
-//       const data = await response.json();
-//       console.log(data);
-//       return `se ha creado con exito, Puedes ver los detalles en el siguiente enlace : https://app.hubspot.com/contacts/${dataAccount?.idAccount}/record/0-3/${data.id}`;
-//     } catch (error: any) {
-//       if (error.response.data.category == "EXPIRED_AUTHENTICATION") {
-//         return "token expired";
-//       }
-//       return "error, por favor vuelva a intentarlo";
-//     }
-//   },
-// });
+    return `se ha creado con exito, Puedes ver los detalles en el siguiente enlace : https://app.hubspot.com/contacts/${idAccount}/record/0-3/${data.id}`;
+  } catch (error: any) {
+    if (error.response.data.category == "EXPIRED_AUTHENTICATION") {
+      return "token expired";
+    }
+    return "error, por favor vuelva a intentarlo";
+  }
+};
