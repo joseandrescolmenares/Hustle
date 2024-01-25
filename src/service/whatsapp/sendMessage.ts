@@ -30,9 +30,9 @@ export async function sendMessage(dataMessage: DATAMESSAGES) {
 
     const response = await axios.post(url, data, { headers });
 
-    return true;
+    return ;
   } catch (error) {
     console.error(`Error al enviar el mensaje: ${error}`);
-    return false;
+    return;
   }
 }

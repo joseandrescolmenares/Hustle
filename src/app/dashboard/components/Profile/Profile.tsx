@@ -52,24 +52,27 @@ export default function SheetSide() {
   const [confetti, setConfetti] = useState(false);
   const [checked, setChecked] = useState(false);
 
+
+
   const channels = supabase
     .channel("custom-all-channel")
     .on(
       "postgres_changes",
-      { event: "*", schema: "public", table: "users" },
+      { event: "*", schema: "public", table: "users", },
       (payload) => {
         const { phoneNumber }: any = payload.new;
         const messageResponse =
           "¡Hola! Soy Hustle, tu asistente personal 🚀. ¿Listo para mantener tu CRM al día con solo un mensaje por WhatsApp? ¡Vamos allá! 💬✨";
         const dataMessage = { phoneNumber, messageResponse };
+        console.log("cagaooo");
 
         if (phoneNumber) {
+  
           sendMessage(dataMessage);
         }
       }
     )
     .subscribe();
-
   const handleSwitch = (value: boolean, idUser: string) => {
     setDialog(value);
     setUserId(idUser);

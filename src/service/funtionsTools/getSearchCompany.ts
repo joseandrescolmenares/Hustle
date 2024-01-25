@@ -51,3 +51,59 @@
 //     return `el id de empresa es : ${idCompany} y el nombre : ${nameCompany}`;
 //   },
 // });
+
+
+import { DynamicStructuredTool } from "@langchain/community/tools/dynamic";
+import axios from "axios";
+import { z } from "zod";
+
+export interface AccountData {
+    token?: string;
+    accountId?: string;
+}
+
+const getBussinesData = (accountData: AccountData) => {
+    return async ({ companyName }: {[key: string]: string}) => {
+        const url = "https://api.hubapi.com/crm/v3/objects/companies/search";
+        const body = {
+            filterGroups: [
+                {
+                    filters: [
+                        {
+                            propertyName: "name",
+                            operator: "EQ",
+                            value: `${companyName}*`,
+                        },
+                    ],
+                },
+            ],
+        };
+        const headers = {
+            Authorization: `Bearer ${accountData?.token}`,
+            "Content-Type": "application/json",
+        };
+
+        const { data } = await axios.post(url, body, { headers });
+        const companyId = data.results[0].id;
+        const companyNameRes = data.results[0].properties.name;
+        console.log(companyId, companyNameRes, "data result");
+
+        return `el id de empresa es : ${companyId} y el nombre : ${companyNameRes}`;
+    };
+};
+
+const getCompany = (accountData: AccountData) => {
+    return new DynamicStructuredTool({
+        name: "getCompany",
+        description: "this function helps to search the companies by name",
+        schema: z.object({
+          valueNameCompany: z
+            .string()
+            .describe("company name to search for the id")
+            .default("jose"),
+        }),
+        func: getBussinesData(accountData),
+    });
+};
+
+export default getCompany;
