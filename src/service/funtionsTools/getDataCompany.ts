@@ -1,9 +1,13 @@
 import axios from "axios";
 
-export const getDataCompany = async (
-  token: string,
-  valueNameCompany: string
-) => {
+interface DataProp {
+  token: string;
+  nameCompany: string;
+}
+
+export const getDataCompany = async (dataProp: DataProp) => {
+  const { nameCompany, token } = dataProp;
+  console.log(nameCompany,"estoy es el nomnre de la empres")
   const url = "https://api.hubapi.com/crm/v3/objects/companies/search";
 
   const data = {
@@ -13,7 +17,7 @@ export const getDataCompany = async (
           {
             propertyName: "name",
             operator: "EQ",
-            value: `${valueNameCompany}*`,
+            value: `${nameCompany}*`,
           },
         ],
       },
@@ -26,11 +30,11 @@ export const getDataCompany = async (
   };
 
   const res = await axios.post(url, data, { headers });
-
+  
   const dataResult = res.data;
   const idCompany = dataResult.results[0].id;
-  const nameCompany = dataResult.results[0].properties.name;
+  const name = dataResult.results[0].properties.name;
 
 
-  return `el id de empresa es : ${idCompany} y el nombre : ${nameCompany}`;
+  return `el id de empresa es : ${idCompany} y el nombre : ${name}`;
 };

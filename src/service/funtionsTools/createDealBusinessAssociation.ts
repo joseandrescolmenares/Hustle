@@ -1,18 +1,20 @@
 import axios from "axios";
+
 interface Props {
-  idDeal: string;
+  idDeals: string;
   idCompany: string;
   token: string;
 }
 
 export const dealBusinessAssociation = async (props: Props) => {
-  const { idDeal, idCompany, token } = props;
+  const { idDeals, idCompany, token } = props;
+  console.log("esto es el id del la empresaa ", idDeals);
   const url = `https://api.hubapi.com/crm-associations/v1/associations`;
 
   const response = await axios.put(
     url,
     {
-      fromObjectId: `${idDeal}`,
+      fromObjectId: `${idDeals}`,
       toObjectId: `${idCompany}`,
       category: "HUBSPOT_DEFINED",
       definitionId: 5,

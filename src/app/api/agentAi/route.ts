@@ -6,46 +6,15 @@ import { getAllCompanies } from "@/service/hubspot/company/getAllCompanies";
 import { renewTokenAgent } from "@/service/funtionsTools/renewTokenAgent";
 
 import axios from "axios";
+import { getSearchContacts } from "@/service/funtionsTools/getSearchContact";
 
 export async function GET(request: Request) {
+  // const jose = await renewTokenAgent("+541126336301")
+  const contactName = "n";
+  const token =
+    "CJ7xz4_UMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFJSABMdmpICOk3nkRsmWTrl6oG-cOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhRQguPktnzwUUpZMtVMb7fyrlRmQUoDbmExUgBaAA";
+  const dataProp = { token, contactName };
+  const data = await getSearchContacts(dataProp);
 
-  const jose = await renewTokenAgent("+541126336301")
-
- return NextResponse.json({jose:jose})
+  return NextResponse.json({ jose: data });
 }
-// export async function GET(request: Request) {
-//   return Response.json({jose:"ok"})
-// }
-
-
-
-// const token = renewTokenAgent();
-// const url = "https://api.hubapi.com/crm/v3/objects/companies/search";
-
-// const data = {
-//   filterGroups: [
-//     {
-//       filters: [
-//         {
-//           propertyName: "name",
-//           operator: "EQ",
-//           value: `jo*`,
-//         },
-//       ],
-//     },
-//   ],
-// };
-
-// const headers = {
-//   Authorization: `Bearer ${token}`,
-//   "Content-Type": "application/json",
-// };
-
-// const res = await axios.post(url, data, { headers });
-
-// const dataResult = res.data;
-// const idCompany = dataResult.results[0].id
-// const nameCompany = dataResult.results[0].properties.name
-// console.log(nameCompany,idCompany ,"data resulll")
-
-// return `el id de empresa es : ${idCompany} y el nombre : ${nameCompany}`;

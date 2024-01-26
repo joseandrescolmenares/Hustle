@@ -11,24 +11,41 @@ import { ZodObject, string, z } from "zod";
 import { getDataCompany } from "../funtionsTools/getDataCompany";
 import { createNewDeals } from "../funtionsTools/createDeals";
 import { dealBusinessAssociation } from "../funtionsTools/createDealBusinessAssociation";
+import { getSearchContacts } from "../funtionsTools/getSearchContact";
+
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
 
+    const getContactInfoByName = new DynamicStructuredTool({
+      name: "getCotactInfoByName",
+      description:
+        "This function allows you to search for contacts by name and provides detailed information about the contact, including their e-mail address, unique identifier (ID) and name. This information can be used in other functions, for example, to establish associations between other entities.",
+      schema: z.object({
+        contactName: string().describe(""),
+      }),
+      func: async ({ contactName }) => {
+        const token = validateDataAccount?.token;
+        const dataProp = { token, contactName };
+        return await getSearchContacts(dataProp);
+      },
+    });
+
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",
     description:
-      "This function allows you to search for companies by name and provides detailed information about the company, including its unique identifier (ID) and name. This information can be used in other functions, for example, to establish partnerships between other entities. ",
+      "This function allows you to search for companies by name and provides detailed information about the company, including its unique identifier (ID) and name. This information can be used in other functions, for example, to establish partnerships between other entities.",
     schema: z.object({
-      companyNameToSearch: z
+      nameCompany: z
         .string()
         .describe("company name to search for the id")
         .default(""),
     }),
-    func: async ({ companyNameToSearch }): Promise<string> => {
+    func: async ({ nameCompany }): Promise<string> => {
+      const token = validateDataAccount?.token
+      const dataConpany = {token,  nameCompany}
       return await getDataCompany(
-        validateDataAccount?.token,
-        companyNameToSearch
+        dataConpany
       );
     },
   });
@@ -38,20 +55,20 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     description:
       "this function creates associations between deal and business.",
     schema: z.object({
-      idDeal: z
+      idDeals: z
         .string()
-        .describe("represents the agreement identifier.")
-        .default("16290810165"),
+        .describe("represents the company's id to perform the association.")
+        .default(""),
       idCompany: z
         .string()
         .describe(
-          "represents the company identifier that can be obtained from getCompany"
+          "represents the company identifier "
         )
-        .default("18794584604"),
+        .default(""),
     }),
-    func: async ({ idDeal, idCompany }) => {
+    func: async ({ idDeals, idCompany }) => {
       const token = validateDataAccount?.token;
-      const props = { idCompany, idDeal, token };
+      const props = { idCompany, idDeals, token };
       return await dealBusinessAssociation(props);
     },
   });
@@ -106,6 +123,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     createDeals,
     getCompanyInfoByName,
     createDealBusinessAssociation,
+    // getContactInfoByName,
   ];
 
   const llm = new ChatOpenAI({
