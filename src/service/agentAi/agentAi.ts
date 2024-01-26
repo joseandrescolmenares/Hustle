@@ -13,23 +13,22 @@ import { createNewDeals } from "../funtionsTools/createDeals";
 import { dealBusinessAssociation } from "../funtionsTools/createDealBusinessAssociation";
 import { getSearchContacts } from "../funtionsTools/getSearchContact";
 
-
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
 
-    const getContactInfoByName = new DynamicStructuredTool({
-      name: "getCotactInfoByName",
-      description:
-        "This function allows you to search for contacts by name and provides detailed information about the contact, including their e-mail address, unique identifier (ID) and name. This information can be used in other functions, for example, to establish associations between other entities.",
-      schema: z.object({
-        contactName: string().describe(""),
-      }),
-      func: async ({ contactName }) => {
-        const token = validateDataAccount?.token;
-        const dataProp = { token, contactName };
-        return await getSearchContacts(dataProp);
-      },
-    });
+  const getContactInfoByName = new DynamicStructuredTool({
+    name: "getCotactInfoByName",
+    description:
+      "This function allows you to search for contacts by name and provides detailed information about the contact, including their e-mail address, unique identifier (ID) and name. This information can be used in other functions, for example, to establish associations between other entities.",
+    schema: z.object({
+      contactName: string().describe(""),
+    }),
+    func: async ({ contactName }) => {
+      const token = validateDataAccount?.token;
+      const dataProp = { token, contactName };
+      return await getSearchContacts(dataProp);
+    },
+  });
 
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",
@@ -42,11 +41,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .default(""),
     }),
     func: async ({ nameCompany }): Promise<string> => {
-      const token = validateDataAccount?.token
-      const dataConpany = {token,  nameCompany}
-      return await getDataCompany(
-        dataConpany
-      );
+      const token = validateDataAccount?.token;
+      const dataConpany = { token, nameCompany };
+      return await getDataCompany(dataConpany);
     },
   });
 
@@ -61,14 +58,13 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .default(""),
       idCompany: z
         .string()
-        .describe(
-          "represents the company identifier "
-        )
+        .describe("represents the company identifier ")
         .default(""),
     }),
     func: async ({ idDeals, idCompany }) => {
       const token = validateDataAccount?.token;
-      const props = { idCompany, idDeals, token };
+      const idAccoun = validateDataAccount?.idAccount;
+      const props = { idCompany, idDeals, token, idAccoun };
       return await dealBusinessAssociation(props);
     },
   });
@@ -97,12 +93,17 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         )
         .optional()
         .default(""),
-      closedate: z.string().describe("The date the deal was closed").optional(),
+      closedate: z
+        .string()
+        .describe(
+          "this property defines the date on which the operation was closed, for this property it is important to follow this format, for example: '2019-12-07T16:50:06.678Z'"
+        )
+        .optional(),
     }),
     func: async ({
       amount,
       dealname,
-      dealstage,
+      // dealstage,
       closedate,
     }): Promise<string> => {
       const token = validateDataAccount?.token;
@@ -110,7 +111,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       const dataParams = {
         amount,
         dealname,
-        dealstage,
+        // dealstage,
         closedate,
         token,
         idAccount,

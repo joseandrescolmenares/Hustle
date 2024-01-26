@@ -4,6 +4,7 @@ interface DataProps {
   dealname?: string;
   closedate?: string;
   idAccount?: string;
+  // dealstage: string;
 }
 
 export const createNewDeals = async (dataProp: DataProps) => {
@@ -29,6 +30,7 @@ export const createNewDeals = async (dataProp: DataProps) => {
     });
 
     const data = await response.json();
+    console.log(data);
 
     return `se ha creado con exito, Puedes ver los detalles en el siguiente enlace : https://app.hubspot.com/contacts/${idAccount}/record/0-3/${data.id}`;
   } catch (error: any) {

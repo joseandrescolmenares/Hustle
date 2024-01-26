@@ -4,10 +4,11 @@ interface Props {
   idDeals: string;
   idCompany: string;
   token: string;
+  idAccoun: string
 }
 
 export const dealBusinessAssociation = async (props: Props) => {
-  const { idDeals, idCompany, token } = props;
+  const { idDeals, idCompany, token,idAccoun } = props;
   console.log("esto es el id del la empresaa ", idDeals);
   const url = `https://api.hubapi.com/crm-associations/v1/associations`;
 
@@ -28,5 +29,7 @@ export const dealBusinessAssociation = async (props: Props) => {
     }
   );
 
-  return "se ha creado con exitos";
+
+
+  return `Puedes ver los detalles en el siguiente enlace : https://app.hubspot.com/contacts/${idAccoun}/record/0-3/${idDeals}`
 };

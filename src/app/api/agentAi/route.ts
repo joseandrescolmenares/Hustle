@@ -7,14 +7,24 @@ import { renewTokenAgent } from "@/service/funtionsTools/renewTokenAgent";
 
 import axios from "axios";
 import { getSearchContacts } from "@/service/funtionsTools/getSearchContact";
+import { createNewDeals } from "@/service/funtionsTools/createDeals";
 
 export async function GET(request: Request) {
   // const jose = await renewTokenAgent("+541126336301")
-  const contactName = "n";
+  const closedate = "n";
   const token =
-    "CJ7xz4_UMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFJSABMdmpICOk3nkRsmWTrl6oG-cOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhRQguPktnzwUUpZMtVMb7fyrlRmQUoDbmExUgBaAA";
-  const dataProp = { token, contactName };
-  const data = await getSearchContacts(dataProp);
+    "CO7YtZ7UMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFDMLEyqTdbts3veD1vNz_M5VA88lOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhRRxbpegWOxolI4UbUEBt8Ei5fwLUoDbmExUgBaAA";
+  const dataProp = {
+    token,
+    idAccount: "0",
+    closedate: "2024/02/28",
+    dealname: "kuil",
+    amount: 0,
+    // dealstage: "closedwon",
+  };
+  // const data = await getSearchContacts(dataProp);
+
+  const data = await createNewDeals(dataProp);
 
   return NextResponse.json({ jose: data });
 }
