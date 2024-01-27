@@ -7,19 +7,9 @@ interface PropsDataContact {
 export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
   const { contactName, token } = propsDataContact;
   const url = "https://api.hubapi.com/crm/v3/objects/contacts/search";
+  console.log(contactName)
 
   const data = {
-    filterGroup: [
-      {
-        filters: [
-          {
-            propertyName: "firstname",
-            operator: "EQ",
-            value: `${contactName}*`,
-          },
-        ],
-      },
-    ],
     filterGroups: [
       {
         filters: [
@@ -28,14 +18,26 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
             operator: "EQ",
             value: `${contactName}*`,
           },
+         
+        ],
+     
+      },
+      {
+        filters: [
+         
           {
             propertyName: "email",
-            operator: "CONTAINS_TOKEN",
+            operator: "EQ",
             value: `${contactName}*`,
           },
+         
         ],
       },
+      
     ],
+   
+     
+  
   };
 
   const headers = {
@@ -45,7 +47,9 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
 
   const res = await axios.post(url, data, { headers });
 
-  const dataurl = res.data;
+  const resultData = res.data;
+  const contactId = resultData.results[0].id
+  // const  name = resultData.results[0].properties
 
-  return dataurl;
+  return `el id del contacto  es : ${contactId}`;
 };

@@ -13,16 +13,17 @@ import { createNewDeals } from "../funtionsTools/createDeals";
 import { dealBusinessAssociation } from "../funtionsTools/createDealBusinessAssociation";
 import { getSearchContacts } from "../funtionsTools/getSearchContact";
 import { getStage } from "../funtionsTools/getStage";
+import { dealContactAssociation } from "../funtionsTools/dealContactAssociation";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
 
   const getContactInfoByName = new DynamicStructuredTool({
-    name: "getCotactInfoByName",
+    name: "getContactInfoByName",
     description:
-      "This function allows you to search for contacts by name and provides detailed information about the contact, including their e-mail address, unique identifier (ID) and name. This information can be used in other functions, for example, to establish associations between other entities.",
+      "This function allows you to search for contact by name and provides detailed information about the contact, including their e-mail address, unique identifier (id) and name. This information can be used in other functions, for example, to establish associations between other entities.",
     schema: z.object({
-      contactName: string().describe(""),
+      contactName: string().describe("contact name to search for the id"),
     }),
     func: async ({ contactName }) => {
       const token = validateDataAccount?.token;
@@ -34,7 +35,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",
     description:
-      "This function allows you to search for companies by name and provides detailed information about the company, including its unique identifier (ID) and name. This information can be used in other functions, for example, to establish partnerships between other entities.",
+      "This function allows you to search for companies by name and provides detailed information about the company, including its unique identifier (id) and name. This information can be used in other functions, for example, to establish partnerships between other entities.",
     schema: z.object({
       nameCompany: z
         .string()
@@ -45,6 +46,20 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       const token = validateDataAccount?.token;
       const dataConpany = { token, nameCompany };
       return await getDataCompany(dataConpany);
+    },
+  });
+  const associateContactWithDeal = new DynamicStructuredTool({
+    name: "associateContactWithDeal",
+    description: "this function creates associations between contact and deals",
+    schema: z.object({
+      contactId: z.string().describe("represents the contact identifier"),
+      dealId: z.string().describe("represents the deal id to perform the association"),
+    }),
+    func: async ({ contactId, dealId }) => {
+      const token = validateDataAccount?.token;
+      const idAccoun = validateDataAccount?.idAccount
+      const props = {token, idAccoun, contactId, dealId}
+      return await dealContactAssociation(props)
     },
   });
 
@@ -72,7 +87,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getDealStage = new DynamicTool({
     name: "getDealStage",
     description:
-      "This function is used to call the stages or phases that are in the CRM.  Prior knowledge of the available stages is required to make the appropriate selections. In addition, this function provides both the values and their corresponding ids, allowing you to capture the ID of the selected value and create a successful operation.",
+      "This function is used to retrieve the stages available in the CRM.  The function provides both the values and their corresponding ids, allowing the accurate capture of the id of the selected value, ensuring that the id is accurately passed to the dealstage when required.",
     func: async () => {
       return await getStage(validateDataAccount?.token);
     },
@@ -84,9 +99,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     schema: z.object({
       amount: z
         .number()
-        .describe(
-          "represents the monetary amount associated with the deal being created."
-        )
+        .describe("represents the monetary amount or monetary value")
         .optional()
         .default(0),
       dealname: z
@@ -96,11 +109,13 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .default(""),
       dealstage: z
         .string()
+        .nullable()
         .describe(
-          "This property describes the phase in which an agreement or commercial negotiation is in a sales process. To set this parameter, consult the 'getDealStage' function to understand the available stages. Make sure to select a stage based on user input, emphasizing the importance of capturing both the stage value and its corresponding id for accurate assignment"
+          "This property describes the stage in which a deal or commercial negotiation is currently positioned within a sales process. Please refrain from adding any id unless it is explicitly required."
         )
         .optional()
-        .default(""),
+        .default(null),
+
       closedate: z
         .string()
         .describe(
@@ -132,8 +147,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     createDeals,
     getCompanyInfoByName,
     associateDealWithBusiness,
-    getDealStage
-    // getContactInfoByName,
+    getDealStage,
+    getContactInfoByName,
+    associateContactWithDeal 
   ];
 
   const llm = new ChatOpenAI({
