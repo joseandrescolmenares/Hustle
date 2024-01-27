@@ -7,11 +7,12 @@ import {
   DynamicStructuredTool,
 } from "@langchain/community/tools/dynamic";
 import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
-import { ZodObject, string, z } from "zod";
+import { AnyZodTuple, ZodObject, string, z } from "zod";
 import { getDataCompany } from "../funtionsTools/getDataCompany";
 import { createNewDeals } from "../funtionsTools/createDeals";
 import { dealBusinessAssociation } from "../funtionsTools/createDealBusinessAssociation";
 import { getSearchContacts } from "../funtionsTools/getSearchContact";
+import { getStage } from "../funtionsTools/getStage";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
@@ -47,8 +48,8 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const createDealBusinessAssociation = new DynamicStructuredTool({
-    name: "createDealBusinessAssociation",
+  const associateDealWithBusiness = new DynamicStructuredTool({
+    name: "associateDealWithBusiness",
     description:
       "this function creates associations between deal and business.",
     schema: z.object({
@@ -68,7 +69,14 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       return await dealBusinessAssociation(props);
     },
   });
-
+  const getDealStage = new DynamicTool({
+    name: "getDealStage",
+    description:
+      "This function is used to call the stages or phases that are in the CRM.  Prior knowledge of the available stages is required to make the appropriate selections. In addition, this function provides both the values and their corresponding ids, allowing you to capture the ID of the selected value and create a successful operation.",
+    func: async () => {
+      return await getStage(validateDataAccount?.token);
+    },
+  });
   const createDeals = new DynamicStructuredTool({
     name: "createDeals",
     description:
@@ -89,7 +97,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       dealstage: z
         .string()
         .describe(
-          "The stage of the deal. The business stages allow you to classify and monitor the progress of the businesses you are working on."
+          "This property describes the phase in which an agreement or commercial negotiation is in a sales process. To set this parameter, consult the 'getDealStage' function to understand the available stages. Make sure to select a stage based on user input, emphasizing the importance of capturing both the stage value and its corresponding id for accurate assignment"
         )
         .optional()
         .default(""),
@@ -103,7 +111,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     func: async ({
       amount,
       dealname,
-      // dealstage,
+      dealstage,
       closedate,
     }): Promise<string> => {
       const token = validateDataAccount?.token;
@@ -111,7 +119,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       const dataParams = {
         amount,
         dealname,
-        // dealstage,
+        dealstage,
         closedate,
         token,
         idAccount,
@@ -123,7 +131,8 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const tools = [
     createDeals,
     getCompanyInfoByName,
-    createDealBusinessAssociation,
+    associateDealWithBusiness,
+    getDealStage
     // getContactInfoByName,
   ];
 
