@@ -14,6 +14,7 @@ import { dealBusinessAssociation } from "../funtionsTools/createDealBusinessAsso
 import { getSearchContacts } from "../funtionsTools/getSearchContact";
 import { getStage } from "../funtionsTools/getStage";
 import { dealContactAssociation } from "../funtionsTools/dealContactAssociation";
+import { createActivityNotes } from "../funtionsTools/createActivityNotes";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
@@ -48,18 +49,48 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       return await getDataCompany(dataConpany);
     },
   });
+
+  const addNoteToDeal = new DynamicStructuredTool({
+    name: "addNoteToDeal",
+    description:
+      "This function is responsible for registering or creating a new note in HubSpot and associating it directly to a specific deal.",
+    schema: z.object({
+      onwerId: z
+        .string()
+        .describe("Identifier of the owner associated with the note.")
+        .optional()
+        .default(""),
+      messageNotesBody: z
+        .string()
+        .describe(" Body of the note or message. ")
+        .default("esto es una nota"),
+      dealId: z
+        .string()
+        .describe("Identifier of the deal to which the note is associated."),
+    }),
+    func: async ({ messageNotesBody, onwerId, dealId }) => {
+      const token = validateDataAccount?.token;
+      const props = { token, messageNotesBody, onwerId, dealId };
+      return await createActivityNotes(props);
+    },
+  });
+
+  // funtions deals :
+
   const associateContactWithDeal = new DynamicStructuredTool({
     name: "associateContactWithDeal",
     description: "this function creates associations between contact and deals",
     schema: z.object({
       contactId: z.string().describe("represents the contact identifier"),
-      dealId: z.string().describe("represents the deal id to perform the association"),
+      dealId: z
+        .string()
+        .describe("represents the deal id to perform the association"),
     }),
     func: async ({ contactId, dealId }) => {
       const token = validateDataAccount?.token;
-      const idAccoun = validateDataAccount?.idAccount
-      const props = {token, idAccoun, contactId, dealId}
-      return await dealContactAssociation(props)
+      const idAccoun = validateDataAccount?.idAccount;
+      const props = { token, idAccoun, contactId, dealId };
+      return await dealContactAssociation(props);
     },
   });
 
@@ -84,14 +115,16 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       return await dealBusinessAssociation(props);
     },
   });
+
   const getDealStage = new DynamicTool({
     name: "getDealStage",
     description:
-      "This function is used to retrieve the stages available in the CRM.  The function provides both the values and their corresponding ids, allowing the accurate capture of the id of the selected value, ensuring that the id is accurately passed to the dealstage when required.",
+      "This function is used to retrieve the stages available in the CRM. The function provides both the values and their corresponding ids, allowing the accurate capture of the id of the selected value, ensuring that the id is accurately passed to the dealstage when required.",
     func: async () => {
       return await getStage(validateDataAccount?.token);
     },
   });
+
   const createDeals = new DynamicStructuredTool({
     name: "createDeals",
     description:
@@ -119,7 +152,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       closedate: z
         .string()
         .describe(
-          "this property defines the date on which the operation was closed, for this property it is important to follow this format, for example: '2019-12-07T16:50:06.678Z'"
+          "this property defines the date on which the operation will be closed, for this property it is important to follow this format, for example: '2019-12-07T16:50:06.678Z'."
         )
         .optional(),
     }),
@@ -149,7 +182,8 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     associateDealWithBusiness,
     getDealStage,
     getContactInfoByName,
-    associateContactWithDeal 
+    associateContactWithDeal,
+    addNoteToDeal
   ];
 
   const llm = new ChatOpenAI({
@@ -157,7 +191,16 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     modelName: "gpt-3.5-turbo-1106",
     temperature: 0,
   });
-  const prompt = await pull<ChatPromptTemplate>("jose/openai-tools-agent");
+  const promptTemplate = await pull<ChatPromptTemplate>(
+    "hustle/openai-tools-agent"
+  );
+
+  const getCurrentDate = () => {
+    return new Date().toISOString();
+  };
+  const prompt = await promptTemplate.partial({
+    currentDateAndTime: getCurrentDate,
+  });
 
   const agent = await createOpenAIToolsAgent({
     llm,
@@ -168,6 +211,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const agentExecutor = new AgentExecutor({
     agent,
     tools,
+    returnIntermediateSteps: true,
   });
 
   const result = await agentExecutor.invoke({
