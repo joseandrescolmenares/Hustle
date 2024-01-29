@@ -10,7 +10,7 @@ import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
 import { AnyZodTuple, ZodObject, string, z } from "zod";
 import { getDataCompany } from "../funtionsTools/getDataCompany";
 import { createNewDeals } from "../funtionsTools/createDeals";
-import { dealBusinessAssociation } from "../funtionsTools/createDealBusinessAssociation";
+import {  dealCompanyAssociation } from "../funtionsTools/createDealCompanyAssociation";
 import { getSearchContacts } from "../funtionsTools/getSearchContact";
 import { getStage } from "../funtionsTools/getStage";
 import { dealContactAssociation } from "../funtionsTools/dealContactAssociation";
@@ -22,7 +22,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getContactInfoByName = new DynamicStructuredTool({
     name: "getContactInfoByName",
     description:
-      "This function allows you to search for contact by name and provides detailed information about the contact, including their e-mail address, unique identifier (id) and name. This information can be used in other functions, for example, to establish associations between other entities.",
+      "This function enables you to search for a contact by name, providing comprehensive information, including their email address, unique identifier (id), and name. The details retrieved can be utilized in various functions, such as establishing associations with other entities",
     schema: z.object({
       contactName: string().describe("contact name to search for the id"),
     }),
@@ -36,7 +36,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",
     description:
-      "This function allows you to search for companies by name and provides detailed information about the company, including its unique identifier (id) and name. This information can be used in other functions, for example, to establish partnerships between other entities.",
+      "This function allows you to search for companies by name, offering detailed information, including the unique identifier (id) and name of the company. The obtained data can be used in other functions, such as forming partnerships between different entities.",
     schema: z.object({
       nameCompany: z
         .string()
@@ -50,10 +50,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const addNoteToDeal = new DynamicStructuredTool({
-    name: "addNoteToDeal",
+  const associateNoteWithDeal = new DynamicStructuredTool({
+    name: "associateNoteWithDeal",
     description:
-      "This function is responsible for registering or creating a new note in HubSpot and associating it directly to a specific deal.",
+   "Registers or creates a new note and directly associates it with a specific deal. Providing the deal's id is essential for the association. The note may include a customizable message.",
     schema: z.object({
       onwerId: z
         .string()
@@ -66,7 +66,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .default("esto es una nota"),
       dealId: z
         .string()
-        .describe("Identifier of the deal to which the note is associated."),
+        .describe("Identifier of the deal to which the note is to be associated. this property is mandatory to associate")
     }),
     func: async ({ messageNotesBody, onwerId, dealId }) => {
       const token = validateDataAccount?.token;
@@ -79,7 +79,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
   const associateContactWithDeal = new DynamicStructuredTool({
     name: "associateContactWithDeal",
-    description: "this function creates associations between contact and deals",
+    description: "This function is used to associate deals with contacts, and it is crucial to provide the unique identifiers of both for the association to be successful. Obtaining the specific ids of both deals and contacts is of paramount importance for the proper functioning of this operation.",
     schema: z.object({
       contactId: z.string().describe("represents the contact identifier"),
       dealId: z
@@ -94,10 +94,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const associateDealWithBusiness = new DynamicStructuredTool({
-    name: "associateDealWithBusiness",
+  const associateDealWithCompany = new DynamicStructuredTool({
+    name: "associateDealWithCompany",
     description:
-      "this function creates associations between deal and business.",
+      "The function establishes associations between a deal and a company. By specifying the unique identifiers of the deal and the company, this function allows to establish a seamless link between these entities within the CRM system. The company identifier and the transaction identifier are essential to make this association.",
     schema: z.object({
       idDeals: z
         .string()
@@ -112,23 +112,22 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       const token = validateDataAccount?.token;
       const idAccoun = validateDataAccount?.idAccount;
       const props = { idCompany, idDeals, token, idAccoun };
-      return await dealBusinessAssociation(props);
+      return await dealCompanyAssociation(props);
     },
   });
 
-  const getDealStage = new DynamicTool({
-    name: "getDealStage",
-    description:
-      "This function is used to retrieve the stages available in the CRM. The function provides both the values and their corresponding ids, allowing the accurate capture of the id of the selected value, ensuring that the id is accurately passed to the dealstage when required.",
+  const getStageForDeal = new DynamicTool({
+    name: "getStageForDeal",
+    description:"This function is designed to retrieve the stages available within the CRM. It provides both the stage values and their corresponding ids, allowing you to accurately capture the id associated with a selected stage. This ensures accurate and efficient use of the id obtained when assigning a stage to a new deal.",
     func: async () => {
-      return await getStage(validateDataAccount?.token);
+      return  getStage(validateDataAccount?.token);
     },
   });
 
   const createDeals = new DynamicStructuredTool({
     name: "createDeals",
     description:
-      "This function creates a deal with the given properties. The function ensures that all information is accurately recorded to enable effective management and tracking of the newly created deal.",
+      "This function creates a new deal with specified properties. It ensures accurate recording of information for effective management and tracking. Optional parameters include monetary amount, deal name, deal stage, and closing date in a standardized format",
     schema: z.object({
       amount: z
         .number()
@@ -144,7 +143,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .string()
         .nullable()
         .describe(
-          "This property describes the stage in which a deal or commercial negotiation is currently positioned within a sales process. Please refrain from adding any id unless it is explicitly required."
+          "Current stage of a deal or commercial negotiation within the sales process. No identifier is required unless explicitly needed. Retrieve it using the 'getDealStage' function if necessary"
         )
         .optional()
         .default(null),
@@ -179,11 +178,11 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const tools = [
     createDeals,
     getCompanyInfoByName,
-    associateDealWithBusiness,
-    getDealStage,
+    associateDealWithCompany,
+    getStageForDeal,
     getContactInfoByName,
     associateContactWithDeal,
-    addNoteToDeal
+    associateNoteWithDeal
   ];
 
   const llm = new ChatOpenAI({
@@ -208,7 +207,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     prompt,
   });
 
-  const agentExecutor = new AgentExecutor({
+  const agentExecutor = new AgentExecutor({ 
     agent,
     tools,
     returnIntermediateSteps: true,

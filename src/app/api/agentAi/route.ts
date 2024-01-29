@@ -12,25 +12,28 @@ import { getStage } from "@/service/funtionsTools/getStage";
 import { dealContactAssociation } from "@/service/funtionsTools/dealContactAssociation";
 import { getOwners } from "@/service/funtionsTools/getOwners";
 import { createActivityNotes } from "@/service/funtionsTools/createActivityNotes";
+import { getDataCompany } from "@/service/funtionsTools/getDataCompany";
 
 export async function GET(request: Request) {
   // const jose = await renewTokenAgent("+541126336301")
-  const closedate = "n";
-  const token =
-    "CKbU4vTUMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFHGQiYpLUAzI0yuDhofvuKtN3xU5Oj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhSP6B18_ApHxyKYFEgHBzav0Bjq60oDbmExUgBaAA";
-  const dataProp = {
-    token,
-    contactName: "max"
-  };
+  // const closedate = "n";
+  // const token =
+  //   "CO-izJvVMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFFNOOp6bBpQoBf1QFGRNxH0ntudNOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhQ8TiVjG2IZwNLKr4cZpRrNoURpUUoDbmExUgBaAA";
+  // const dataProp = {
+  //   token,
+  //   contactName: "n"
+  // };
   // const data = await getSearchContacts(dataProp);
   // const data =await  dealContactAssociation({token})
   // const  data = await getOwners(token)
-  const props = {token, onwerId: "", messageNotesBody:"holaa donde estoyy"}
-  const data = await createActivityNotes(props)
+  // const props = {token, nameCompany: "molina"}
+  // const data = await createActivityNotes(props)
 
   // const data = await createNewDeals(dataProp);
 
+
+  // const  data = await getDataCompany(props)
   // const data = await getStage(token);
 
-  return NextResponse.json({ jose: data });
+  return NextResponse.json({ jose:"jose" });
 }

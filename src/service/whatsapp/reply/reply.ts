@@ -1,5 +1,5 @@
-import { agentAi } from "../agentAi/agentAi";
-import { sendMessage } from "../whatsapp/sendMessage";
+import { agentAi } from "../../agentAi/agentAi";
+import { sendMessage } from "../sendMessage";
 import { validateNumber } from "@/lib/validateNumber";
 
 export async function reply(dataMessage: any) {
@@ -9,17 +9,17 @@ export async function reply(dataMessage: any) {
   console.log(dataMessage.entry[0].changes[0].value.messages[0], "message");
   if (dataMessage.entry[0].changes[0].value.messages[0].type === "audio") {
     let phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
-    let messageResponse = "¡Lo tengo! Procesando... 🎧";
+    let messageResponse = "Estamos actualmente enfocados en el desarrollo de esta nueva característica. Pronto podrás disfrutar de la capacidad de enviar mensajes de audio para enriquecer aún más tu experiencia con nuestra plataforma. Mientras tanto, agradecemos tu comprensión y te invitamos a continuar utilizando la función actual de mensajes en texto.🤘💥";
     const obj = { phoneNumber, messageResponse };
     sendMessage(obj);
     // await handleAudioMessage(dataMessage);
 
-    setTimeout(async () => {
-      messageResponse =
-        "Hemos creado el negocio 'WhatsApp' con éxito. ¡Listo para seguir optimizando tu experiencia!";
-      const obj1 = { phoneNumber, messageResponse };
-      await sendMessage(obj1);
-    }, 8000);
+    // setTimeout(async () => {
+    //   messageResponse =
+    //     "Hemos creado el negocio 'WhatsApp' con éxito. ¡Listo para seguir optimizando tu experiencia!";
+    //   const obj1 = { phoneNumber, messageResponse };
+    //   await sendMessage(obj1);
+    // }, 8000);
 
     return;
   }

@@ -7,7 +7,7 @@ interface DataProp {
 
 export const getDataCompany = async (dataProp: DataProp) => {
   const { nameCompany, token } = dataProp;
-  console.log(nameCompany,"estoy es el nomnre de la empres")
+  console.log(nameCompany, "estoy es el nomnre de la empres");
   const url = "https://api.hubapi.com/crm/v3/objects/companies/search";
 
   const data = {
@@ -30,11 +30,18 @@ export const getDataCompany = async (dataProp: DataProp) => {
   };
 
   const res = await axios.post(url, data, { headers });
-  
+
   const dataResult = res.data;
-  const idCompany = dataResult.results[0].id;
-  const name = dataResult.results[0].properties.name;
 
+  if (dataResult.total === 0) {
+    return "No company found with the specified criteria.";
+  }
+  if (dataResult.total > 1) {
+    return "More than one company found with this name, please be more specific.";
+  }
 
-  return `el id de empresa es : ${idCompany} y el nombre : ${name}`;
+  const idCompany = dataResult.results[0]?.id;
+  const name = dataResult.results[0]?.properties?.name;
+
+  return `Found company with ID: ${idCompany} and Name: ${name}`;
 };

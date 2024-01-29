@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { NextResponse } from "next/server";
 import {  sendMessage } from "@/service/whatsapp/sendMessage";
 import { agentAi } from "@/service/agentAi/agentAi";
-import { reply } from "@/service/reply/reply";
+import { reply } from "@/service/whatsapp/reply/reply";
 
 export async function GET(request: Request) {
   const verificationToken = process.env.WHATSAPP_VERIFICATION_TOKEN;

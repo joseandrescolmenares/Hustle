@@ -6,50 +6,54 @@ interface PropsDataContact {
 }
 export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
   const { contactName, token } = propsDataContact;
-  const url = "https://api.hubapi.com/crm/v3/objects/contacts/search";
-  console.log(contactName)
 
-  const data = {
-    filterGroups: [
-      {
-        filters: [
-          {
-            propertyName: "firstname",
-            operator: "EQ",
-            value: `${contactName}*`,
-          },
-         
-        ],
-     
-      },
-      {
-        filters: [
-         
-          {
-            propertyName: "email",
-            operator: "EQ",
-            value: `${contactName}*`,
-          },
-         
-        ],
-      },
-      
-    ],
-   
-     
-  
-  };
+  try {
+    const url = "https://api.hubapi.com/crm/v3/objects/contacts/search";
 
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
+    const data = {
+      filterGroups: [
+        {
+          filters: [
+            {
+              propertyName: "firstname",
+              operator: "EQ",
+              value: `${contactName}*`,
+            },
+          ],
+        },
+        {
+          filters: [
+            {
+              propertyName: "email",
+              operator: "EQ",
+              value: `${contactName}*`,
+            },
+          ],
+        },
+      ],
+    };
 
-  const res = await axios.post(url, data, { headers });
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
 
-  const resultData = res.data;
-  const contactId = resultData.results[0].id
-  // const  name = resultData.results[0].properties
+    const res = await axios.post(url, data, { headers });
 
-  return `el id del contacto  es : ${contactId}`;
+    const resultData = res.data;
+    console.log(resultData)
+    if (resultData.total === 0) {
+      return "No contact found with the specified criteria.";
+    }
+    if (resultData.total > 1) {
+      return "More than one contact found with this name, please be more specific.";
+    }
+    const contactId = resultData.results[0].id;
+    // const name = resultData.results[0].properties;
+
+    return `Successfully obtained contact id: ${contactId}`;
+  } catch (error) {
+    console.error("Error creating associations:", error);
+    return "No contact found with the specified name or email. Please check your input and try again.";
+  }
 };

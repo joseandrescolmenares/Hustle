@@ -32,11 +32,12 @@ export const createNewDeals = async (dataProp: DataProps) => {
     const data = await response.json();
     console.log(data);
 
-    return `se ha creado con exito, Puedes ver los detalles en el siguiente enlace : https://app.hubspot.com/contacts/${idAccount}/record/0-3/${data.id}`;
+    return `Process completed successfully. Deal created.. You can view the details at: https://app.hubspot.com/contacts/${idAccount}/record/deal/${data.id}.
+    `;
   } catch (error: any) {
-    if (error.response.data.category == "EXPIRED_AUTHENTICATION") {
-      return "token expired";
-    }
-    return "error, por favor vuelva a intentarlo";
+    return "The function encountered an error and couldn't create the new deal. Please try again later. We apologize for the inconvenience.";
+    // if (error.response.data.category == "EXPIRED_AUTHENTICATION") {
+    //   return "token expired";
+    // }
   }
 };

@@ -28,7 +28,6 @@ export const renewTokenAgent = async (phoneNumber: string) => {
   if (!refresh_token || !hubspotAccount) return;
 
   const token = await renewToken(refresh_token);
-  console.log(token, "token");
 
   return { token, idAccount: hubspotAccount };
 };

@@ -40,9 +40,10 @@ export const createActivityNotes = async (props: Props) => {
   try {
     const result = await axios.post(apiUrl, body, { headers });
     const data = result.data;
-    return "se creo con exitos"
+    return "Note added successfully.";
   } catch (error) {
     console.error("Error creating note:", error);
-    throw error;
+    return "Error adding note. Please try again later. We apologize for the inconvenience.";
+
   }
 };
