@@ -23,7 +23,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const dataMessage = await request.json();
-    reply(dataMessage);
+   await reply(dataMessage);
     return NextResponse.json({ status: 200 });
   } catch (error) {
     console.error(`Error en la función principal: ${error}`);
