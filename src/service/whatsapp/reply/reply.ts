@@ -11,7 +11,7 @@ export async function reply(dataMessage: any) {
     let phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
     let messageResponse = "Estamos actualmente enfocados en el desarrollo de esta nueva característica. Pronto podrás disfrutar de la capacidad de enviar mensajes de audio para enriquecer aún más tu experiencia con nuestra plataforma. Mientras tanto, agradecemos tu comprensión y te invitamos a continuar utilizando la función actual de mensajes en texto.🤘💥";
     const obj = { phoneNumber, messageResponse };
-    return await sendMessage(obj);
+    return sendMessage(obj);
     // await handleAudioMessage(dataMessage);
 
     // setTimeout(async () => {
@@ -30,7 +30,7 @@ export async function reply(dataMessage: any) {
   if (!(await validateNumber(phoneNumber)).validate.status) {
     const message = await validateNumber(phoneNumber);
     const response = { phoneNumber, messageResponse: message.validate.message };
-    return await sendMessage(response);
+    return  sendMessage(response);
   }
   let messageResponse = "¡Lo tengo! Procesando...";
   const obj2 = { messageResponse, phoneNumber };

@@ -8,10 +8,10 @@ interface DATAMESSAGES {
 
 export async function sendMessage(dataMessage: DATAMESSAGES) {
   try {
-    const accessToken = process.env.WHATSAPP_TOKEN;
-
-    const url = `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_ID_NUMBER}/messages`;
-
+    // const accessToken = process.env.WHATSAPP_TOKEN;
+    const accessToken = "EAAKJGUoai2ABOwhwMQhyTPjXUapY0fxfsfILouNZBVUvKBK3PGvOFZCRBqDw0SUlCS3RH7KErLWKeCEW0eZBErUxWygjaolnZC9ZASaQCmkoqCJm6gWB8yAH9uMeYKb2IEdAN3xRLZCELkqBMOZBCEZBDzzCnXL7qoZApR7ZAHqqHhKpZCeWB54v8oelZC3MHPcWJIvT";
+    // const url = `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_ID_NUMBER}/messages`;
+    const url = `https://graph.facebook.com/v18.0/216808618182077/messages`;
     const data = {
       messaging_product: "whatsapp",
       recipient_type: "individual",
