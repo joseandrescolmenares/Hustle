@@ -6,7 +6,8 @@ import { agentAi } from "@/service/agentAi/agentAi";
 import { reply } from "@/service/whatsapp/reply/reply";
 
 export async function GET(request: Request) {
-  const verificationToken = process.env.WHATSAPP_VERIFICATION_TOKEN;
+  // const verificationToken = process.env.WHATSAPP_VERIFICATION_TOKEN;
+  const verificationToken = "keco45rV7FsgAiG2ogj!!YsKUay@ageB2dw9A9"
   const { searchParams } = new URL(request.url);
   const mode = searchParams.get("hub.mode");
   const token = searchParams.get("hub.verify_token");
