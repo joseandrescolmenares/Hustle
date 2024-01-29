@@ -186,7 +186,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   ];
 
   const llm = new ChatOpenAI({
-    openAIApiKey: "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",
+    openAIApiKey:"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",
     modelName: "gpt-3.5-turbo-1106",
     temperature: 0,
   });

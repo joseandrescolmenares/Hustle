@@ -40,7 +40,7 @@ export async function reply(dataMessage: any) {
   const responseBotWhatsapp = await agentAi(messageBody, phoneNumber);
 
   messageResponse = responseBotWhatsapp.output;
-  // const messageResponse = "Hola!! en unos pocos minutos estaremos liberando el asistente!"
+ 
   const response = { phoneNumber, messageResponse };
-  const success = await sendMessage(response);
+  return await sendMessage(response);
 }
