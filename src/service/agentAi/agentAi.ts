@@ -121,7 +121,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     name: "getStageForDeal",
     description:"This function is designed to retrieve the stages available within the CRM. It provides both the stage values and their corresponding ids, allowing you to accurately capture the id associated with a selected stage. This ensures accurate and efficient use of the id obtained when assigning a stage to a new deal.",
     func: async () => {
-      return  getStage(validateDataAccount?.token);
+      return await getStage(validateDataAccount?.token);
     },
   });
 

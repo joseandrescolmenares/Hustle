@@ -35,12 +35,12 @@ export async function reply(dataMessage: any) {
   let messageResponse = "¡Lo tengo! Procesando...";
   const obj2 = { messageResponse, phoneNumber };
 
-   sendMessage(obj2);
+  await  sendMessage(obj2);
 
   const responseBotWhatsapp = await agentAi(messageBody, phoneNumber);
 
   messageResponse = responseBotWhatsapp.output;
  
   const response = { phoneNumber, messageResponse };
-  return await sendMessage(response);
+  return  sendMessage(response);
 }
