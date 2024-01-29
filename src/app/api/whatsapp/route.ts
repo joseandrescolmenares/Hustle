@@ -26,7 +26,7 @@ export async function POST(request: Request) {
    await reply(dataMessage);
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.error(`Error en la función principal: ${error}`);
+    console.error(`Error en la función principal:`);
     return NextResponse.json({ status: 500 });
   }
 }
