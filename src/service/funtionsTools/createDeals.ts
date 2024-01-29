@@ -32,7 +32,7 @@ export const createNewDeals = async (dataProp: DataProps) => {
     const data = await response.json();
     console.log(data);
 
-    return `Process completed successfully. Deal created.. You can view the details at: https://app.hubspot.com/contacts/${idAccount}/record/deal/${data.id}.
+    return `Process completed successfully. Deal created.. You can view the details at: https://app.hubspot.com/contacts/${idAccount}/deal/${data.id}.
     `;
   } catch (error: any) {
     return "The function encountered an error and couldn't create the new deal. Please try again later. We apologize for the inconvenience.";

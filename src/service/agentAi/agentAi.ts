@@ -17,6 +17,7 @@ import { dealContactAssociation } from "../funtionsTools/dealContactAssociation"
 import { createActivityNotes } from "../funtionsTools/createActivityNotes";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
+  
   const validateDataAccount = await renewTokenAgent(phoneNumber);
 
   const getContactInfoByName = new DynamicStructuredTool({
