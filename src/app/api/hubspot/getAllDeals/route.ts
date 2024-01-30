@@ -49,34 +49,34 @@ async function fetchAllDeals(): Promise<any[]> {
           numberOfContacts: deal.properties.num_associated_contacts,
           numberOfSalesActivities: deal.properties.num_contacted_notes,
         });
-        console.log(deal, "deals")
+        console.log(resultScore, "deals")
 
-        if (resultScore) {
-          const ownerInfo = await getIOwner(
-            deal.properties.hubspot_owner_id || "",
-            deal.properties.dealname,
-            deal.properties.hs_object_id,
-            deal.properties.num_associated_contacts,
-            deal.properties.amount,
-            deal.properties.closed_lost_reason,
-            deal.properties.closed_won_reason,
-            deal.properties.closedate,
-            deal.properties.createdate,
-            deal.properties.dealstage,
-            deal.properties.description,
-            deal.properties.hs_all_collaborator_owner_ids,
-            deal.properties.hs_deal_stage_probability,
-            deal.properties.hs_forecast_probability,
-            deal.properties.hs_is_closed_won,
-            deal.properties.hs_lastmodifieddate,
-            deal.properties.hs_next_step,
-            deal.properties.hs_priority,
-            deal.properties.num_contacted_notes,
-            deal.properties.notes_last_contacted,
-            resultScore,
-          );
-          allData.push(ownerInfo);
-        }
+      //   if (resultScore) {
+      //     const ownerInfo = await getIOwner(
+      //       deal.properties.hubspot_owner_id || "",
+      //       deal.properties.dealname,
+      //       deal.properties.hs_object_id,
+      //       deal.properties.num_associated_contacts,
+      //       deal.properties.amount,
+      //       deal.properties.closed_lost_reason,
+      //       deal.properties.closed_won_reason,
+      //       deal.properties.closedate,
+      //       deal.properties.createdate,
+      //       deal.properties.dealstage,
+      //       deal.properties.description,
+      //       deal.properties.hs_all_collaborator_owner_ids,
+      //       deal.properties.hs_deal_stage_probability,
+      //       deal.properties.hs_forecast_probability,
+      //       deal.properties.hs_is_closed_won,
+      //       deal.properties.hs_lastmodifieddate,
+      //       deal.properties.hs_next_step,
+      //       deal.properties.hs_priority,
+      //       deal.properties.num_contacted_notes,
+      //       deal.properties.notes_last_contacted,
+      //       resultScore,
+      //     );
+      //     allData.push(ownerInfo);
+      //   }
       }
 
       url = resultDeals?.paging?.next?.link || "";
