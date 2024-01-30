@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     });
 
     // Ejecutar la función reply en segundo plano
-    reply(dataMessage);
+   await reply(dataMessage);
 
     // Esperar a que la respuesta se haya enviado antes de continuar
     await responsePromise;
