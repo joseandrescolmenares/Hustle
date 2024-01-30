@@ -4,13 +4,12 @@ import { validateNumber } from "@/lib/validateNumber";
 
 const cache = new Set();
 
-
 export async function reply(dataMessage: any) {
   if ("statuses" in dataMessage.entry[0]?.changes[0]?.value) {
     return;
   }
   if (cache.has(dataMessage.entry[0].changes[0].value.messages[0].id)) {
-    return new Response("El mensaje ya se está procesando", { status: 200 });
+    return ;
   }
 
   cache.add(dataMessage.entry[0].changes[0].value.messages[0].id);
