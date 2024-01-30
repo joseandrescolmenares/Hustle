@@ -2,18 +2,17 @@ import { agentAi } from "../../agentAi/agentAi";
 import { sendMessage } from "../sendMessage";
 import { validateNumber } from "@/lib/validateNumber";
 
-const messageQueue: any[] = [];
+const cache = new Set();
 
 export async function reply(dataMessage: any) {
   if ("statuses" in dataMessage.entry[0]?.changes[0]?.value) {
     return;
   }
-
-  const messageId = dataMessage.entry[0].changes[0].value.messages[0].id;
-  if (messageQueue.includes(messageId)) {
-    return new Response("El mensaje ya se está procesando", { status: 200 });
+  if (cache.has(dataMessage.entry[0].changes[0].value.messages[0].id)) {
+    return ;
   }
-  messageQueue.push(messageId);
+
+  cache.add(dataMessage.entry[0].changes[0].value.messages[0].id);
 
   console.log(dataMessage.entry[0].changes[0].value.messages[0], "message");
 
@@ -52,14 +51,10 @@ export async function reply(dataMessage: any) {
   messageResponse = responseBotWhatsapp.output;
   console.log("llegue hasyta abajo de en reply");
   const response = { phoneNumber, messageResponse };
+  cache.delete(dataMessage.entry[0].changes[0].value.messages[0].id);
   sendMessage(response);
-  const index = messageQueue.indexOf(messageId);
-  if (index > -1) {
-    messageQueue.splice(index, 1);
-  }
 
   return
   
 }
-
 
