@@ -26,13 +26,12 @@ export async function reply(dataMessage: any) {
   let phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
   let messageBody = dataMessage.entry[0].changes[0].value.messages[0].text.body;
 console.log("estoyyy en reply")
-  if (!(await validateNumber(phoneNumber)).validate.status) {
-    const message = await validateNumber(phoneNumber);
-    const response = { phoneNumber, messageResponse: message.validate.message };
-    sendMessage(response);
-    return;
+  // if (!(await validateNumber(phoneNumber)).validate.status) {
+  //   const message = await validateNumber(phoneNumber);
+  //   const response = { phoneNumber, messageResponse: message.validate.message };
+  //   sendMessage(response);
    
-  }
+  // }
   let messageResponse = "¡Lo tengo! Procesando...";
   const obj2 = { messageResponse, phoneNumber };
 
@@ -43,5 +42,5 @@ console.log("estoyyy en reply")
   messageResponse = responseBotWhatsapp.output;
   console.log("llegue hasyta abajo de en reply")
   const response = { phoneNumber, messageResponse };
-  sendMessage(response);
+ return sendMessage(response);
 }
