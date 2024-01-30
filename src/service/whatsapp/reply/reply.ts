@@ -29,7 +29,9 @@ export async function reply(dataMessage: any) {
   if (!(await validateNumber(phoneNumber)).validate.status) {
     const message = await validateNumber(phoneNumber);
     const response = { phoneNumber, messageResponse: message.validate.message };
-    return sendMessage(response);
+    sendMessage(response);
+    return;
+   
   }
   let messageResponse = "¡Lo tengo! Procesando...";
   const obj2 = { messageResponse, phoneNumber };
@@ -41,5 +43,5 @@ export async function reply(dataMessage: any) {
   messageResponse = responseBotWhatsapp.output;
 
   const response = { phoneNumber, messageResponse };
-  return sendMessage(response);
+  return  sendMessage(response);
 }

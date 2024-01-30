@@ -1,12 +1,12 @@
 import axios from "axios";
 import { agentAi } from "../agentAi/agentAi";
 
-interface DATAMESSAGES {
+interface DataMessage {
   phoneNumber: string;
   messageResponse: string;
 }
 
-export async function sendMessage(dataMessage: DATAMESSAGES) {
+export async function sendMessage(dataMessage: DataMessage) {
   try {
 
     console.log("estou funcionandogit ")

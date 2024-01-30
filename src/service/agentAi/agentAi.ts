@@ -10,14 +10,15 @@ import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
 import { AnyZodTuple, ZodObject, string, z } from "zod";
 import { getDataCompany } from "../funtionsTools/getDataCompany";
 import { createNewDeals } from "../funtionsTools/createDeals";
-import {  dealCompanyAssociation } from "../funtionsTools/createDealCompanyAssociation";
+import { dealCompanyAssociation } from "../funtionsTools/createDealCompanyAssociation";
 import { getSearchContacts } from "../funtionsTools/getSearchContact";
 import { getStage } from "../funtionsTools/getStage";
 import { dealContactAssociation } from "../funtionsTools/dealContactAssociation";
 import { createActivityNotes } from "../funtionsTools/createActivityNotes";
+import { getDataDeal } from "../funtionsTools/getDataDeal";
+import { updateDeal } from "../funtionsTools/updateDeal";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
-  
   const validateDataAccount = await renewTokenAgent(phoneNumber);
 
   const getContactInfoByName = new DynamicStructuredTool({
@@ -51,10 +52,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const associateNoteWithDeal = new DynamicStructuredTool({
-    name: "associateNoteWithDeal",
+  const addNoteWithDeal = new DynamicStructuredTool({
+    name: "addNoteWithDeal",
     description:
-   "Registers or creates a new note and directly associates it with a specific deal. Providing the deal's id is essential for the association. The note may include a customizable message.",
+      "Registers or creates a new note and directly associates it with a specific deal. Providing the deal's id is essential for the association. The note may include a customizable message.",
     schema: z.object({
       onwerId: z
         .string()
@@ -67,7 +68,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .default("esto es una nota"),
       dealId: z
         .string()
-        .describe("Identifier of the deal to which the note is to be associated. this property is mandatory to associate")
+        .describe(
+          "Identifier of the deal to which the note is to be associated. this property is mandatory to associate"
+        ),
     }),
     func: async ({ messageNotesBody, onwerId, dealId }) => {
       const token = validateDataAccount?.token;
@@ -80,7 +83,8 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
   const associateContactWithDeal = new DynamicStructuredTool({
     name: "associateContactWithDeal",
-    description: "This function is used to associate deals with contacts, and it is crucial to provide the unique identifiers of both for the association to be successful. Obtaining the specific ids of both deals and contacts is of paramount importance for the proper functioning of this operation.",
+    description:
+      "This function is used to associate deals with contacts, and it is crucial to provide the unique identifiers of both for the association to be successful. Obtaining the specific ids of both deals and contacts is of paramount importance for the proper functioning of this operation.",
     schema: z.object({
       contactId: z.string().describe("represents the contact identifier"),
       dealId: z
@@ -119,9 +123,71 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
   const getStageForDeal = new DynamicTool({
     name: "getStageForDeal",
-    description:"This function is designed to retrieve the stages available within the CRM. It provides both the stage values and their corresponding ids, allowing you to accurately capture the id associated with a selected stage. This ensures accurate and efficient use of the id obtained when assigning a stage to a new deal.",
+    description:
+      "This function is designed to retrieve the stages available within the CRM. It provides both the stage values and their corresponding ids, allowing you to accurately capture the id associated with a selected stage. This ensures accurate and efficient use of the id obtained when assigning a stage to a new deal.",
     func: async () => {
       return await getStage(validateDataAccount?.token);
+    },
+  });
+
+  const getDealInfoByName = new DynamicStructuredTool({
+    name: "getDealInfoByName",
+    description:
+      "This function allows you to search for a deal by its name, providing comprehensive information that includes the unique identifier (id) and the name of the deal. ",
+    schema: z.object({
+      dealName: z
+        .string()
+        .describe(
+          "represents the name of the deal for which the associated identifier (id) is to be obtained."
+        ),
+    }),
+    func: async ({ dealName }) => {
+      const token = validateDataAccount?.token;
+      const prop = { token, dealName };
+      return await getDataDeal(prop);
+    },
+  });
+
+  const updateDealInformation = new DynamicStructuredTool({
+    name: "updateDealInformation",
+    description:
+      "This function is designed to update the details of a deal(negocio), allowing for modifications to various aspects such as dates, values,name,  and other relevant properties.",
+    schema: z.object({
+      amount: z
+        .number()
+        .describe("Represents the monetary amount or monetary value."),
+
+      dealname: z
+        .string()
+        .describe("Represents the name of the deal."),
+
+      dealstage: z
+        .string()
+        .describe(
+          "Current stage of a deal or commercial negotiation within the sales process. "
+        ),
+
+      closedate: z
+        .string()
+        .describe(
+          "This property defines the date on which the operation will be closed. Follow the format, for example: '2019-12-07T16:50:06.678Z'."
+        ),
+
+      dealId: z.string().describe("Identifier of the deal to be updated."),
+    }),
+    func: async ({ amount, dealname, dealstage, closedate, dealId }):Promise<string> => {
+      const token = validateDataAccount?.token;
+      const idAccount = validateDataAccount?.idAccount;
+      const props = {
+        amount,
+        dealname,
+        dealstage,
+        closedate,
+        dealId,
+        token,
+        idAccount,
+      };
+      return await updateDeal(props);
     },
   });
 
@@ -183,11 +249,13 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     getStageForDeal,
     getContactInfoByName,
     associateContactWithDeal,
-    associateNoteWithDeal
+    addNoteWithDeal,
+    getDealInfoByName,
+    updateDealInformation,
   ];
 
   const llm = new ChatOpenAI({
-    openAIApiKey:"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",
+    openAIApiKey: "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",
     modelName: "gpt-3.5-turbo-1106",
     temperature: 0,
   });
@@ -208,7 +276,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     prompt,
   });
 
-  const agentExecutor = new AgentExecutor({ 
+  const agentExecutor = new AgentExecutor({
     agent,
     tools,
     returnIntermediateSteps: true,

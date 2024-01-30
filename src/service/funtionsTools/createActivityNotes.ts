@@ -12,7 +12,7 @@ export const createActivityNotes = async (props: Props) => {
 
   const body = {
     properties: {
-      hs_timestamp: "2021-11-12T15:48:22Z",
+      hs_timestamp: "2024-02-12T15:48:22Z",
       hs_note_body: messageNotesBody,
       hubspot_owner_id: onwerId,
       hs_attachment_ids: "",

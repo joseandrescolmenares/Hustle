@@ -78,7 +78,7 @@ export const insertDealowner = async (
         closed_won_reason: closed_won_reason || "",
         closedate: closedate || "",
         createdate: createdate || "",
-        dealstage: dealstage,
+        dealstage: dealstage || "",
         description: description || "",
         hs_all_collaborator_owner_ids: hs_all_collaborator_owner_ids || "",
         hs_deal_stage_probability: hs_deal_stage_probability || "",
