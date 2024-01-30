@@ -25,7 +25,8 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const dataMessage = await request.json();
-   await reply(dataMessage);
+    Response.json({ status: 200 });
+    reply(dataMessage);
     return NextResponse.json({ status: 200 });
   } catch (error) {
     console.error(`Error : ${error}`);
