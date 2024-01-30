@@ -2,11 +2,21 @@ import { agentAi } from "../../agentAi/agentAi";
 import { sendMessage } from "../sendMessage";
 import { validateNumber } from "@/lib/validateNumber";
 
+const cache = new Set();
+
+
 export async function reply(dataMessage: any) {
   if ("statuses" in dataMessage.entry[0]?.changes[0]?.value) {
     return;
   }
+  if (cache.has(dataMessage.id)) {
+    return new Response("El mensaje ya se está procesando", { status: 200 });
+  }
+
+  cache.add(dataMessage.entry[0].changes[0].value.messages[0].id);
+
   console.log(dataMessage.entry[0].changes[0].value.messages[0], "message");
+  
   if (dataMessage.entry[0].changes[0].value.messages[0].type === "audio") {
     let phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
     let messageResponse =
@@ -38,9 +48,12 @@ export async function reply(dataMessage: any) {
   sendMessage(obj2);
 
   const responseBotWhatsapp = await agentAi(messageBody, phoneNumber);
-
+ 
   messageResponse = responseBotWhatsapp.output;
   console.log("llegue hasyta abajo de en reply");
   const response = { phoneNumber, messageResponse };
-  return sendMessage(response);
+  sendMessage(response);
+  cache.delete(dataMessage.id);
+  return
+  
 }
