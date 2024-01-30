@@ -5,6 +5,8 @@ import { sendMessage } from "@/service/whatsapp/sendMessage";
 import { agentAi } from "@/service/agentAi/agentAi";
 import { reply } from "@/service/whatsapp/reply/reply";
 
+export const runtime = "edge"
+
 export async function GET(request: Request) {
   // const verificationToken = process.env.WHATSAPP_VERIFICATION_TOKEN;
   const verificationToken = "keco45rV7FsgAiG2ogj!!YsKUay@ageB2dw9A9";

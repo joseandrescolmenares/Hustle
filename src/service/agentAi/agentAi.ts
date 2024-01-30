@@ -18,8 +18,8 @@ import { createActivityNotes } from "../funtionsTools/createActivityNotes";
 import { getDataDeal } from "../funtionsTools/getDataDeal";
 import { updateDeal } from "../funtionsTools/updateDeal";
 
-export const agentAi = (message: string, phoneNumber: string) => {
-  return new Promise(async (resolve, reject) => {
+export const agentAi = async (message: string, phoneNumber: string) => {
+  
   const validateDataAccount = await renewTokenAgent(phoneNumber);
 
   const getContactInfoByName = new DynamicStructuredTool({
@@ -288,7 +288,5 @@ export const agentAi = (message: string, phoneNumber: string) => {
     chat_history: [],
   });
 
-  resolve(result);
-
-});
-}
+  return result;
+};
