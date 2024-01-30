@@ -2,18 +2,20 @@ import { agentAi } from "../../agentAi/agentAi";
 import { sendMessage } from "../sendMessage";
 import { validateNumber } from "@/lib/validateNumber";
 
-const cache = new Set();
+const messageQueue:  any[] = [];
 
 export async function reply(dataMessage: any) {
   if ("statuses" in dataMessage.entry[0]?.changes[0]?.value) {
     return;
   }
-  if (cache.has(dataMessage.entry[0].changes[0].value.messages[0].id)) {
-    return ;
+
+  const messageId = dataMessage.entry[0].changes[0].value.messages[0].id;
+
+  // Verificar si el mensaje ya está en la cola
+  if (messageQueue.includes(messageId)) {
+    return new Response("El mensaje ya se está procesando", { status: 200 });
   }
-
-  cache.add(dataMessage.entry[0].changes[0].value.messages[0].id);
-
+  messageQueue.push(messageId);
   console.log(dataMessage.entry[0].changes[0].value.messages[0], "message");
 
   if (dataMessage.entry[0].changes[0].value.messages[0].type === "audio") {
@@ -51,7 +53,10 @@ export async function reply(dataMessage: any) {
   messageResponse = responseBotWhatsapp.output;
   console.log("llegue hasyta abajo de en reply");
   const response = { phoneNumber, messageResponse };
-  cache.delete(dataMessage.entry[0].changes[0].value.messages[0].id);
+  const index = messageQueue.indexOf(messageId);
+    if (index > -1) {
+      messageQueue.splice(index, 1);
+    }
   sendMessage(response);
 
   return
