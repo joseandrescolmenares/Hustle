@@ -1,18 +1,25 @@
 import axios from "axios";
 
 interface Props {
+  idAccount: string,
   token: string;
   onwerId?: string;
   messageNotesBody: string;
   dealId?: string;
 }
 export const createActivityNotes = async (props: Props) => {
-  const { onwerId, token, messageNotesBody, dealId } = props;
+  const { onwerId, token, messageNotesBody, dealId,  idAccount} = props;
   const apiUrl = "https://api.hubapi.com/crm/v3/objects/notes";
+
+  const getCurrentDate = () => {
+    return new Date().toISOString();
+  };
+
+  const data = getCurrentDate()
 
   const body = {
     properties: {
-      hs_timestamp: "2024-02-12T15:48:22Z",
+      hs_timestamp: data,
       hs_note_body: messageNotesBody,
       hubspot_owner_id: onwerId,
       hs_attachment_ids: "",
@@ -40,7 +47,7 @@ export const createActivityNotes = async (props: Props) => {
   try {
     const result = await axios.post(apiUrl, body, { headers });
     const data = result.data;
-    return "Note added successfully.";
+    return `Nota añadida correctamente.  Puede ver los detalles en:  https://app.hubspot.com/contacts/${idAccount}/deal/${dealId}.`;
   } catch (error) {
     console.error("Error creating note:", error);
     return "Error adding note. Please try again later. We apologize for the inconvenience.";

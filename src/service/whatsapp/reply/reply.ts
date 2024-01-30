@@ -2,22 +2,13 @@ import { agentAi } from "../../agentAi/agentAi";
 import { sendMessage } from "../sendMessage";
 import { validateNumber } from "@/lib/validateNumber";
 
-const messageQueue:  any[] = [];
-
 export async function reply(dataMessage: any) {
   if ("statuses" in dataMessage.entry[0]?.changes[0]?.value) {
     return;
   }
 
-  const messageId = dataMessage.entry[0].changes[0].value.messages[0].id;
-
   // Verificar si el mensaje ya está en la cola
-  if (messageQueue.includes(messageId)) {
-    return new Response("El mensaje ya se está procesando", { status: 200 });
-  }
-  messageQueue.push(messageId);
-  console.log(dataMessage.entry[0].changes[0].value.messages[0], "message");
-
+console.log( dataMessage.entry[0].changes[0].value.messages[0], "message")
   if (dataMessage.entry[0].changes[0].value.messages[0].type === "audio") {
     let phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
     let messageResponse =
@@ -41,7 +32,6 @@ export async function reply(dataMessage: any) {
     const message = await validateNumber(phoneNumber);
     const response = { phoneNumber, messageResponse: message.validate.message };
     sendMessage(response);
-
   }
   let messageResponse = "¡Lo tengo! Procesando...";
   const obj2 = { messageResponse, phoneNumber };
@@ -49,17 +39,12 @@ export async function reply(dataMessage: any) {
   sendMessage(obj2);
 
   const responseBotWhatsapp = await agentAi(messageBody, phoneNumber);
- 
+
   messageResponse = responseBotWhatsapp.output;
   console.log("llegue hasyta abajo de en reply");
   const response = { phoneNumber, messageResponse };
-  const index = messageQueue.indexOf(messageId);
-    if (index > -1) {
-      messageQueue.splice(index, 1);
-    }
+
   sendMessage(response);
 
-  return
-  
+  return;
 }
-

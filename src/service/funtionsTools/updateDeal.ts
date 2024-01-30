@@ -40,5 +40,5 @@ export const updateDeal = async (props: PropData) => {
 
   
 
-  return `se creo cambio con exitos, lo puedes ver aca : https://app.hubspot.com/contacts/${idAccount}/deal/${dealId}`
+  return `se actualizo con exitos, lo puedes ver en el siguiente link : https://app.hubspot.com/contacts/${idAccount}/deal/${dealId}`
 };

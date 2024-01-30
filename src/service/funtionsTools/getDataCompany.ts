@@ -43,5 +43,5 @@ export const getDataCompany = async (dataProp: DataProp) => {
   const idCompany = dataResult.results[0]?.id;
   const name = dataResult.results[0]?.properties?.name;
 
-  return `Found company with ID: ${idCompany} and Name: ${name}`;
+  return `Empresa encontrada con id: ${idCompany} y Nombre: ${name}`;
 };

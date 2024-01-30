@@ -30,7 +30,7 @@ export const dealCompanyAssociation = async (props: Props) => {
       }
     );
 
-    return `Associations created successfully. You can view the details at: https://app.hubspot.com/contacts/${idAccoun}/record/deal/${idDeals}`;
+    return `Asociaciones creadas con éxito. Puede ver los detalles en: https://app.hubspot.com/contacts/${idAccoun}/record/deal/${idDeals}`;
   } catch (error) {
     console.error("Error creating associations:", error);
     throw new Error("Error creating associations. Please try again later.");

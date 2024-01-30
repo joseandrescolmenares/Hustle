@@ -42,7 +42,7 @@ export const getDataDeal = async (props: PropsDataContact) => {
     const id = resultData.results[0].id;
     const name = resultData.results[0].properties.dealname
 
-    return `Successfully obtained contact id: ${id} and name : ${name}`;
+    return `Obtenido con éxito el id de contacto: ${id} y el nombre : ${name}`;
   } catch (error) {
     console.error("Error creating associations:", error);
     return "No deal found with the specified name  Please check your input and try again.";

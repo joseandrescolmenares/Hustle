@@ -19,7 +19,6 @@ import { getDataDeal } from "../funtionsTools/getDataDeal";
 import { updateDeal } from "../funtionsTools/updateDeal";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
-  
   const validateDataAccount = await renewTokenAgent(phoneNumber);
 
   const getContactInfoByName = new DynamicStructuredTool({
@@ -39,11 +38,11 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",
     description:
-      "This function allows you to search for companies by name, offering detailed information, including the unique identifier (id) and name of the company. The obtained data can be used in other functions, such as forming partnerships between different entities.",
+      "This function allows searching for companies by their name, providing detailed information, including the unique identifier (id) and the company(compañia) name. The retrieved data can be used in other functions.",
     schema: z.object({
       nameCompany: z
         .string()
-        .describe("company name to search for the id")
+        .describe("company(empresa)  name to search for the id")
         .default(""),
     }),
     func: async ({ nameCompany }): Promise<string> => {
@@ -56,7 +55,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const addNoteWithDeal = new DynamicStructuredTool({
     name: "addNoteWithDeal",
     description:
-      "Registers or creates a new note and directly associates it with a specific deal. Providing the deal's id is essential for the association. The note may include a customizable message.",
+      "Registers or creates a new note and directly associates it with a specific deal(Negocio). Providing the deal(Negocio)'s id is essential for the association. The note may include a customizable message.",
     schema: z.object({
       onwerId: z
         .string()
@@ -70,12 +69,13 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       dealId: z
         .string()
         .describe(
-          "Identifier of the deal to which the note is to be associated. this property is mandatory to associate"
+          "Identifier of the deal(Negocio) to which the note is to be associated. this property is mandatory to associate"
         ),
     }),
     func: async ({ messageNotesBody, onwerId, dealId }) => {
       const token = validateDataAccount?.token;
-      const props = { token, messageNotesBody, onwerId, dealId };
+      const idAccount = validateDataAccount?.idAccount;
+      const props = { token, messageNotesBody, onwerId, dealId, idAccount };
       return await createActivityNotes(props);
     },
   });
@@ -85,12 +85,12 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const associateContactWithDeal = new DynamicStructuredTool({
     name: "associateContactWithDeal",
     description:
-      "This function is used to associate deals with contacts, and it is crucial to provide the unique identifiers of both for the association to be successful. Obtaining the specific ids of both deals and contacts is of paramount importance for the proper functioning of this operation.",
+      "This function is used to associate deals(Negocio) with contacts, and it is crucial to provide the unique identifiers of both for the association to be successful. Obtaining the specific ids of both deals(Negocio) and contacts is of paramount importance for the proper functioning of this operation.",
     schema: z.object({
       contactId: z.string().describe("represents the contact identifier"),
       dealId: z
         .string()
-        .describe("represents the deal id to perform the association"),
+        .describe("represents the deal(Negocio) id to perform the association"),
     }),
     func: async ({ contactId, dealId }) => {
       const token = validateDataAccount?.token;
@@ -103,15 +103,15 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const associateDealWithCompany = new DynamicStructuredTool({
     name: "associateDealWithCompany",
     description:
-      "The function establishes associations between a deal and a company. By specifying the unique identifiers of the deal and the company, this function allows to establish a seamless link between these entities within the CRM system. The company identifier and the transaction identifier are essential to make this association.",
+      "The function establishes associations between a deal(Negocio) and a company(empresa). By specifying the unique identifiers of the deal(Negocio) and the company(empresa), this function allows to establish a seamless link between these entities within the CRM system. The company(empresa) identifier and the transaction identifier are essential to make this association.",
     schema: z.object({
       idDeals: z
         .string()
-        .describe("represents the company's id to perform the association.")
+        .describe("represents the company(empresa)'s id to perform the association.")
         .default(""),
       idCompany: z
         .string()
-        .describe("represents the company identifier ")
+        .describe("represents the company(empresa) identifier ")
         .default(""),
     }),
     func: async ({ idDeals, idCompany }) => {
@@ -125,7 +125,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getStageForDeal = new DynamicTool({
     name: "getStageForDeal",
     description:
-      "This function is designed to retrieve the stages available within the CRM. It provides both the stage values and their corresponding ids, allowing you to accurately capture the id associated with a selected stage. This ensures accurate and efficient use of the id obtained when assigning a stage to a new deal.",
+      "This function is designed to retrieve the stages available within the CRM. It provides both the stage values and their corresponding ids, allowing you to accurately capture the id associated with a selected stage. This ensures accurate and efficient use of the id obtained when assigning a stage to a new deal(Negocio).",
     func: async () => {
       return await getStage(validateDataAccount?.token);
     },
@@ -134,12 +134,12 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getDealInfoByName = new DynamicStructuredTool({
     name: "getDealInfoByName",
     description:
-      "This function allows you to search for a deal by its name, providing comprehensive information that includes the unique identifier (id) and the name of the deal. ",
+      "This function allows you to search for a deal(Negocio) by its name, providing comprehensive information that includes the unique identifier (id) and the name of the deal(Negocio). ",
     schema: z.object({
       dealName: z
         .string()
         .describe(
-          "represents the name of the deal for which the associated identifier (id) is to be obtained."
+          "represents the name of the deal(Negocio) for which the associated identifier (id) is to be obtained."
         ),
     }),
     func: async ({ dealName }) => {
@@ -158,14 +158,12 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .number()
         .describe("Represents the monetary amount or monetary value."),
 
-      dealname: z
-        .string()
-        .describe("Represents the name of the deal."),
+      dealname: z.string().describe("Represents the name of the deal(Negocio)."),
 
       dealstage: z
         .string()
         .describe(
-          "Current stage of a deal or commercial negotiation within the sales process. "
+          "Current stage of a deal(Negocio) or commercial negotiation within the sales process. "
         ),
 
       closedate: z
@@ -174,9 +172,15 @@ export const agentAi = async (message: string, phoneNumber: string) => {
           "This property defines the date on which the operation will be closed. Follow the format, for example: '2019-12-07T16:50:06.678Z'."
         ),
 
-      dealId: z.string().describe("Identifier of the deal to be updated."),
+      dealId: z.string().describe("Identifier of the deal(Negocio) to be updated."),
     }),
-    func: async ({ amount, dealname, dealstage, closedate, dealId }):Promise<string> => {
+    func: async ({
+      amount,
+      dealname,
+      dealstage,
+      closedate,
+      dealId,
+    }): Promise<string> => {
       const token = validateDataAccount?.token;
       const idAccount = validateDataAccount?.idAccount;
       const props = {
@@ -195,7 +199,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const createDeals = new DynamicStructuredTool({
     name: "createDeals",
     description:
-      "This function creates a new deal with specified properties. It ensures accurate recording of information for effective management and tracking. Optional parameters include monetary amount, deal name, deal stage, and closing date in a standardized format",
+      "This function creates a new deal(Negocio) with the specified properties, ensuring accurate recording of information for effective management and tracking. Optional parameters include monetary amount, deal name, deal stage, and standardized closing date format. Additionally, this function provides information such as the id and name of the created deal(Negocio), which can be utilized in other functions.",
     schema: z.object({
       amount: z
         .number()
@@ -204,14 +208,14 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .default(0),
       dealname: z
         .string()
-        .describe("represents the name of the deal.")
+        .describe("represents the name of the deal(Negocio).")
         .optional()
         .default(""),
       dealstage: z
         .string()
         .nullable()
         .describe(
-          "Current stage of a deal or commercial negotiation within the sales process. No identifier is required unless explicitly needed. Retrieve it using the 'getDealStage' function if necessary"
+          "Current stage of a deal(Negocio) or commercial negotiation within the sales process. No identifier is required unless explicitly needed. Retrieve it using the 'getDealStage' function if necessary"
         )
         .optional()
         .default(null),
