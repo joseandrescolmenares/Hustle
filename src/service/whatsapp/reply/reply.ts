@@ -7,7 +7,6 @@ export async function reply(dataMessage: any) {
     return;
   }
 
-  // Verificar si el mensaje ya está en la cola
 console.log( dataMessage.entry[0].changes[0].value.messages[0], "message")
   if (dataMessage.entry[0].changes[0].value.messages[0].type === "audio") {
     let phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
