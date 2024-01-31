@@ -32,11 +32,14 @@ export async function GET(request: Request) {
         },
       }
     );
+
     const { access_token, refresh_token, expires_in } = responseToken.data;
+
     const cookieStore = cookies();
     cookieStore.set("refresh_token", refresh_token);
     cookieStore.set("accessTokenHubspot", access_token);
     cookieStore.set("expires_in", expires_in);
+    
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const idIntegrations = cookieStore.get("idIntegrations")?.value;
     const teamId = cookieStore.get("team")?.value;
@@ -76,7 +79,7 @@ export async function GET(request: Request) {
       .select();
   } catch (error) {
     return Response.json({
-      error: "Hubo un error al obtener el token de acceso.",
+      error: `failed to integrate to Hubspot on [oauth-callback],  ${error}`,
     });
   }
   redirect("/dashboard");

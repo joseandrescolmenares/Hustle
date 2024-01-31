@@ -17,17 +17,9 @@ import { getDataDeal } from "@/service/funtionsTools/getDataDeal";
 import { updateDeal } from "@/service/funtionsTools/updateDeal";
 
 export async function GET(request: Request) {
-  // const jose = await renewTokenAgent("+541126336301")
-  // const closedate = "n";
   const token =
     "CMntpbrVMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFNPx0TVT2QoQwts1kdkUv1jYx_BjOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhTmiQagc6AwDwSZwrlaMdiJNIcAG0oDbmExUgBaAA";
-  // const dataProp = {
-  //   token,
-  //   contactName: "n"
-  // };
-  // const data = await getSearchContacts(dataProp);
-  // const data =await  dealContactAssociation({token})
-  // const  data = await getOwners(token)
+
   const props = {
     dealId: "17219101813",
     token,
@@ -36,12 +28,15 @@ export async function GET(request: Request) {
     dealname: "max",
     closedate: "",
   };
+
+  // const jose = await renewTokenAgent("+541126336301")
+  // const data = await getSearchContacts(dataProp);
+  // const data =await  dealContactAssociation({token})
+  // const  data = await getOwners(token)
   // const data = await createActivityNotes(props)
-
   // const data = await createNewDeals(dataProp);
-
   // const data = await updateDeal(props);
   // const data = await getStage(token);
 
-  return NextResponse.json({ jose: "jodse"});
+  return NextResponse.json({ jose: "jodse" });
 }
