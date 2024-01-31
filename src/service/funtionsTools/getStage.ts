@@ -18,10 +18,10 @@ export const getStage = async (token: string) => {
     }));
 
     const stagesString = stages
-      .map((stage) => `'${stage.values}' (id: ${stage.id})`)
+      .map((stage) => `'${stage.values}' (ID: ${stage.id})`)
       .join(", ");
 
-    return `You should select the id corresponding to the value you deem appropriate: ${stagesString} Ensure you select the id corresponding to the desired stage.`;
+    return `You should select the ID corresponding to the value you deem appropriate: ${stagesString} Ensure you select the id corresponding to the desired stage.`;
 
   } catch (error) {
     console.error("Error creating associations:", error);

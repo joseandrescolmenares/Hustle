@@ -38,7 +38,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",
     description:
-      "This function allows searching for companies by their name, providing detailed information, including the unique identifier (id) and the company(compañia) name. The retrieved data can be used in other functions.",
+      "This function allows searching for companies by their name, providing detailed information, including the unique identifier (ID) and the company (compañía) name. The retrieved data can be used in other functions.",
     schema: z.object({
       nameCompany: z
         .string()
@@ -125,7 +125,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getStageForDeal = new DynamicTool({
     name: "getStageForDeal",
     description:
-      "This function is designed to retrieve the stages available within the CRM. It provides both the stage values and their corresponding ids, allowing you to accurately capture the id associated with a selected stage. This ensures accurate and efficient use of the id obtained when assigning a stage to a new deal(Negocio).",
+      "This function is designed to retrieve the stages available within the CRM. It provides both the stage values and their corresponding IDs, allowing you to accurately capture the id associated with a selected stage. This ensures accurate and efficient use of the id obtained when assigning a stage to a new deal(Negocio).",
     func: async () => {
       return await getStage(validateDataAccount?.token);
     },
@@ -199,7 +199,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const createDeals = new DynamicStructuredTool({
     name: "createDeals",
     description:
-      "This function creates a new deal(Negocio) with the specified properties, ensuring accurate recording of information for effective management and tracking. Optional parameters include monetary amount, deal name, deal stage, and standardized closing date format. Additionally, this function provides information such as the id and name of the created deal(Negocio), which can be utilized in other functions.",
+      "This function creates a new deal (Negocio) with the specified properties, ensuring accurate recording of information for effective management and tracking. Optional parameters include monetary amount, deal name, deal stage, and standardized closing date format. Additionally, this function provides information, such as the id and name of the created deal (Negocio), which can be utilized in other functions.",
     schema: z.object({
       amount: z
         .number()
@@ -261,7 +261,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
   const llm = new ChatOpenAI({
     openAIApiKey: "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",
-    modelName: "gpt-3.5-turbo-1106",
+    modelName: "gpt-4-1106-preview",
     temperature: 0,
   });
   const promptTemplate = await pull<ChatPromptTemplate>(

@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     const {
       data: { user },
     }: any = await supabase.auth.getUser(token);
-    console.log(user, "user");
+    
     const { data: dataUser, error: errorUser } = await supabase
       .from("users")
       .insert([
