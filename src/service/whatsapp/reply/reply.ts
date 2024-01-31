@@ -26,7 +26,7 @@ console.log( dataMessage.entry[0].changes[0].value.messages[0], "message")
 
   let phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
   let messageBody = dataMessage.entry[0].changes[0].value.messages[0].text.body;
-  console.log("estoyyy en reply");
+
   if (!(await validateNumber(phoneNumber)).validate.status) {
     const message = await validateNumber(phoneNumber);
     const response = { phoneNumber, messageResponse: message.validate.message };
