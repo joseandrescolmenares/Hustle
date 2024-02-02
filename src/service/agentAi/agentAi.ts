@@ -1,6 +1,10 @@
 import { ChatOpenAI } from "@langchain/openai";
 import type { ChatPromptTemplate } from "@langchain/core/prompts";
-import { createOpenAIToolsAgent, AgentExecutor } from "langchain/agents";
+import {
+  createOpenAIToolsAgent,
+  AgentExecutor,
+  createStructuredChatAgent,
+} from "langchain/agents";
 import { pull } from "langchain/hub";
 import {
   DynamicTool,
@@ -17,6 +21,14 @@ import { dealContactAssociation } from "../funtionsTools/dealContactAssociation"
 import { createActivityNotes } from "../funtionsTools/createActivityNotes";
 import { getDataDeal } from "../funtionsTools/getDataDeal";
 import { updateDeal } from "../funtionsTools/updateDeal";
+import { UpstashRedisChatMessageHistory } from "@langchain/community/stores/message/upstash_redis";
+import { ChatMessageHistory } from "langchain/stores/message/in_memory";
+import { RunnableWithMessageHistory } from "@langchain/core/runnables";
+import { MongoClient, ObjectId } from "mongodb";
+import { BufferMemory } from "langchain/memory";
+
+import { ConversationChain } from "langchain/chains";
+import { MongoDBChatMessageHistory } from "@langchain/community/stores/message/mongodb";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
@@ -107,7 +119,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     schema: z.object({
       idDeals: z
         .string()
-        .describe("represents the company(empresa)'s id to perform the association.")
+        .describe(
+          "represents the company(empresa)'s id to perform the association."
+        )
         .default(""),
       idCompany: z
         .string()
@@ -158,7 +172,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .number()
         .describe("Represents the monetary amount or monetary value."),
 
-      dealname: z.string().describe("Represents the name of the deal(Negocio)."),
+      dealname: z
+        .string()
+        .describe("Represents the name of the deal(Negocio)."),
 
       dealstage: z
         .string()
@@ -172,7 +188,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
           "This property defines the date on which the operation will be closed. Follow the format, for example: '2019-12-07T16:50:06.678Z'."
         ),
 
-      dealId: z.string().describe("Identifier of the deal(Negocio) to be updated."),
+      dealId: z
+        .string()
+        .describe("Identifier of the deal(Negocio) to be updated."),
     }),
     func: async ({
       amount,
@@ -249,19 +267,12 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
   const tools = [
     createDeals,
-    getCompanyInfoByName,
-    associateDealWithCompany,
-    getStageForDeal,
-    getContactInfoByName,
-    associateContactWithDeal,
-    addNoteWithDeal,
-    getDealInfoByName,
-    updateDealInformation,
+   
   ];
 
   const llm = new ChatOpenAI({
-    openAIApiKey: "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",
-    modelName: "gpt-4-1106-preview",
+    openAIApiKey: process.env.OPENAI_API_KEY,
+    modelName: "gpt-3.5-turbo-1106",
     temperature: 0,
   });
   const promptTemplate = await pull<ChatPromptTemplate>(
@@ -281,16 +292,83 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     prompt,
   });
 
+  const client = new MongoClient(
+    "mongodb+srv://joseandrescolmenares02:wiMLUGo61Id5upfc@cluster0.zpvhlte.mongodb.net/?retryWrites=true&w=majority" ||
+      ""
+  );
+  await client.connect();
+  const collection = client.db("langchain").collection("memory");
+
+  // generate a new sessionId string
+  const sessionId = "dea";
+
+
   const agentExecutor = new AgentExecutor({
     agent,
     tools,
-    returnIntermediateSteps: true,
+    
   });
 
-  const result = await agentExecutor.invoke({
-    input: message,
-    chat_history: [],
+  const messageHistory = new ChatMessageHistory();
+
+// const  chatHistory = new MongoDBChatMessageHistory({
+//     collection,
+//     sessionId,
+//   })
+  
+  const agentWithChatHistory = new RunnableWithMessageHistory({
+    runnable: agentExecutor,
+    // This is needed because in most real world scenarios, a session id is needed per user.
+    // It isn't really used here because we are using a simple in memory ChatMessageHistory.
+
+    getMessageHistory: (sessionId) => messageHistory,
+  
+    inputMessagesKey: "input",
+    historyMessagesKey: "chat_history",
+    
   });
+
+  // const chainWithHistory = new RunnableWithMessageHistory({
+  //   runnable: agentExecutor,
+  //   getMessageHistory: (sessionId) =>
+  //     new UpstashRedisChatMessageHistory({
+  //       sessionId,
+  //       config: {
+  //         url: "https://relative-tetra-37107.upstash.io",
+  //         token:
+  //           "AZDzACQgMmM1Mzc5ZTUtM2MxNy00YjE5LWEyZmUtM2U2YzEyM2Y1NTIwNzBjNWI5NjUzNGY4NGE2MjhiMWQ0NzE4MjRmZmY3MDQ=",
+  //       },
+  //     }),
+  //   historyMessagesKey: "chat_history",
+  //   inputMessagesKey: "input",
+  // });
+
+  const result = await agentWithChatHistory.invoke(
+    {
+      input: message,
+
+    },
+    {
+      configurable: {
+        sessionId: sessionId,
+      },
+    }
+  );
 
   return result;
 };
+
+  // const result = await agentExecutor.invoke({
+  //   input: message,
+  //   memory,
+  // });
+
+
+  // getCompanyInfoByName,
+  // associateDealWithCompany,
+  // getStageForDeal,
+  // getContactInfoByName,
+  // associateContactWithDeal,
+  // addNoteWithDeal,
+  // getDealInfoByName,
+  // updateDealInformation,

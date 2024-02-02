@@ -27,7 +27,7 @@ export async function GET(request: Request) {
   //         client_id: clientId,
   //         client_secret: clientSecret,
   //         redirect_uri: redirectUri,
-  //         refresh_token: refresh_token,
+  //         refresh_token: "bc7dcf0c-8211-4e9d-b918-90b0acbddf1d",
   //       },
   //     }
   //   );
