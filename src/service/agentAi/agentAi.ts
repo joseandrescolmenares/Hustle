@@ -267,7 +267,14 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
   const tools = [
     createDeals,
-   
+    getCompanyInfoByName,
+    associateDealWithCompany,
+    getStageForDeal,
+    getContactInfoByName,
+    associateContactWithDeal,
+    addNoteWithDeal,
+    getDealInfoByName,
+    updateDealInformation,
   ];
 
   const llm = new ChatOpenAI({
@@ -292,41 +299,38 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     prompt,
   });
 
-  const client = new MongoClient(
-    "mongodb+srv://joseandrescolmenares02:wiMLUGo61Id5upfc@cluster0.zpvhlte.mongodb.net/?retryWrites=true&w=majority" ||
-      ""
-  );
-  await client.connect();
-  const collection = client.db("langchain").collection("memory");
+  // const client = new MongoClient(
+  //   "mongodb+srv://joseandrescolmenares02:wiMLUGo61Id5upfc@cluster0.zpvhlte.mongodb.net/?retryWrites=true&w=majority" ||
+  //     ""
+  // );
+  // await client.connect();
+  // const collection = client.db("langchain").collection("memory");
 
   // generate a new sessionId string
-  const sessionId = "dea";
-
+  // const sessionId = "dea";
 
   const agentExecutor = new AgentExecutor({
     agent,
     tools,
-    
   });
 
-  const messageHistory = new ChatMessageHistory();
+  // const messageHistory = new ChatMessageHistory();
 
-// const  chatHistory = new MongoDBChatMessageHistory({
-//     collection,
-//     sessionId,
-//   })
-  
-  const agentWithChatHistory = new RunnableWithMessageHistory({
-    runnable: agentExecutor,
-    // This is needed because in most real world scenarios, a session id is needed per user.
-    // It isn't really used here because we are using a simple in memory ChatMessageHistory.
+  // const  chatHistory = new MongoDBChatMessageHistory({
+  //     collection,
+  //     sessionId,
+  //   })
 
-    getMessageHistory: (sessionId) => messageHistory,
-  
-    inputMessagesKey: "input",
-    historyMessagesKey: "chat_history",
-    
-  });
+  // const agentWithChatHistory = new RunnableWithMessageHistory({
+  //   runnable: agentExecutor,
+  //   // This is needed because in most real world scenarios, a session id is needed per user.
+  //   // It isn't really used here because we are using a simple in memory ChatMessageHistory.
+
+  //   getMessageHistory: (sessionId) => messageHistory,
+
+  //   inputMessagesKey: "input",
+  //   historyMessagesKey: "chat_history",
+  // });
 
   // const chainWithHistory = new RunnableWithMessageHistory({
   //   runnable: agentExecutor,
@@ -343,32 +347,14 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   //   inputMessagesKey: "input",
   // });
 
-  const result = await agentWithChatHistory.invoke(
-    {
-      input: message,
-
-    },
-    {
-      configurable: {
-        sessionId: sessionId,
-      },
-    }
-  );
+  const result = await agentExecutor.invoke({
+    input: message,
+  });
 
   return result;
 };
 
-  // const result = await agentExecutor.invoke({
-  //   input: message,
-  //   memory,
-  // });
-
-
-  // getCompanyInfoByName,
-  // associateDealWithCompany,
-  // getStageForDeal,
-  // getContactInfoByName,
-  // associateContactWithDeal,
-  // addNoteWithDeal,
-  // getDealInfoByName,
-  // updateDealInformation,
+// const result = await agentExecutor.invoke({
+//   input: message,
+//   memory,
+// });
