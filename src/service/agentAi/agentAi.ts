@@ -285,7 +285,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const updateDealInformation = new DynamicStructuredTool({
     name: "updateDealInformation",
     description:
-      "This function is designed to update the details of a deal(negocio), allowing for modifications to various aspects such as dates, values,name,  and other relevant properties.",
+      "This function is responsible for updating the details of a deal (Negocio), allowing modification of various aspects such as dates, values, name, and other relevant properties. It is mandatory to provide the dealId parameter for the correct execution of the function",
     schema: z.object({
       amount: z
         .number()
@@ -309,7 +309,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
       dealId: z
         .string()
-        .describe("Identifier of the deal(Negocio) to be updated."),
+        .describe("Identifier of the deal(Negocio) to update. it is very important and mandatory to pass this parameter."),
     }),
     func: async ({
       amount,
