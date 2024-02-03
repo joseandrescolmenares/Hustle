@@ -1,25 +1,25 @@
 import axios from "axios";
 
 interface Props {
-  idDeals: string;
-  idCompany: string;
-  token: string;
-  idAccoun: string;
+  idContact?: string;
+  idDeal?: string;
+  token?: string;
+  idAccoun?: string;
 }
 
-export const dealCompanyAssociation = async (props: Props) => {
+export const contactDealAssociation = async (props: Props) => {
   try {
-    const { idDeals, idCompany, token, idAccoun } = props;
-    console.log("esto es el id del la empresaa ", idDeals);
+    const { idContact, idDeal, token, idAccoun } = props;
+
     const url = `https://api.hubapi.com/crm-associations/v1/associations`;
 
     const response = await axios.put(
       url,
       {
-        fromObjectId: `${idDeals}`,
-        toObjectId: `${idCompany}`,
+        fromObjectId: `${idDeal}`,
+        toObjectId: `${idContact}`,
         category: "HUBSPOT_DEFINED",
-        definitionId: 5,
+        definitionId: 3,
       },
 
       {
@@ -30,7 +30,7 @@ export const dealCompanyAssociation = async (props: Props) => {
       }
     );
 
-    return `Asociaciones creadas con éxito. Puede ver los detalles en: https://app.hubspot.com/contacts/${idAccoun}/record/deal/${idDeals}`;
+    return `Asociaciones creadas con éxito. Puede ver los detalles en: https://app.hubspot.com/contacts/${idAccoun}/contact/${idContact}`;
   } catch (error) {
     console.error("Error creating associations:", error);
     throw new Error("Error creating associations. Please try again later.");

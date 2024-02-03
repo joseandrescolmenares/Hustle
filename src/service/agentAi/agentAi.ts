@@ -11,27 +11,100 @@ import {
   DynamicStructuredTool,
 } from "@langchain/community/tools/dynamic";
 import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
-import { AnyZodTuple, ZodObject, string, z } from "zod";
-import { getDataCompany } from "../funtionsTools/getDataCompany";
-import { createNewDeals } from "../funtionsTools/createDeals";
-import { dealCompanyAssociation } from "../funtionsTools/createDealCompanyAssociation";
-import { getSearchContacts } from "../funtionsTools/getSearchContact";
-import { getStage } from "../funtionsTools/getStage";
-import { dealContactAssociation } from "../funtionsTools/dealContactAssociation";
-import { createActivityNotes } from "../funtionsTools/createActivityNotes";
-import { getDataDeal } from "../funtionsTools/getDataDeal";
-import { updateDeal } from "../funtionsTools/updateDeal";
-import { UpstashRedisChatMessageHistory } from "@langchain/community/stores/message/upstash_redis";
-import { ChatMessageHistory } from "langchain/stores/message/in_memory";
-import { RunnableWithMessageHistory } from "@langchain/core/runnables";
-import { MongoClient, ObjectId } from "mongodb";
-import { BufferMemory } from "langchain/memory";
+import { AnyZodTuple, Schema, ZodObject, string, z } from "zod";
+import { getDataCompany } from "../funtionsTools/company/getDataCompany";
+import { createNewDeals } from "../funtionsTools/deals/createDeals";
+import { dealCompanyAssociation } from "../funtionsTools/deals/association/createDealCompanyAssociation";
+import { getSearchContacts } from "../funtionsTools/contact/getSearchContact";
+import { getStage } from "../funtionsTools/deals/getStage";
+import { dealContactAssociation } from "../funtionsTools/deals/association/dealContactAssociation";
+import { createActivityNotes } from "../funtionsTools/deals/activityDeal/createActivityNotes";
+import { getDataDeal } from "../funtionsTools/deals/getDataDeal";
 
-import { ConversationChain } from "langchain/chains";
-import { MongoDBChatMessageHistory } from "@langchain/community/stores/message/mongodb";
+import { createCompany } from "../funtionsTools/company/createCompany";
+import { updateDeal } from "../funtionsTools/deals/updateDeal";
+import { createContact } from "../funtionsTools/contact/createContact";
+import { linkSync } from "fs";
+import { contactDealAssociation } from "../funtionsTools/contact/association/contactDealAssociation";
+import { companyContactAssociations } from "../funtionsTools/company/association/companyContact";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
+  const token = validateDataAccount?.token;
+  const idAccount = validateDataAccount?.idAccount;
+
+  // funrtion contact
+
+  const createNewContact = new DynamicStructuredTool({
+    name: "createContact",
+    description:
+      " creates a new contact with the specified properties. Additionally, this function provides information, such as the id and name of the created contact, which can be used in other functions.",
+    schema: z.object({
+      phone: z.string().describe("The contact's phone number").optional(),
+      firstname: z
+        .string()
+        .describe("The first name of the contact.")
+        .optional()
+        .default(""),
+      lastname: z.string().describe("The last name of the contact.").optional(),
+      company: z
+        .string()
+        .describe("The name of the company associated with the contact.")
+        .optional()
+        .default(""),
+      website: z
+        .string()
+        .describe("The website linked to the contact.")
+        .optional()
+        .default(""),
+      email: z
+        .string()
+        .describe("The email address of the contact.")
+        .optional(),
+      lifecyclestage: z
+        .string()
+        .describe("The current stage in the contact's lifecycle.")
+        .optional(),
+    }),
+    func: async ({
+      phone,
+      firstname,
+      lastname,
+      company,
+      email,
+      lifecyclestage,
+      website,
+    }) => {
+      const props = {
+        token,
+        idAccount,
+        phone,
+        firstname,
+        lastname,
+        company,
+        email,
+        lifecyclestage,
+        website,
+      };
+      return await createContact(props);
+    },
+  });
+
+  const associateDealWithContact = new DynamicStructuredTool({
+    name: "associateContactWithDeal",
+    description:
+      "This function serves to associate a deal(Negocio) with contacts, and it is crucial to provide unique identifiers for both to ensure the success of the association. Obtaining specific identifiers for both deals and contacts is of vital importance for the proper functioning of this operation.",
+    schema: z.object({
+      contactId: z.string().describe("represents the contact identifier"),
+      dealId: z
+        .string()
+        .describe("represents the deal(Negocio) id to perform the association"),
+    }),
+    func: async ({ contactId, dealId }) => {
+      const props = { token, idAccount, contactId, dealId };
+      return await contactDealAssociation(props);
+    },
+  });
 
   const getContactInfoByName = new DynamicStructuredTool({
     name: "getContactInfoByName",
@@ -41,9 +114,62 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       contactName: string().describe("contact name to search for the id"),
     }),
     func: async ({ contactName }) => {
-      const token = validateDataAccount?.token;
       const dataProp = { token, contactName };
       return await getSearchContacts(dataProp);
+    },
+  });
+
+  // funtion company
+
+  const createNewCompany = new DynamicStructuredTool({
+    name: "createCompany",
+    description:
+      "This function creates a new company with the specified properties. Additionally, this function provides information, such as the id and name of the created company, that can be used in other functions.",
+    schema: z.object({
+      phone: z
+        .number()
+        .describe("Contact phone number of the company")
+        .optional(),
+      name: z
+        .string()
+        .describe("Full name of the company")
+        .optional()
+        .default(""),
+      city: z
+        .string()
+        .describe("Location or city where the company is based.")
+        .optional()
+        .default(""),
+      industry: z
+        .string()
+        .describe("Industry to which the company belongs")
+        .optional()
+        .default(""),
+      domain: z
+        .string()
+        .describe("Primary web domain of the company.")
+        .optional()
+        .default(""),
+    }),
+    func: async ({ phone, name, city, industry, domain }) => {
+      const props = { token, idAccount, phone, name, city, industry, domain };
+      return await createCompany(props);
+    },
+  });
+
+  const associateContactWithCompany = new DynamicStructuredTool({
+    name: "associateContactWithCompany",
+    description:
+      "This function is responsible for establishing associations between companies(empresas) and contacts, and it is crucial to provide unique identifiers for both to ensure the success of the association.",
+    schema: z.object({
+      idCompany: z
+        .string()
+        .describe("represents the company(empresa) identifier "),
+      idContact: z.string().describe("represents the contact identifier"),
+    }),
+    func: async ({ idCompany, idContact }) => {
+      const props = { token, idAccount, idCompany, idContact };
+      return await companyContactAssociations(props);
     },
   });
 
@@ -58,7 +184,6 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .default(""),
     }),
     func: async ({ nameCompany }): Promise<string> => {
-      const token = validateDataAccount?.token;
       const dataConpany = { token, nameCompany };
       return await getDataCompany(dataConpany);
     },
@@ -85,8 +210,6 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         ),
     }),
     func: async ({ messageNotesBody, onwerId, dealId }) => {
-      const token = validateDataAccount?.token;
-      const idAccount = validateDataAccount?.idAccount;
       const props = { token, messageNotesBody, onwerId, dealId, idAccount };
       return await createActivityNotes(props);
     },
@@ -95,9 +218,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   // funtions deals :
 
   const associateContactWithDeal = new DynamicStructuredTool({
-    name: "associateContactWithDeal",
+    name: "associateDealWithContact",
     description:
-      "This function is used to associate deals(Negocio) with contacts, and it is crucial to provide the unique identifiers of both for the association to be successful. Obtaining the specific ids of both deals(Negocio) and contacts is of paramount importance for the proper functioning of this operation.",
+      "This function associates contacts with a deal (Negocio), and it is crucial to provide unique identifiers for both to ensure the success of the association. Obtaining specific identifiers for both deals and contacts is of vital importance for the proper functioning of this operation.",
+
     schema: z.object({
       contactId: z.string().describe("represents the contact identifier"),
       dealId: z
@@ -105,9 +229,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .describe("represents the deal(Negocio) id to perform the association"),
     }),
     func: async ({ contactId, dealId }) => {
-      const token = validateDataAccount?.token;
-      const idAccoun = validateDataAccount?.idAccount;
-      const props = { token, idAccoun, contactId, dealId };
+      const props = { token, idAccount, contactId, dealId };
       return await dealContactAssociation(props);
     },
   });
@@ -129,9 +251,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .default(""),
     }),
     func: async ({ idDeals, idCompany }) => {
-      const token = validateDataAccount?.token;
-      const idAccoun = validateDataAccount?.idAccount;
-      const props = { idCompany, idDeals, token, idAccoun };
+      const props = { idCompany, idDeals, token, idAccount };
       return await dealCompanyAssociation(props);
     },
   });
@@ -157,7 +277,6 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         ),
     }),
     func: async ({ dealName }) => {
-      const token = validateDataAccount?.token;
       const prop = { token, dealName };
       return await getDataDeal(prop);
     },
@@ -199,8 +318,6 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       closedate,
       dealId,
     }): Promise<string> => {
-      const token = validateDataAccount?.token;
-      const idAccount = validateDataAccount?.idAccount;
       const props = {
         amount,
         dealname,
@@ -251,8 +368,6 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       dealstage,
       closedate,
     }): Promise<string> => {
-      const token = validateDataAccount?.token;
-      const idAccount = validateDataAccount?.idAccount;
       const dataParams = {
         amount,
         dealname,
@@ -271,10 +386,14 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     associateDealWithCompany,
     getStageForDeal,
     getContactInfoByName,
+    associateDealWithContact,
     associateContactWithDeal,
     addNoteWithDeal,
     getDealInfoByName,
     updateDealInformation,
+    createNewCompany,
+    createNewContact,
+    associateContactWithCompany,
   ];
 
   const llm = new ChatOpenAI({

@@ -6,31 +6,30 @@ import { getAllCompanies } from "@/service/hubspot/company/getAllCompanies";
 import { renewTokenAgent } from "@/service/funtionsTools/renewTokenAgent";
 
 import axios from "axios";
-import { getSearchContacts } from "@/service/funtionsTools/getSearchContact";
-import { createNewDeals } from "@/service/funtionsTools/createDeals";
-import { getStage } from "@/service/funtionsTools/getStage";
-import { dealContactAssociation } from "@/service/funtionsTools/dealContactAssociation";
-import { getOwners } from "@/service/funtionsTools/getOwners";
-import { createActivityNotes } from "@/service/funtionsTools/createActivityNotes";
-import { getDataCompany } from "@/service/funtionsTools/getDataCompany";
-import { getDataDeal } from "@/service/funtionsTools/getDataDeal";
-import { updateDeal } from "@/service/funtionsTools/updateDeal";
-import { createCompany } from "@/service/funtionsTools/createCompany";
+import { getSearchContacts } from "@/service/funtionsTools/contact/getSearchContact";
+import { createNewDeals } from "@/service/funtionsTools/deals/createDeals";
+import { getStage } from "@/service/funtionsTools/deals/getStage";
+import { dealContactAssociation } from "@/service/funtionsTools/deals/association/dealContactAssociation";
+import { getOwners } from "@/service/funtionsTools/onwer/getOwners";
+import { createActivityNotes } from "@/service/funtionsTools/deals/activityDeal/createActivityNotes";
+import { getDataCompany } from "@/service/funtionsTools/company/getDataCompany";
+import { getDataDeal } from "@/service/funtionsTools/deals/getDataDeal";
+import { updateDeal } from "@/service/funtionsTools/deals/updateDeal";
+import { createCompany } from "@/service/funtionsTools/company/createCompany";
+import { createContact } from "@/service/funtionsTools/contact/createContact";
+import { companyContactAssociations } from "@/service/funtionsTools/company/association/companyContact";
 
 export async function GET(request: Request) {
   const token =
-    "CKHbvMbWMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFEmg4yId82w9Sm-Wy4q3BDJkd6-mOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhRHoSa2uvKfQPQoTdTo-RyYXt-U1koDbmExUgBaAA";
+    "COTduOjWMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFLTbNTCLtg9sMmV2d_99k0sS11yXOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhQ5GFwEanMCEOJ6f_D2CdxKL7JJtUoDbmExUgBaAA";
 
   const props = {
-    token,
-    phone: 1126336301,
-    name: "kiko",
-    industry:"",
-    idAccount:"",
-    domain:"",
-    city:""
+    idCompany: "18957579039",
+  idContact: "701",
+  token,
+  idAccoun:"44543727"
   };
-   const data = await createCompany(props)
+  //  const data = await companyContactAssociations(props)
   // const jose = await renewTokenAgent("+541126336301")
   // const data = await getSearchContacts(dataProp);
   // const data =await  dealContactAssociation({token})
@@ -40,5 +39,5 @@ export async function GET(request: Request) {
   // const data = await updateDeal(props);
   // const data = await getStage(token);
 
-  return NextResponse.json({ jose: data });
+  return NextResponse.json({ jose: "jose" });
 }
