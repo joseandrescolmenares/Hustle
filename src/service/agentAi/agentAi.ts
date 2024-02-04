@@ -11,7 +11,7 @@ import {
   DynamicStructuredTool,
 } from "@langchain/community/tools/dynamic";
 import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
-import { AnyZodTuple, Schema, ZodObject, string, z } from "zod";
+import { AnyZodTuple, Schema, ZodObject, object, string, z } from "zod";
 import { getDataCompany } from "../funtionsTools/company/getDataCompany";
 import { createNewDeals } from "../funtionsTools/deals/createDeals";
 import { dealCompanyAssociation } from "../funtionsTools/deals/association/createDealCompanyAssociation";
@@ -24,9 +24,16 @@ import { getDataDeal } from "../funtionsTools/deals/getDataDeal";
 import { createCompany } from "../funtionsTools/company/createCompany";
 import { updateDeal } from "../funtionsTools/deals/updateDeal";
 import { createContact } from "../funtionsTools/contact/createContact";
-import { linkSync } from "fs";
+import { RunnableWithMessageHistory } from "@langchain/core/runnables";
+
 import { contactDealAssociation } from "../funtionsTools/contact/association/contactDealAssociation";
 import { companyContactAssociations } from "../funtionsTools/company/association/companyContact";
+import { MessagesPlaceholder } from "@langchain/core/prompts";
+
+import { UpstashRedisChatMessageHistory } from "@langchain/community/stores/message/upstash_redis";
+import { Input } from "@/app/components/ui/Input";
+import { createtaskDeals } from "../funtionsTools/deals/activityDeal/createTaskDeal";
+import { title } from "process";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
@@ -201,7 +208,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .default(""),
       messageNotesBody: z
         .string()
-        .describe(" Body of the note or message. ")
+        .describe("Body of the note or message. ")
         .default("esto es una nota"),
       dealId: z
         .string()
@@ -216,6 +223,47 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   });
 
   // funtions deals :
+
+  const createTaskAndAssociateWithDeal = new DynamicStructuredTool({
+    name: "createTaskAndAssociateWithDeal",
+    description: `Creates a new task and directly associates it with a specific deal (Negocio). For the association, it is essential to provide the deal's identifier (id), which must be a numerical value.
+    `,
+    schema: z.object({
+      idDeal: z.number().describe("The identifier (id) specifies the deal (Negocio) to which the task should be associated. This property is essential and must be provided for the successful association."),
+      type: z.string().describe("The type of task. Values include EMAIL, CALL, or TODO. Choose the one that best fits based on user input."),
+      time: z.string().describe("Required. This field marks the task's due date. You can use a Unix timestamp in milliseconds or UTC format."),
+      title: z.string().describe("The title of the task."),
+      priority: z.string().describe("The priority of the task. Values include LOW, MEDIUM, or HIGH. Choose the one that best fits based on user input."),
+      status: z.string().describe("The status of the task, either COMPLETED or NOT_STARTED. Choose one based on user input."),
+      messageBody: z.string().describe("Body of the note or message."),
+      ownerId: z.string().describe("ID of the task owner.").optional(),
+    }),
+    func: async ({
+      idDeal,
+      messageBody,
+      time,
+      title,
+      status,
+      type,
+      priority,
+      ownerId,
+    }) => {
+      const props = {
+        token,
+        idDeal,
+        idAccount,
+        messageBody,
+        time,
+        title,
+        status,
+        type,
+        priority,
+        ownerId,
+      };
+
+      return await createtaskDeals(props);
+    },
+  });
 
   const associateContactWithDeal = new DynamicStructuredTool({
     name: "associateDealWithContact",
@@ -309,7 +357,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
       dealId: z
         .string()
-        .describe("Identifier of the deal(Negocio) to update. it is very important and mandatory to pass this parameter."),
+        .describe(
+          "Identifier of the deal(Negocio) to update. it is very important and mandatory to pass this parameter."
+        ),
     }),
     func: async ({
       amount,
@@ -394,11 +444,12 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     createNewCompany,
     createNewContact,
     associateContactWithCompany,
+    createTaskAndAssociateWithDeal
   ];
 
   const llm = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: "gpt-3.5-turbo-1106",
+    modelName: "gpt-4-turbo-preview",
     temperature: 0,
   });
   const promptTemplate = await pull<ChatPromptTemplate>(
@@ -418,42 +469,14 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     prompt,
   });
 
-  // const client = new MongoClient(
-  //   "mongodb+srv://joseandrescolmenares02:wiMLUGo61Id5upfc@cluster0.zpvhlte.mongodb.net/?retryWrites=true&w=majority" ||
-  //     ""
-  // );
-  // await client.connect();
-  // const collection = client.db("langchain").collection("memory");
-
-  // generate a new sessionId string
-  // const sessionId = "dea";
-
   const agentExecutor = new AgentExecutor({
     agent,
     tools,
   });
 
-  // const messageHistory = new ChatMessageHistory();
-
-  // const  chatHistory = new MongoDBChatMessageHistory({
-  //     collection,
-  //     sessionId,
-  //   })
-
-  // const agentWithChatHistory = new RunnableWithMessageHistory({
-  //   runnable: agentExecutor,
-  //   // This is needed because in most real world scenarios, a session id is needed per user.
-  //   // It isn't really used here because we are using a simple in memory ChatMessageHistory.
-
-  //   getMessageHistory: (sessionId) => messageHistory,
-
-  //   inputMessagesKey: "input",
-  //   historyMessagesKey: "chat_history",
-  // });
-
   // const chainWithHistory = new RunnableWithMessageHistory({
   //   runnable: agentExecutor,
-  //   getMessageHistory: (sessionId) =>
+  //   getMessageHistory: (sessionId: string) =>
   //     new UpstashRedisChatMessageHistory({
   //       sessionId,
   //       config: {
@@ -462,13 +485,27 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   //           "AZDzACQgMmM1Mzc5ZTUtM2MxNy00YjE5LWEyZmUtM2U2YzEyM2Y1NTIwNzBjNWI5NjUzNGY4NGE2MjhiMWQ0NzE4MjRmZmY3MDQ=",
   //       },
   //     }),
-  //   historyMessagesKey: "chat_history",
+
   //   inputMessagesKey: "input",
+  //   historyMessagesKey: "chat_history",
+
   // });
 
   const result = await agentExecutor.invoke({
     input: message,
+    chat_history: [],
   });
+
+  //   const result = await chainWithHistory.invoke(
+  //     {
+  //       input: message,
+  //     },
+  //     {
+  //       configurable: {
+  //         sessionId: "baa",
+  //       },
+  //     }
+  //   );
 
   return result;
 };
