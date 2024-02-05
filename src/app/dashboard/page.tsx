@@ -1,6 +1,6 @@
 import React from "react";
 import { supabase } from "@/lib/ClientSupabase";
-import { Dialog } from "./components/Dialog";
+import { Dashboard} from "./components/Dashboard";
 import { cookies } from "next/headers";
 import { TableItem } from "./components/TableDeals";
 import { getAllDeals } from "@/service/hubspot/deals/getAllDeals";
@@ -35,8 +35,8 @@ const dashboard = async () => {
   }
 
   return (
-    <div className="w-full flex  justify-center items-center">
-      {/* <Dialog /> */}
+    <div className="w-full flex  justify-center items-center h-screen">
+      <Dashboard  crm="Hubspot"/>
     </div>
   );
   
