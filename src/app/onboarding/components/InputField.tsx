@@ -5,10 +5,8 @@ import { supabase } from "@/lib/ClientSupabase";
 import { useRouter } from "next/navigation";
 
 
-import { Input } from "../../components/ui/Input";
-import { Label } from "../../components/ui/Label";
-
-
+import { Input } from "@/app/components/ui/Input";
+import { Label } from "@/app/components/ui/Label";
 
 
 export function InputField({

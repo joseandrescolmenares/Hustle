@@ -28,7 +28,7 @@ import {
 } from "../components/ui/select";
 import { InputField } from "./components/InputField";
 
-export default function TeamSwitcher() {
+export default function Onboarding() {
   const router = useRouter();
   const [loandingData, setLoandingData] = React.useState(false);
   const [inputTeam, setInputTeam] = React.useState({
