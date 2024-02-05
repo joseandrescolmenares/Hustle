@@ -9,6 +9,7 @@ import { ClipBoard } from "../Clipboard";
 import { TbBrandWhatsapp } from "react-icons/tb";
 import { Switch } from "@/app/components/ui/switch";
 import { HiPaperAirplane } from "react-icons/hi2";
+import { FiGrid ,FiUser} from "react-icons/fi"
 
 // import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
@@ -54,25 +55,25 @@ export default function SheetSide() {
 
 
 
-  const channels = supabase
-    .channel("custom-all-channel")
-    .on(
-      "postgres_changes",
-      { event: "*", schema: "public", table: "users", },
-      (payload) => {
-        const { phoneNumber }: any = payload.new;
-        const messageResponse =
-          "¡Hola! Soy Hustle, tu asistente personal 🚀. ¿Listo para mantener tu CRM al día con solo un mensaje por WhatsApp? ¡Vamos allá! 💬✨";
-        const dataMessage = { phoneNumber, messageResponse };
-        console.log("cagaooo");
+  // const channels = supabase
+  //   .channel("custom-all-channel")
+  //   .on(
+  //     "postgres_changes",
+  //     { event: "*", schema: "public", table: "users", },
+  //     (payload) => {
+  //       const { phoneNumber }: any = payload.new;
+  //       const messageResponse =
+  //         "¡Hola! Soy Hustle, tu asistente personal 🚀. ¿Listo para mantener tu CRM al día con solo un mensaje por WhatsApp? ¡Vamos allá! 💬✨";
+  //       const dataMessage = { phoneNumber, messageResponse };
+  //       console.log("cagaooo");
 
-        if (phoneNumber) {
+  //       if (phoneNumber) {
   
-          sendMessage(dataMessage);
-        }
-      }
-    )
-    .subscribe();
+  //         sendMessage(dataMessage);
+  //       }
+  //     }
+  //   )
+  //   .subscribe();
   const handleSwitch = (value: boolean, idUser: string) => {
     setDialog(value);
     setUserId(idUser);
@@ -109,17 +110,17 @@ export default function SheetSide() {
     setInviteCode(dataTeam[0].inviteCode);
   };
 
-  useEffect(() => {
-    getUser();
-    codeTeam();
-  }, []);
+  // useEffect(() => {
+  //   getUser();
+  //   codeTeam();
+  // }, []);
 
   return (
     <div>
       <Sheet>
         <SheetTrigger asChild>
           <button className=" flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700 cursor-pointer">
-            <CiUser size={24} />
+          <FiUser size={24}/>
           </button>
         </SheetTrigger>
         <SheetContent side="left">

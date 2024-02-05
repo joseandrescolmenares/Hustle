@@ -7,6 +7,7 @@ import {
   CiFilter,
   CiUser,
 } from "react-icons/ci";
+import { FiGrid ,FiUser} from "react-icons/fi"
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -51,7 +52,7 @@ function Sidebar() {
               {" "}
               <li className="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-customPurple dark:text-white dark:hover:bg-slate-700">
                 {/* <CiGrid41 size={24} /> */}
-                <CiWarning size={24} />
+                <FiGrid size={24} />
                 {/* <span className="ml-3 flex-1 whitespace-nowrap">Home</span> */}
               </li>
             </Link>
@@ -79,6 +80,7 @@ function Sidebar() {
             </li> */}
            
               <Profile />
+             
          
           </ul>
 
