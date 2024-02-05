@@ -27,21 +27,57 @@ import {
   SelectValue,
 } from "../components/ui/select";
 
+export function InputField({
+  id,
+  label,
+  placeholder,
+  value,
+  onChange,
+  type,
+}: any) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id}>{label}</Label>
+      <Input
+        type={type}
+        id={id}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+}
+
 export default function TeamSwitcher() {
   const router = useRouter();
   const [loandingData, setLoandingData] = React.useState(false);
   const [inputTeam, setInputTeam] = React.useState({
-    nameTeam: "",
-    statusAccount: "free",
+    nameCompany: "",
+    firstname: "",
+    phone: "",
+    organizationSize: "",
+    crmName: "",
   });
 
-  const [guestLink, setGuestLink] = React.useState("");
+  console.log(inputTeam);
+
+  const handleInputChange = (field: string, value: string) => {
+    setInputTeam({ ...inputTeam, [field]: value });
+  };
+
+  const handlePlanChange = (value: string) => {
+    handleInputChange("statusAccount", value);
+  };
 
   const handleCreateTeam = async () => {
     try {
       const cleanedData = {
-        nameTeam: inputTeam?.nameTeam?.trim(),
-        statusAccount: inputTeam?.statusAccount?.trim(),
+        nameCompany: inputTeam?.nameCompany.trim(),
+        firstname: inputTeam.firstname.trim(),
+        phone: inputTeam.phone.trim(),
+        organizationSize: inputTeam.organizationSize.trim(),
+        crmName: inputTeam.crmName.trim(),
       };
       setLoandingData(true);
       const data = await axios.post("/api/supabase/createTeam", cleanedData);
@@ -55,22 +91,22 @@ export default function TeamSwitcher() {
     }
   };
 
-  const handleGuestLink = async () => {
-    try {
-      const dataLink = {
-        link: guestLink,
-      };
-      setLoandingData(true);
-      const data = await axios.post("/api/supabase/joinTeam", dataLink);
-      const result = data?.data;
+  // const handleGuestLink = async () => {
+  //   try {
+  //     const dataLink = {
+  //       link: guestLink,
+  //     };
+  //     setLoandingData(true);
+  //     const data = await axios.post("/api/supabase/joinTeam", dataLink);
+  //     const result = data?.data;
 
-      if (result) {
-        router.push("/dashboard");
-      }
-    } catch (error) {
-      console.error("Error al crear el equipo:", error);
-    }
-  };
+  //     if (result) {
+  //       router.push("/dashboard");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error al crear el equipo:", error);
+  //   }
+  // };
 
   return (
     <>
@@ -82,25 +118,67 @@ export default function TeamSwitcher() {
         <Dialog open={true}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create team</DialogTitle>
+              <DialogTitle>Organization Details</DialogTitle>
               <DialogDescription>
-                Add a new team to manage products and customers.
+                Add crucial information for efficient management of products and
+                clients.
               </DialogDescription>
             </DialogHeader>
             <div>
               <div className="space-y-4 py-2 pb-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Team name</Label>
-                  <Input
-                    id="name"
-                    placeholder="Meta"
-                    value={inputTeam.nameTeam}
-                    onChange={(e) =>
-                      setInputTeam({ ...inputTeam, nameTeam: e.target.value })
+                <div className="space-y-4 py-2 pb-4">
+                  <InputField
+                    type="text"
+                    id="nameCompany"
+                    label="Company name"
+                    placeholder="Hustle"
+                    value={inputTeam.nameCompany}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleInputChange("nameCompany", e.target.value)
+                    }
+                  />
+                  <InputField
+                    type="text"
+                    id="firstname"
+                    label="First Name"
+                    placeholder="Max Velasco"
+                    value={inputTeam.firstname}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleInputChange("firstname", e.target.value)
+                    }
+                  />
+                  <InputField
+                    type="text"
+                    id="phone"
+                    label="Phone number"
+                    placeholder="+54 911 190 230 01"
+                    value={inputTeam.phone}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleInputChange("phone", e.target.value)
+                    }
+                  />
+                  <InputField
+                    type="text"
+                    id="crmName"
+                    label="What CRM do you use?*"
+                    placeholder="Hubspot"
+                    value={inputTeam.crmName}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleInputChange("crmName", e.target.value)
+                    }
+                  />
+                  <InputField
+                    type="number"
+                    id="organizationSize"
+                    label="How many sales representatives work in your company?"
+                    placeholder="10"
+                    value={inputTeam.organizationSize}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleInputChange("organizationSize", e.target.value)
                     }
                   />
                 </div>
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label htmlFor="plan">Subscription plan</Label>
                   <Select
                     onValueChange={(value) =>
@@ -125,7 +203,7 @@ export default function TeamSwitcher() {
                       </SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
               </div>
               <DialogFooter className="border-b border-gray-400 rounded-md px-4 py-2">
                 {/* <Button variant="outline">Cancel</Button> */}
@@ -133,22 +211,6 @@ export default function TeamSwitcher() {
                   Continue
                 </Button>
               </DialogFooter>
-              <div className="space-y-2 mt-6 mb-5">
-                <Label htmlFor="name">
-                  Join a team with the invitation link here.{" "}
-                  <span className=" text-lg">👇</span>
-                </Label>
-                <div className="flex gap-3">
-                  <Input
-                    id="name"
-                    placeholder="https://www.Hustle.com/meta?codigo=ABCDEFGHIJKLM"
-                    onChange={(e) => setGuestLink(e.target.value)}
-                  />
-                  <Button type="submit" onClick={handleGuestLink}>
-                    enviar
-                  </Button>
-                </div>
-              </div>
             </div>
           </DialogContent>
         </Dialog>

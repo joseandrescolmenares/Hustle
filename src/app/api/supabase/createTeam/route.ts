@@ -5,9 +5,10 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 export async function POST(request: Request) {
   try {
-    const { nameTeam, statusAccout } = await request.json();
+    const { nameCompany, firstname, phone, organizationSize, crmName } =
+      await request.json();
     const cookieStore = cookies();
-    const token = cookieStore.get("access_token")?.value
+    const token = cookieStore.get("access_token")?.value;
     const userId = cookieStore.get("userId")?.value;
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
@@ -29,8 +30,11 @@ export async function POST(request: Request) {
       .insert([
         {
           id_integrations: dataIntegrations[0]?.id_integrations,
-          nameTeam: nameTeam,
-          statusAccount: statusAccout,
+          nameCompany: nameCompany,
+          firstname: firstname,
+          phone: phone,
+          organizationSize: organizationSize,
+          crmName: crmName,
         },
       ])
       .select();
@@ -38,11 +42,10 @@ export async function POST(request: Request) {
     if (errorTeam) {
       throw new Error(`Error during team insertion: ${errorTeam.message}`);
     }
-
     const {
       data: { user },
-    }: any = await supabase.auth.getUser(token)
-console.log(user,"user")
+    }: any = await supabase.auth.getUser(token);
+    console.log(user, "user");
 
     const { data: dataUser, error: errorUser } = await supabase
       .from("users")
@@ -52,7 +55,8 @@ console.log(user,"user")
           id_team: dataTeam[0]?.id_team,
           rol: "creator",
           isOnboarding: true,
-          correo: user.email
+          correo: user.email,
+          phoneNumber: phone,
         },
       ]);
 
