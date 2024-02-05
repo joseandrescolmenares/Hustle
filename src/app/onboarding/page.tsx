@@ -26,28 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
-
-export function InputField({
-  id,
-  label,
-  placeholder,
-  value,
-  onChange,
-  type,
-}: any) {
-  return (
-    <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
-      <Input
-        type={type}
-        id={id}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-      />
-    </div>
-  );
-}
+import { InputField } from "./components/InputField";
 
 export default function TeamSwitcher() {
   const router = useRouter();
