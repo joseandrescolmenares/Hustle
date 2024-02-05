@@ -21,9 +21,9 @@ export async function reply(dataMessage: any) {
   const phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
   const messageBody = dataMessage.entry[0].changes[0].value.messages[0].text.body;
 
-  if (!(await validateNumber(phoneNumber)).validate.status) {
+  if (!(await validateNumber(phoneNumber))?.validate.status) {
     const message = await validateNumber(phoneNumber);
-    const response = { phoneNumber, messageResponse: message.validate.message };
+    const response = { phoneNumber, messageResponse: message?.validate?.message };
     return sendMessage(response);
   }
 
@@ -32,7 +32,7 @@ export async function reply(dataMessage: any) {
   sendMessage(obj2);
 
   const responseBotWhatsapp = await agentAi(messageBody, phoneNumber);
-  messageResponse = responseBotWhatsapp.output;
+  messageResponse = responseBotWhatsapp?.output;
 
   console.log("llegue hasta abajo en reply");
   

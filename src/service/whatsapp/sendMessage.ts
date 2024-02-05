@@ -2,8 +2,8 @@ import axios from "axios";
 import { agentAi } from "../agentAi/agentAi";
 
 interface DataMessage {
-  phoneNumber: string;
-  messageResponse: string;
+  phoneNumber?: string;
+  messageResponse?: string;
 }
 
 export async function sendMessage(dataMessage: DataMessage) {

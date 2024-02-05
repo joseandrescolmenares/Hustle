@@ -1,18 +1,18 @@
 import axios from "axios";
 
 interface Props {
-  idAccount: string;
-  token: string;
+  idAccount?: string;
+  token?: string;
   onwerId?: string;
   messageBody: string;
-  time: string;
-  status: string;
-  title: string;
-  priority: string;
-  type: string;
-  contactId?: string;
+  time?: string;
+  status?: string;
+  title?: string;
+  priority?: string;
+  type?: string;
+  contactId?: number;
 }
-export const createActivitytaskDeals = async (props: Props) => {
+export const createActivitytaskContact = async (props: Props) => {
   const {
     token,
     contactId,
@@ -45,7 +45,7 @@ export const createActivitytaskDeals = async (props: Props) => {
         types: [
           {
             associationCategory: "HUBSPOT_DEFINED",
-            associationTypeId: 216,
+            associationTypeId: 204,
           },
         ],
       },
@@ -60,7 +60,7 @@ export const createActivitytaskDeals = async (props: Props) => {
   try {
     const result = await axios.post(apiUrl, body, { headers });
     const data = result.data;
-    return `Tarea añadida correctamente.  Puede ver los detalles en:  https://app.hubspot.com/contacts/${idAccount}/deal/${contactId}.`;
+    return `Tarea añadida correctamente.  Puede ver los detalles en:  https://app.hubspot.com/contacts/${idAccount}/contact/${contactId}.`;
   } catch (error) {
     console.error("Error creating note:", error);
     return "Error adding note. Please try again later. We apologize for the inconvenience.";

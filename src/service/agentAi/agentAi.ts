@@ -34,13 +34,80 @@ import { UpstashRedisChatMessageHistory } from "@langchain/community/stores/mess
 import { Input } from "@/app/components/ui/Input";
 import { createtaskDeals } from "../funtionsTools/deals/activityDeal/createTaskDeal";
 import { title } from "process";
+import { createActivitytaskCompany } from "../funtionsTools/company/activityCompany/createTaskCompany";
+import { createActivitytaskContact } from "../funtionsTools/contact/activityContact/createTaskContact";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
   const token = validateDataAccount?.token;
   const idAccount = validateDataAccount?.idAccount;
 
+  if(!idAccount || !token){
+    return
+  }
+
   // funrtion contact
+
+  const createTaskAndAssociateWithContact = new DynamicStructuredTool({
+    name: "createTaskAndAssociateWithContact",
+    description: `Creates a new task and directly associates it with a specific contact(Contacto). For the association, it is essential to provide the contact identifier (id), which must be a numerical value.
+    `,
+    schema: z.object({
+      contactId: z
+        .number()
+        .describe(
+          "The identifier (id) specifies the contact (Contacto) to which the task should be associated. This property is essential and must be provided for the successful association."
+        ),
+      type: z
+        .string()
+        .describe(
+          "The type of task. Values include EMAIL, CALL, or TODO. Choose the one that best fits based on user input."
+        ),
+      time: z
+        .string()
+        .describe(
+          "Required. This field marks the task's due date. You can use a Unix timestamp in milliseconds or UTC format."
+        ),
+      title: z.string().describe("The title of the task."),
+      priority: z
+        .string()
+        .describe(
+          "The priority of the task. Values include LOW, MEDIUM, or HIGH. Choose the one that best fits based on user input."
+        ),
+      status: z
+        .string()
+        .describe(
+          "The status of the task, either COMPLETED or NOT_STARTED. Choose one based on user input."
+        ),
+      messageBody: z.string().describe("Body of the note or message."),
+      ownerId: z.string().describe("ID of the task owner.").optional(),
+    }),
+    func: async ({
+      contactId,
+      messageBody,
+      time,
+      title,
+      status,
+      type,
+      priority,
+      ownerId,
+    }) => {
+      const props = {
+        token,
+        contactId,
+        idAccount,
+        messageBody,
+        time,
+        title,
+        status,
+        type,
+        priority,
+        ownerId,
+      };
+
+      return await createActivitytaskContact(props);
+    },
+  });
 
   const createNewContact = new DynamicStructuredTool({
     name: "createContact",
@@ -128,6 +195,67 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
   // funtion company
 
+  const createTaskAndAssociateWithCompany = new DynamicStructuredTool({
+    name: "createTaskAndAssociateWithCompany",
+    description: `Creates a new task and directly associates it with a specific company (Empresa). For the association, it is essential to provide the Company identifier (id), which must be a numerical value.
+    `,
+    schema: z.object({
+      idCompany: z
+        .number()
+        .describe(
+          "The identifier (id) specifies the company (Empresa) to which the task should be associated. This property is essential and must be provided for the successful association."
+        ),
+      type: z
+        .string()
+        .describe(
+          "The type of task. Values include EMAIL, CALL, or TODO. Choose the one that best fits based on user input."
+        ),
+      time: z
+        .string()
+        .describe(
+          "Required. This field marks the task's due date. You can use a Unix timestamp in milliseconds or UTC format."
+        ),
+      title: z.string().describe("The title of the task."),
+      priority: z
+        .string()
+        .describe(
+          "The priority of the task. Values include LOW, MEDIUM, or HIGH. Choose the one that best fits based on user input."
+        ),
+      status: z
+        .string()
+        .describe(
+          "The status of the task, either COMPLETED or NOT_STARTED. Choose one based on user input."
+        ),
+      messageBody: z.string().describe("Body of the note or message."),
+      ownerId: z.string().describe("ID of the task owner.").optional(),
+    }),
+    func: async ({
+      idCompany,
+      messageBody,
+      time,
+      title,
+      status,
+      type,
+      priority,
+      ownerId,
+    }) => {
+      const props = {
+        token,
+        idCompany,
+        idAccount,
+        messageBody,
+        time,
+        title,
+        status,
+        type,
+        priority,
+        ownerId,
+      };
+
+      return await createActivitytaskCompany(props);
+    },
+  });
+
   const createNewCompany = new DynamicStructuredTool({
     name: "createCompany",
     description:
@@ -187,7 +315,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     schema: z.object({
       nameCompany: z
         .string()
-        .describe("company(empresa)  name to search for the id")
+        .describe("company(Empresa)  name to search for the id")
         .default(""),
     }),
     func: async ({ nameCompany }): Promise<string> => {
@@ -229,12 +357,32 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     description: `Creates a new task and directly associates it with a specific deal (Negocio). For the association, it is essential to provide the deal's identifier (id), which must be a numerical value.
     `,
     schema: z.object({
-      idDeal: z.number().describe("The identifier (id) specifies the deal (Negocio) to which the task should be associated. This property is essential and must be provided for the successful association."),
-      type: z.string().describe("The type of task. Values include EMAIL, CALL, or TODO. Choose the one that best fits based on user input."),
-      time: z.string().describe("Required. This field marks the task's due date. You can use a Unix timestamp in milliseconds or UTC format."),
+      idDeal: z
+        .number()
+        .describe(
+          "The identifier (id) specifies the deal (Negocio) to which the task should be associated. This property is essential and must be provided for the successful association."
+        ),
+      type: z
+        .string()
+        .describe(
+          "The type of task. Values include EMAIL, CALL, or TODO. Choose the one that best fits based on user input."
+        ),
+      time: z
+        .string()
+        .describe(
+          "Required. This field marks the task's due date. You can use a Unix timestamp in milliseconds or UTC format."
+        ),
       title: z.string().describe("The title of the task."),
-      priority: z.string().describe("The priority of the task. Values include LOW, MEDIUM, or HIGH. Choose the one that best fits based on user input."),
-      status: z.string().describe("The status of the task, either COMPLETED or NOT_STARTED. Choose one based on user input."),
+      priority: z
+        .string()
+        .describe(
+          "The priority of the task. Values include LOW, MEDIUM, or HIGH. Choose the one that best fits based on user input."
+        ),
+      status: z
+        .string()
+        .describe(
+          "The status of the task, either COMPLETED or NOT_STARTED. Choose one based on user input."
+        ),
       messageBody: z.string().describe("Body of the note or message."),
       ownerId: z.string().describe("ID of the task owner.").optional(),
     }),
@@ -444,7 +592,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     createNewCompany,
     createNewContact,
     associateContactWithCompany,
-    createTaskAndAssociateWithDeal
+    createTaskAndAssociateWithDeal,
+    createTaskAndAssociateWithCompany,
+    createTaskAndAssociateWithContact,
   ];
 
   const llm = new ChatOpenAI({

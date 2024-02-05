@@ -10,12 +10,12 @@ interface Props {
   title: string;
   priority: string;
   type: string;
-  companyId?: string;
+  idCompany?: number;
 }
-export const createActivitytaskDeals = async (props: Props) => {
+export const createActivitytaskCompany = async (props: Props) => {
   const {
     token,
-    companyId,
+    idCompany,
     idAccount,
     messageBody,
     time,
@@ -40,12 +40,12 @@ export const createActivitytaskDeals = async (props: Props) => {
     associations: [
       {
         to: {
-          id: companyId,
+          id: idCompany,
         },
         types: [
           {
             associationCategory: "HUBSPOT_DEFINED",
-            associationTypeId: 216,
+            associationTypeId: 192,
           },
         ],
       },
@@ -60,7 +60,7 @@ export const createActivitytaskDeals = async (props: Props) => {
   try {
     const result = await axios.post(apiUrl, body, { headers });
     const data = result.data;
-    return `Tarea añadida correctamente.  Puede ver los detalles en:  https://app.hubspot.com/contacts/${idAccount}/deal/${companyId}.`;
+    return `Tarea añadida correctamente.  Puede ver los detalles en:  https://app.hubspot.com/contacts/${idAccount}/companies/${idCompany}.`;
   } catch (error) {
     console.error("Error creating note:", error);
     return "Error adding note. Please try again later. We apologize for the inconvenience.";
