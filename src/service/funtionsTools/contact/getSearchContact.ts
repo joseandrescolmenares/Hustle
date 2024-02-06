@@ -3,9 +3,26 @@ import axios from "axios";
 interface PropsDataContact {
   token: string;
   contactName: string;
+  emailContact?: string;
 }
 export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
-  const { contactName, token } = propsDataContact;
+  const { contactName, token, emailContact } = propsDataContact;
+
+  let firstName, lastName;
+  let searchEmail = emailContact;
+
+  if (!emailContact) {
+    searchEmail = contactName;
+  }
+
+  if (contactName.includes(" ")) {
+    const [firstNamePart, lastNamePart] = contactName.split(" ");
+    firstName = firstNamePart;
+    lastName = lastNamePart;
+  } else {
+    firstName = contactName;
+    lastName;
+  }
 
   try {
     const url = "https://api.hubapi.com/crm/v3/objects/contacts/search";
@@ -26,7 +43,7 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
             {
               propertyName: "email",
               operator: "EQ",
-              value: `${contactName}*`,
+              value: `${searchEmail}*`,
             },
           ],
         },
@@ -34,11 +51,16 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
           filters: [
             {
               propertyName: "firstname",
-              operator: "CONTAINS_TOKEN",
-              value: `${contactName}*`,
+              operator: "EQ",
+              value: `${firstName}*`,
+            },
+            {
+              propertyName: "lastname",
+              operator: "EQ",
+              value: `${lastName}*`,
             },
           ],
-        }
+        },
       ],
     };
 
@@ -50,7 +72,7 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
     const res = await axios.post(url, data, { headers });
 
     const resultData = res.data;
-    console.log(resultData)
+    console.log(resultData);
     if (resultData.total === 0) {
       return "No contact found with the specified criteria.";
     }
@@ -60,7 +82,8 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
     const contactId = resultData.results[0].id;
     // const name = resultData.results[0].properties;
 
-    return `Identificador de contacto obtenido: ${contactId}`;
+    // return `Identificador de contacto obtenido: ${contactId}`;
+    return resultData;
   } catch (error) {
     console.error("Error creating associations:", error);
     return "No contact found with the specified name or email. Please check your input and try again.";

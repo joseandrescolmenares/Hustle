@@ -3,11 +3,18 @@ import axios from "axios";
 interface DataProp {
   token: string;
   nameCompany: string;
+  domain?: string;
 }
 
 export const getDataCompany = async (dataProp: DataProp) => {
-  const { nameCompany, token } = dataProp;
+  const { nameCompany, token, domain } = dataProp;
   console.log(nameCompany, "estoy es el nomnre de la empres");
+
+  let getDomain = domain;
+  if (!domain) {
+    getDomain = nameCompany;
+  }
+
   const url = "https://api.hubapi.com/crm/v3/objects/companies/search";
 
   const data = {
@@ -18,6 +25,15 @@ export const getDataCompany = async (dataProp: DataProp) => {
             propertyName: "name",
             operator: "EQ",
             value: `${nameCompany}*`,
+          },
+        ],
+      },
+      {
+        filters: [
+          {
+            propertyName: "domain",
+            operator: "EQ",
+            value: `${getDomain}*`,
           },
         ],
       },

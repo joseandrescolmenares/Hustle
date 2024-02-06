@@ -22,19 +22,17 @@ import { createtaskDeals } from "@/service/funtionsTools/deals/activityDeal/crea
 import { contactDealAssociation } from "@/service/funtionsTools/contact/association/contactDealAssociation";
 
 export async function GET(request: Request) {
-  // const token =
-  //   "CMuVstvXMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFMLFdhM_udCOrgBbtn813SAnkCIxOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhTt18UuhJlfsJcAlOYprgqTnCiwJ0oDbmExUgBaAA";
+  const token =
+    "CJamg_rXMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFLZb7aPchgyshgVqHR4WllbHkSwKOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhS6nDgENpKxGJOttfYONyOUX9LMq0oDbmExUgBaAA";
 
-  // const props = {
-  //   idContact:"1201",
-  //   idDeal:"17327602555",
-  //   token,
-  //   idAccount: "44543727",
- 
-  // };
+  const props = {
+    token,
+
+    contactName: "bill gates",
+  };
   // const data = await createtaskDeals(props);
   // const jose = await renewTokenAgent("+541126336301")
-  // const data = await getSearchContacts(dataProp);
+  const data = await getSearchContacts(props);
   // const data =await  dealContactAssociation({token})
   // const  data = await getOwners(token)
   // const data = await createActivityNotes(props)
@@ -43,7 +41,7 @@ export async function GET(request: Request) {
   // const data = await getStage(token);
 
   // const  data = contactDealAssociation(props)
-  return NextResponse.json({ jose: "jose" });
+  return NextResponse.json({ jose: data });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"

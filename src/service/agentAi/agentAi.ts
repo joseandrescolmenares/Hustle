@@ -42,8 +42,8 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const token = validateDataAccount?.token;
   const idAccount = validateDataAccount?.idAccount;
 
-  if(!idAccount || !token){
-    return
+  if (!idAccount || !token) {
+    return;
   }
 
   // funrtion contact
@@ -186,9 +186,14 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       "This function enables you to search for a contact by name, providing comprehensive information, including their email address, unique identifier (id), and name. The details retrieved can be utilized in various functions, such as establishing associations with other entities",
     schema: z.object({
       contactName: string().describe("contact name to search for the id"),
+      email: z
+        .string()
+        .describe("Contact email for second option search")
+        .optional(),
     }),
-    func: async ({ contactName }) => {
-      const dataProp = { token, contactName };
+    func: async ({ contactName, email }) => {
+      const emailContact = email;
+      const dataProp = { token, contactName, emailContact };
       return await getSearchContacts(dataProp);
     },
   });
@@ -317,9 +322,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .string()
         .describe("company(Empresa)  name to search for the id")
         .default(""),
+      domain: z.string().describe("company's domain for the search of the second option").optional(),
     }),
-    func: async ({ nameCompany }): Promise<string> => {
-      const dataConpany = { token, nameCompany };
+    func: async ({ nameCompany, domain }): Promise<string> => {
+      const dataConpany = { token, nameCompany, domain };
       return await getDataCompany(dataConpany);
     },
   });
@@ -644,7 +650,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const result = await agentExecutor.invoke({
     input: message,
     chat_history: [],
-    tools
+    tools,
   });
 
   //   const result = await chainWithHistory.invoke(
