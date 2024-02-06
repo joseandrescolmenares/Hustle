@@ -15,8 +15,8 @@ export const dealContactAssociation = async (props: Props) => {
     const response = await axios.put(
       url,
       {
-        fromObjectId: `${contactId}`,
-        toObjectId: `${dealId}`,
+        fromObjectId: dealId,
+        toObjectId: contactId,
         category: "HUBSPOT_DEFINED",
         definitionId: 3,
       },
