@@ -30,6 +30,15 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
             },
           ],
         },
+        {
+          filters: [
+            {
+              propertyName: "firstname",
+              operator: "CONTAINS_TOKEN",
+              value: `${contactName}*`,
+            },
+          ],
+        }
       ],
     };
 

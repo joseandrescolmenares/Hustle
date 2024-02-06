@@ -27,7 +27,7 @@ export const validateNumber = async (phoneNumber: string) => {
   }
 
   console.log(data[0].id_team, "perrrsoo");
-  const hubspotAccount = data[0]?.id_team[0]?.hubspotAccount;
+  const hubspotAccount = data[0]?.id_team?.hubspotAccount;
   console.log(hubspotAccount, "huspo");
   if (!hubspotAccount) {
     return {  

@@ -164,7 +164,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const associateDealWithContact = new DynamicStructuredTool({
+  const associateContactWithDeal = new DynamicStructuredTool({
     name: "associateContactWithDeal",
     description:
       "This function serves to associate a deal(Negocio) with contacts, and it is crucial to provide unique identifiers for both to ensure the success of the association. Obtaining specific identifiers for both deals and contacts is of vital importance for the proper functioning of this operation.",
@@ -413,22 +413,22 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const associateContactWithDeal = new DynamicStructuredTool({
-    name: "associateDealWithContact",
-    description:
-      "This function associates contacts with a deal (Negocio), and it is crucial to provide unique identifiers for both to ensure the success of the association. Obtaining specific identifiers for both deals and contacts is of vital importance for the proper functioning of this operation.",
+  // const associateContactWithDeal = new DynamicStructuredTool({
+  //   name: "associateDealWithContact",
+  //   description:
+  //     "This function associates contacts with a deal (Negocio), and it is crucial to provide unique identifiers for both to ensure the success of the association. Obtaining specific identifiers for both deals and contacts is of vital importance for the proper functioning of this operation.",
 
-    schema: z.object({
-      contactId: z.string().describe("represents the contact identifier"),
-      dealId: z
-        .string()
-        .describe("represents the deal(Negocio) id to perform the association"),
-    }),
-    func: async ({ contactId, dealId }) => {
-      const props = { token, idAccount, contactId, dealId };
-      return await dealContactAssociation(props);
-    },
-  });
+  //   schema: z.object({
+  //     contactId: z.string().describe("represents the contact identifier"),
+  //     dealId: z
+  //       .string()
+  //       .describe("represents the deal(Negocio) id to perform the association"),
+  //   }),
+  //   func: async ({ contactId, dealId }) => {
+  //     const props = { token, idAccount, contactId, dealId };
+  //     return await dealContactAssociation(props);
+  //   },
+  // });
 
   const associateDealWithCompany = new DynamicStructuredTool({
     name: "associateDealWithCompany",
@@ -584,7 +584,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     associateDealWithCompany,
     getStageForDeal,
     getContactInfoByName,
-    associateDealWithContact,
+    // associateDealWithContact,
     associateContactWithDeal,
     addNoteWithDeal,
     getDealInfoByName,

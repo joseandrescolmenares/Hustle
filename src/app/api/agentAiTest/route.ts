@@ -19,22 +19,18 @@ import { createCompany } from "@/service/funtionsTools/company/createCompany";
 import { createContact } from "@/service/funtionsTools/contact/createContact";
 import { companyContactAssociations } from "@/service/funtionsTools/company/association/companyContact";
 import { createtaskDeals } from "@/service/funtionsTools/deals/activityDeal/createTaskDeal";
+import { contactDealAssociation } from "@/service/funtionsTools/contact/association/contactDealAssociation";
 
 export async function GET(request: Request) {
   // const token =
-  //   "CP7ziZXXMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFFVDLa2TgZZZHTokx3aRNnnUxdUkOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhSUFGZVQO0ItLQIrV_2m3y9sgF_aUoDbmExUgBaAA";
+  //   "CMuVstvXMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFMLFdhM_udCOrgBbtn813SAnkCIxOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhTt18UuhJlfsJcAlOYprgqTnCiwJ0oDbmExUgBaAA";
 
   // const props = {
-  //   dealId: 17341710148,
+  //   idContact:"1201",
+  //   idDeal:"17327602555",
   //   token,
   //   idAccount: "44543727",
-  //   messageBody: "Tarea: los invencibles",
-  //   time: "2024-02-19T05:00:39.415Z",
-  //   status: "NOT_STARTED",
-  //   title: "los invencibles",
-  //   priority: "MEDIUM",
-  //   type: "TODO",
-  //   onwerId:""
+ 
   // };
   // const data = await createtaskDeals(props);
   // const jose = await renewTokenAgent("+541126336301")
@@ -46,5 +42,9 @@ export async function GET(request: Request) {
   // const data = await updateDeal(props);
   // const data = await getStage(token);
 
+  // const  data = contactDealAssociation(props)
   return NextResponse.json({ jose: "jose" });
 }
+// {
+//   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"
+// }

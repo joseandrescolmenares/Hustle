@@ -18,7 +18,7 @@ export const dealContactAssociation = async (props: Props) => {
         fromObjectId: `${contactId}`,
         toObjectId: `${dealId}`,
         category: "HUBSPOT_DEFINED",
-        definitionId: 4,
+        definitionId: 3,
       },
 
       {
