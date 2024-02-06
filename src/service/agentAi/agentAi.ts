@@ -644,6 +644,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const result = await agentExecutor.invoke({
     input: message,
     chat_history: [],
+    tools
   });
 
   //   const result = await chainWithHistory.invoke(

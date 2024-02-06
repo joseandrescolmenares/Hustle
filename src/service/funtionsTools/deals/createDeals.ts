@@ -32,7 +32,7 @@ export const createNewDeals = async (dataProp: DataProps) => {
     const data = await response.json();
     const name = data?.properties?.dealname;
   
-    return `El Negocio  se ha creado correctamente. Puede ver la información [aquí](https://app.hubspot.com/contacts/${idAccount}/deal/${data.id}). El identificador (id) del negocio recién creado es: ${data.id} uselo para otras funciones.
+    return `El Negocio  se ha creado correctamente. Puede ver la información [aquí](https://app.hubspot.com/contacts/${idAccount}/deal/${data.id}).
     `;
   } catch (error: any) {
     return "The function encountered an error and couldn't create the new deal. Please try again later. We apologize for the inconvenience.";
