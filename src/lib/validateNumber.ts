@@ -1,6 +1,11 @@
 import { renewToken } from "@/service/renewToken";
 import { supabase } from "./ClientSupabase";
 
+interface Integration {
+  hubspotAccount: any;
+  id_integrations: { refresh_token: any }[];
+}
+
 export const validateNumber = async (phoneNumber: string) => {
   const { data, error } = await supabase
     .from("users")
@@ -27,17 +32,16 @@ export const validateNumber = async (phoneNumber: string) => {
   }
 
   console.log(data[0].id_team, "perrrsoo");
-  const hubspotAccount = data[0]?.id_team?.hubspotAccount;
+  const { hubspotAccount }: any = data[0].id_team;
   console.log(hubspotAccount, "huspo");
   if (!hubspotAccount) {
-    return {  
+    return {
       validate: {
         message: "por favor, agregue una cuenta de Husbpot",
         status: false,
       },
     };
   }
-
 
   return { validate: { message: "success", status: true } };
 };
