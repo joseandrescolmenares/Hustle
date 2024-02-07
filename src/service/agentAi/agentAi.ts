@@ -11,7 +11,7 @@ import {
   DynamicStructuredTool,
 } from "@langchain/community/tools/dynamic";
 import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
-import { AnyZodTuple, Schema, ZodObject, object, string, z } from "zod";
+import { string, z } from "zod";
 import { getDataCompany } from "../funtionsTools/company/getDataCompany";
 import { handleDeal } from "../funtionsTools/deals/handleDeal";
 import { dealCompanyAssociation } from "../funtionsTools/deals/association/createDealCompanyAssociation";
@@ -21,14 +21,12 @@ import { dealContactAssociation } from "../funtionsTools/deals/association/dealC
 import { createActivityNotes } from "../funtionsTools/deals/activityDeal/createActivityNotes";
 import { getDataDeal } from "../funtionsTools/deals/getDataDeal";
 
-import {
-  handleCompany,
-} from "../funtionsTools/company/handleCompany";
+import { handleCompany } from "../funtionsTools/company/handleCompany";
 import { updateDeal } from "../funtionsTools/deals/updateDeal";
-import { createContact } from "../funtionsTools/contact/createContact";
+import { handleContact } from "../funtionsTools/contact/handleContact";
 import { RunnableWithMessageHistory } from "@langchain/core/runnables";
 
-import { contactDealAssociation } from "../funtionsTools/contact/association/contactDealAssociation";
+import {  createAssociationObject } from "../funtionsTools/createAssociationObject";
 import { companyContactAssociations } from "../funtionsTools/company/association/companyContact";
 import { MessagesPlaceholder } from "@langchain/core/prompts";
 
@@ -111,10 +109,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const createNewContact = new DynamicStructuredTool({
-    name: "createContact",
+  const handleNewAndUpdatedContact = new DynamicStructuredTool({
+    name: "handleNewAndUpdatedContact",
     description:
-      " creates a new contact with the specified properties. Additionally, this function provides information, such as the id and name of the created contact, which can be used in other functions.",
+      "Creates or updates a contact(contacto) in HubSpot, allowing configuration of fields such as the contact's phone number, first name, last name, company, email address, website, and lifecycle stage. Performs Create or Update action. If the action is Update, contactId is required to successfully complete the update.",
     schema: z.object({
       phone: z.string().describe("The contact's phone number").optional(),
       firstname: z
@@ -141,6 +139,17 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .string()
         .describe("The current stage in the contact's lifecycle.")
         .optional(),
+
+      contactId: z
+        .string()
+        .describe(
+          "Identifier of the contact(contacto) to update. It is very important and mandatory to pass this parameter when executing the update action."
+        )
+        .optional(),
+      jobtitle: z
+        .string()
+        .describe(`"Position" or "Job title" of a contact"`)
+        .optional(),
     }),
     func: async ({
       phone,
@@ -150,6 +159,8 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       email,
       lifecyclestage,
       website,
+      contactId,
+      jobtitle,
     }) => {
       const props = {
         token,
@@ -161,24 +172,64 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         email,
         lifecyclestage,
         website,
+        contactId,
+        jobtitle,
       };
-      return await createContact(props);
+      return await handleContact(props);
     },
   });
 
-  const associateContactWithDeal = new DynamicStructuredTool({
-    name: "associateContactWithDeal",
+
+  const createAssociation = new DynamicStructuredTool({
+    name: "createAssociation",
     description:
-      "This function serves to associate a deal(Negocio) with contacts, and it is crucial to provide unique identifiers for both to ensure the success of the association. Obtaining specific identifiers for both deals and contacts is of vital importance for the proper functioning of this operation.",
+      "This function facilitates the creation of associations between objects within HubSpot, such as creating associations between a deal(negocio) and a contact(contacto), between a contact and a company(empresa), or between a company and a deal. It is crucial to provide unique identifiers for both the source record and the target object to ensure the success of the association process. Additionally, specifying the object name is essential for the proper execution of this operation.",
+
     schema: z.object({
+      fromObjectType: z
+        .string()
+        .describe(
+          'This parameter represents the type of object from which the association is being established. Use the name of the object (e.g., "contact" for contacts, "company" for companies, "deal" for deals).'
+        ),
+      fromObjectId: z
+        .string()
+        .describe(
+          "This parameter represents the ID of the record from which the association is being established. For example, it could be the ID of a contact(contacto), the ID of a deal(negocio), or the ID of a company(empresa)."
+        ),
+      toObjectType: z
+        .string()
+        .describe(
+          "This parameter represents the type of object to which the record is being associated. You should provide the name of the object type to which you are associating the record. Similar to fromObjectType, the options are contact, company, and deal."
+        ),
+      toObjectId: z
+        .string()
+        .describe(
+          "This parameter represents the ID of the record to which the record from fromObjectId is being associated. You should provide the specific ID of the record to which you want to associate the record from fromObjectId, such as the ID of a company, deal, or contact."
+        ),
       contactId: z.string().describe("represents the contact identifier"),
       dealId: z
         .string()
         .describe("represents the deal(Negocio) id to perform the association"),
     }),
-    func: async ({ contactId, dealId }) => {
-      const props = { token, idAccount, contactId, dealId };
-      return await contactDealAssociation(props);
+    func: async ({
+      contactId,
+      dealId,
+      fromObjectType,
+      fromObjectId,
+      toObjectId,
+      toObjectType,
+    }) => {
+      const props = {
+        token,
+        idAccount,
+        contactId,
+        dealId,
+        fromObjectType,
+        fromObjectId,
+        toObjectId,
+        toObjectType,
+      };
+      return await createAssociationObject(props);
     },
   });
 
@@ -295,7 +346,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       companyId: z
         .string()
         .describe(
-          "Identifier of the company(empresa) to update. It is very important and mandatory to pass this parameter."
+          "Identifier of the company(empresa) to update. It is very important and mandatory to pass this parameter when executing the update action"
         )
         .optional(),
     }),
@@ -564,15 +615,15 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const tools = [
     handleNewAndUpdatedDeals,
     getCompanyInfoByName,
-    associateDealWithCompany,
+    // associateDealWithCompany,
     getStageForDeal,
     getContactInfoByName,
-    associateDealWithContact,
-    associateContactWithDeal,
+    // associateDealWithContact,
+    createAssociation,
     addNoteWithDeal,
     getDealInfoByName,
     handleNewAndUpdatedCompany,
-    createNewContact,
+    handleNewAndUpdatedContact,
     associateContactWithCompany,
     createTaskAndAssociateWithDeal,
     createTaskAndAssociateWithCompany,
@@ -606,44 +657,11 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     tools,
   });
 
-  // const chainWithHistory = new RunnableWithMessageHistory({
-  //   runnable: agentExecutor,
-  //   getMessageHistory: (sessionId: string) =>
-  //     new UpstashRedisChatMessageHistory({
-  //       sessionId,
-  //       config: {
-  //         url: "https://relative-tetra-37107.upstash.io",
-  //         token:
-  //           "AZDzACQgMmM1Mzc5ZTUtM2MxNy00YjE5LWEyZmUtM2U2YzEyM2Y1NTIwNzBjNWI5NjUzNGY4NGE2MjhiMWQ0NzE4MjRmZmY3MDQ=",
-  //       },
-  //     }),
-
-  //   inputMessagesKey: "input",
-  //   historyMessagesKey: "chat_history",
-
-  // });
-
   const result = await agentExecutor.invoke({
     input: message,
     chat_history: [],
     tools,
   });
 
-  //   const result = await chainWithHistory.invoke(
-  //     {
-  //       input: message,
-  //     },
-  //     {
-  //       configurable: {
-  //         sessionId: "baa",
-  //       },
-  //     }
-  //   );
-
   return result;
 };
-
-// const result = await agentExecutor.invoke({
-//   input: message,
-//   memory,
-// });
