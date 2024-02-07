@@ -26,7 +26,7 @@ import { updateDeal } from "../funtionsTools/deals/updateDeal";
 import { handleContact } from "../funtionsTools/contact/handleContact";
 import { RunnableWithMessageHistory } from "@langchain/core/runnables";
 
-import {  createAssociationObject } from "../funtionsTools/createAssociationObject";
+import { createAssociationObject } from "../funtionsTools/createAssociationObject";
 import { companyContactAssociations } from "../funtionsTools/company/association/companyContact";
 import { MessagesPlaceholder } from "@langchain/core/prompts";
 
@@ -179,7 +179,6 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-
   const createAssociation = new DynamicStructuredTool({
     name: "createAssociation",
     description:
@@ -206,14 +205,8 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .describe(
           "This parameter represents the ID of the record to which the record from fromObjectId is being associated. You should provide the specific ID of the record to which you want to associate the record from fromObjectId, such as the ID of a company, deal, or contact."
         ),
-      contactId: z.string().describe("represents the contact identifier"),
-      dealId: z
-        .string()
-        .describe("represents the deal(Negocio) id to perform the association"),
     }),
     func: async ({
-      contactId,
-      dealId,
       fromObjectType,
       fromObjectId,
       toObjectId,
@@ -222,8 +215,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       const props = {
         token,
         idAccount,
-        contactId,
-        dealId,
+
         fromObjectType,
         fromObjectId,
         toObjectId,
@@ -562,14 +554,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     schema: z.object({
       amount: z
         .number()
-        .describe("represents the monetary amount or monetary value")
-        .optional()
-        .default(0),
+        .describe("represents the monetary amount or monetary value"),
       dealname: z
         .string()
-        .describe("represents the name of the deal(Negocio).")
-        .optional()
-        .default(""),
+        .describe("represents the name of the deal(Negocio)."),
       dealstage: z
         .string()
         .nullable()
@@ -624,7 +612,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     getDealInfoByName,
     handleNewAndUpdatedCompany,
     handleNewAndUpdatedContact,
-    associateContactWithCompany,
+    // associateContactWithCompany,
     createTaskAndAssociateWithDeal,
     createTaskAndAssociateWithCompany,
     createTaskAndAssociateWithContact,

@@ -2,9 +2,9 @@ import axios from "axios";
 import { updateDeal } from "./updateDeal";
 
 export interface DataProps {
-  token?: string;
-  amount?: number;
-  dealname?: string;
+  token: string;
+  amount: number;
+  dealname: string;
   closedate?: string;
   idAccount?: string;
   dealstage: string | null;

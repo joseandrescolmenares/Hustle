@@ -10,14 +10,10 @@ export const updateDeal = async (props: DataProps) => {
     url,
     {
       properties: {
-        amount: `${amount}`,
-        closedate: `${closedate}`,
-        dealname: `${dealname}`,
-        dealstage: `${dealstage}`,
-        // properties_amount: `${}`
-        // properties_amount: `${}`
-        // properties_amount: `${}`
-        // properties_amount: `${}`
+        amount: amount,
+        closedate: closedate,
+        dealname: dealname,
+        dealstage: dealstage,
       },
     },
 
@@ -28,6 +24,6 @@ export const updateDeal = async (props: DataProps) => {
       },
     }
   );
-
+  console.log(response.data);
   return `se actualizo con exitos, lo puedes ver en el siguiente link : https://app.hubspot.com/contacts/${idAccount}/deal/${dealId}`;
 };
