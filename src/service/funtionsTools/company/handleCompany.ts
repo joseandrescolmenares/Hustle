@@ -1,4 +1,6 @@
-interface DataProps {
+import { updateCompany } from "./updateCompany";
+
+export  interface DataProps {
     token?: string;
     phone?: number;
     name?: string;
@@ -6,10 +8,16 @@ interface DataProps {
     idAccount?: string;
     domain:string
     city:string
+    companyId?:string
   }
   
-  export const createCompany = async (dataProp: DataProps) => {
-    const { phone, name,industry,domain, token, idAccount, city, } = dataProp;
+  export const handleCompany = async (dataProp: DataProps) => {
+    const { phone, name,industry,domain, token, idAccount, city, companyId } = dataProp;
+
+    if(companyId){
+      return await updateCompany(dataProp)
+    }
+
     const url = "https://api.hubapi.com/crm/v3/objects/companies";
   
     const requestBody = {

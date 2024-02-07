@@ -1,24 +1,15 @@
 import axios from "axios";
-
-interface PropData {
-    amount: number
-    dealname: string 
-    dealstage: string 
-    closedate: string 
-    dealId: string;
-    token: string;
-    idAccount: string
-}
-
-export const updateDeal = async (props: PropData) => {
-  const { dealId, amount, token, closedate, dealname, dealstage,idAccount} = props;
+import { DataProps } from "./handleDeal";
+export const updateDeal = async (props: DataProps) => {
+  const { dealId, amount, token, closedate, dealname, dealstage, idAccount } =
+    props;
 
   const url = `https://api.hubapi.com/crm/v3/objects/deals/${dealId}`;
 
   const response = await axios.patch(
     url,
     {
-      "properties": {
+      properties: {
         amount: `${amount}`,
         closedate: `${closedate}`,
         dealname: `${dealname}`,
@@ -38,7 +29,5 @@ export const updateDeal = async (props: PropData) => {
     }
   );
 
-  
-
-  return `se actualizo con exitos, lo puedes ver en el siguiente link : https://app.hubspot.com/contacts/${idAccount}/deal/${dealId}`
+  return `se actualizo con exitos, lo puedes ver en el siguiente link : https://app.hubspot.com/contacts/${idAccount}/deal/${dealId}`;
 };

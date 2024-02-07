@@ -7,7 +7,7 @@ import { renewTokenAgent } from "@/service/funtionsTools/renewTokenAgent";
 
 import axios from "axios";
 import { getSearchContacts } from "@/service/funtionsTools/contact/getSearchContact";
-import { createNewDeals } from "@/service/funtionsTools/deals/createDeals";
+import { createNewDeals } from "@/service/funtionsTools/deals/handleDeal";
 import { getStage } from "@/service/funtionsTools/deals/getStage";
 import { dealContactAssociation } from "@/service/funtionsTools/deals/association/dealContactAssociation";
 import { getOwners } from "@/service/funtionsTools/onwer/getOwners";
@@ -15,7 +15,7 @@ import { createActivityNotes } from "@/service/funtionsTools/deals/activityDeal/
 import { getDataCompany } from "@/service/funtionsTools/company/getDataCompany";
 import { getDataDeal } from "@/service/funtionsTools/deals/getDataDeal";
 import { updateDeal } from "@/service/funtionsTools/deals/updateDeal";
-import { createCompany } from "@/service/funtionsTools/company/createCompany";
+import { createCompany } from "@/service/funtionsTools/company/handleCompany";
 import { createContact } from "@/service/funtionsTools/contact/createContact";
 import { companyContactAssociations } from "@/service/funtionsTools/company/association/companyContact";
 import { createtaskDeals } from "@/service/funtionsTools/deals/activityDeal/createTaskDeal";

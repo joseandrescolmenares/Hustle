@@ -13,7 +13,7 @@ import {
 import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
 import { AnyZodTuple, Schema, ZodObject, object, string, z } from "zod";
 import { getDataCompany } from "../funtionsTools/company/getDataCompany";
-import { createNewDeals } from "../funtionsTools/deals/createDeals";
+import { handleDeal } from "../funtionsTools/deals/handleDeal";
 import { dealCompanyAssociation } from "../funtionsTools/deals/association/createDealCompanyAssociation";
 import { getSearchContacts } from "../funtionsTools/contact/getSearchContact";
 import { getStage } from "../funtionsTools/deals/getStage";
@@ -21,7 +21,9 @@ import { dealContactAssociation } from "../funtionsTools/deals/association/dealC
 import { createActivityNotes } from "../funtionsTools/deals/activityDeal/createActivityNotes";
 import { getDataDeal } from "../funtionsTools/deals/getDataDeal";
 
-import { createCompany } from "../funtionsTools/company/createCompany";
+import {
+  handleCompany,
+} from "../funtionsTools/company/handleCompany";
 import { updateDeal } from "../funtionsTools/deals/updateDeal";
 import { createContact } from "../funtionsTools/contact/createContact";
 import { RunnableWithMessageHistory } from "@langchain/core/runnables";
@@ -261,10 +263,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const createNewCompany = new DynamicStructuredTool({
-    name: "createCompany",
+  const handleNewAndUpdatedCompany = new DynamicStructuredTool({
+    name: "handleNewAndUpdatedCompany",
     description:
-      "This function creates a new company with the specified properties. Additionally, this function provides information, such as the id and name of the created company, that can be used in other functions.",
+      "Creates or updates a company(empresa) in HubSpot, allowing configuration of fields such as the company(empresa) name, phone number, city, domain, and industry. Performs Create or Update action. If the action is Update, companyId is required to successfully complete the update. Only modifies the properties specified by the user.",
     schema: z.object({
       phone: z
         .number()
@@ -290,10 +292,25 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .describe("Primary web domain of the company.")
         .optional()
         .default(""),
+      companyId: z
+        .string()
+        .describe(
+          "Identifier of the company(empresa) to update. It is very important and mandatory to pass this parameter."
+        )
+        .optional(),
     }),
-    func: async ({ phone, name, city, industry, domain }) => {
-      const props = { token, idAccount, phone, name, city, industry, domain };
-      return await createCompany(props);
+    func: async ({ phone, name, city, industry, domain, companyId }) => {
+      const props = {
+        token,
+        idAccount,
+        phone,
+        name,
+        city,
+        industry,
+        domain,
+        companyId,
+      };
+      return await handleCompany(props);
     },
   });
 
@@ -322,7 +339,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         .string()
         .describe("company(Empresa)  name to search for the id")
         .default(""),
-      domain: z.string().describe("company's domain for the search of the second option").optional(),
+      domain: z
+        .string()
+        .describe("company's domain for the search of the second option")
+        .optional(),
     }),
     func: async ({ nameCompany, domain }): Promise<string> => {
       const dataConpany = { token, nameCompany, domain };
@@ -484,61 +504,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const updateDealInformation = new DynamicStructuredTool({
-    name: "updateDealInformation",
+  const handleNewAndUpdatedDeals = new DynamicStructuredTool({
+    name: "handleNewAndUpdatedDeals",
     description:
-      "This function is responsible for updating the details of a deal (Negocio), allowing modification of various aspects such as dates, values, name, and other relevant properties. It is mandatory to provide the dealId parameter for the correct execution of the function",
-    schema: z.object({
-      amount: z
-        .number()
-        .describe("Represents the monetary amount or monetary value."),
-
-      dealname: z
-        .string()
-        .describe("Represents the name of the deal(Negocio)."),
-
-      dealstage: z
-        .string()
-        .describe(
-          "Current stage of a deal(Negocio) or commercial negotiation within the sales process. "
-        ),
-
-      closedate: z
-        .string()
-        .describe(
-          "This property defines the date on which the operation will be closed. Follow the format, for example: '2019-12-07T16:50:06.678Z'."
-        ),
-
-      dealId: z
-        .string()
-        .describe(
-          "Identifier of the deal(Negocio) to update. it is very important and mandatory to pass this parameter."
-        ),
-    }),
-    func: async ({
-      amount,
-      dealname,
-      dealstage,
-      closedate,
-      dealId,
-    }): Promise<string> => {
-      const props = {
-        amount,
-        dealname,
-        dealstage,
-        closedate,
-        dealId,
-        token,
-        idAccount,
-      };
-      return await updateDeal(props);
-    },
-  });
-
-  const createDeals = new DynamicStructuredTool({
-    name: "createDeals",
-    description:
-      "This function creates a new deal (Negocio) with the specified properties, ensuring accurate recording of information for effective management and tracking. Optional parameters include monetary amount, deal name, deal stage, and standardized closing date format. Additionally, this function provides information, such as the id and name of the created deal (Negocio), which can be utilized in other functions.",
+      "Creates or Updates a deal(Negocio) in HubSpot, allowing setting fields such as deal name, amount, closing date, and deal stage.This function performs two actions: Create or Update. If the action is Update, the dealId is required to successfully complete the update.",
     schema: z.object({
       amount: z
         .number()
@@ -565,12 +534,19 @@ export const agentAi = async (message: string, phoneNumber: string) => {
           "this property defines the date on which the operation will be closed, for this property it is important to follow this format, for example: '2019-12-07T16:50:06.678Z'."
         )
         .optional(),
+      dealId: z
+        .string()
+        .describe(
+          "Identifier of the deal(Negocio) to update. it is very important and mandatory to pass this parameter."
+        )
+        .optional(),
     }),
     func: async ({
       amount,
       dealname,
       dealstage,
       closedate,
+      dealId,
     }): Promise<string> => {
       const dataParams = {
         amount,
@@ -579,13 +555,14 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         closedate,
         token,
         idAccount,
+        dealId,
       };
-      return await createNewDeals(dataParams);
+      return await handleDeal(dataParams);
     },
   });
 
   const tools = [
-    createDeals,
+    handleNewAndUpdatedDeals,
     getCompanyInfoByName,
     associateDealWithCompany,
     getStageForDeal,
@@ -594,8 +571,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     associateContactWithDeal,
     addNoteWithDeal,
     getDealInfoByName,
-    updateDealInformation,
-    createNewCompany,
+    handleNewAndUpdatedCompany,
     createNewContact,
     associateContactWithCompany,
     createTaskAndAssociateWithDeal,
