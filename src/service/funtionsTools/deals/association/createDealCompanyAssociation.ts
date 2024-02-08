@@ -10,7 +10,7 @@ interface Props {
 export const dealCompanyAssociation = async (props: Props) => {
   try {
     const { idDeals, idCompany, token, idAccount } = props;
-    console.log("esto es el id del la empresaa ", idDeals);
+
     const url = `https://api.hubapi.com/crm-associations/v1/associations`;
 
     const response = await axios.put(

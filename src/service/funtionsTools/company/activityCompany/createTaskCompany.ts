@@ -59,7 +59,7 @@ export const createActivitytaskCompany = async (props: Props) => {
 
   try {
     const result = await axios.post(apiUrl, body, { headers });
-    const data = result.data;
+    const data = result?.data;
     return `Tarea añadida correctamente.  Puede ver los detalles en:  https://app.hubspot.com/contacts/${idAccount}/companies/${idCompany}.`;
   } catch (error) {
     console.error("Error creating note:", error);

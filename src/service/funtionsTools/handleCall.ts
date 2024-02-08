@@ -9,6 +9,9 @@ interface Props {
   callToNumber: string;
   callRecordingUrl: string;
   callStatus: string;
+  dealId: string | undefined;
+  callId: string | undefined;
+  idAccount: string;
 }
 export const handleCall = async (props: Props) => {
   const {
@@ -20,6 +23,8 @@ export const handleCall = async (props: Props) => {
     callRecordingUrl,
     callStatus,
     callToNumber,
+    dealId,
+    idAccount,
   } = props;
 
   const getCurrentDate = () => {
@@ -41,6 +46,19 @@ export const handleCall = async (props: Props) => {
       hs_call_status: callStatus,
       // "hubspot_owner_id": "11349275740",
     },
+    associations: [
+      {
+        to: {
+          id: dealId,
+        },
+        types: [
+          {
+            associationCategory: "HUBSPOT_DEFINED",
+            associationTypeId: 206,
+          },
+        ],
+      },
+    ],
   };
 
   const headers = {
@@ -51,9 +69,9 @@ export const handleCall = async (props: Props) => {
   try {
     const result = await axios.post(apiUrl, body, { headers });
     const data = result.data;
-    const id =  data.id;
-    console.log(id,"caleandodod")
-    return `registro de llamada  creada con exito, el ID del registro de la llamada es ${id} el ID le servira para la asociacion`;
+    const id = data.id;
+    console.log(id, "caleandodod");
+    return `registro de llamada  creada con exito, se asocio al negocio correctamente lo puedes ver aca,https://app.hubspot.com/contacts/${idAccount}/deal/${dealId}`;
   } catch (error) {
     console.error("Error creating note:", error);
     return "Error adding note. Please try again later. We apologize for the inconvenience.";

@@ -33,28 +33,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ status: 500 });
   }
 }
-// export async function POST(request: Request) {
-//   try {
-//     const dataMessage = await request.json();
-
-//     // Enviar la respuesta con el estado 200
-//     const responsePromise = new Promise((resolve) => {
-//       resolve(new Response("OK", { status: 200 }));
-//     });
-
-//     // Ejecutar la función reply en segundo plano
-//   reply(dataMessage);
-
-//     // Esperar a que la respuesta se haya enviado antes de continuar
-//     await responsePromise;
-
-//     // Continuar con el resto del código después de enviar la respuesta
-
-//     return new Response("Reply en progreso", { status: 200 });
-//   } catch (error) {
-//     console.error(`Error : ${error}`);
-//     return new Response("Internal Server Error", { status: 500 });
-//   }
-// }
 
 

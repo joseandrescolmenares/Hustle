@@ -23,19 +23,16 @@ import { Contact } from "lucide-react";
 import { handleCall } from "@/service/funtionsTools/handleCall";
 
 export async function GET(request: Request) {
-  // const token = "CLuAkbfYMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFFI-XDKcuUli4JtRMa8R8e_dGTGZOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUnl72-iGvPb9a0dzsV3oZOEyPCwtKA25hMVIAWgA";
+  // const token = "COL-sM7YMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFK8rJTFTn1NGrxRlkoBOY5GIpFCCOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUojJaWbFSnXVG2Pz5B2uGvhpzzwtKA25hMVIAWgA";
 
   // const props = {
   //   token,
-  //   fromObjectType:"calls",
-  //     fromObjectId:"sssd",
-  //     toObjectId:"",
-  //     toObjectType:""
-
+  //   contactName:"andres@meethustle.",
+  //   email:""
   // };
 
 
-  // // // const data = await createtaskDeals(props);
+  // const data = await getSearchContacts(props);
   // // // const jose = await renewTokenAgent("+541126336301")
   // // const data = await contactDealAssociation(props);
   // // const data =await  dealContactAssociation({token})

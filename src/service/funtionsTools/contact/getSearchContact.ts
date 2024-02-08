@@ -2,21 +2,21 @@ import axios from "axios";
 
 interface PropsDataContact {
   token: string;
-  contactName: string;
-  emailContact?: string;
+  contactName?: string ;
+  email?: string 
 }
 export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
-  const { contactName, token, emailContact } = propsDataContact;
+  const { contactName, token, email } = propsDataContact;
 
   let firstName, lastName;
-  let searchEmail = emailContact;
+  let searchEmail =  email;
 
-  if (!emailContact) {
+  if (!searchEmail) {
     searchEmail = contactName;
   }
 
-  if (contactName.includes(" ")) {
-    const [firstNamePart, lastNamePart] = contactName.split(" ");
+  if (contactName?.includes(" ")) {
+    const [firstNamePart, lastNamePart] = contactName?.split(" ");
     firstName = firstNamePart;
     lastName = lastNamePart;
   } else {
@@ -79,12 +79,9 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
     if (resultData.total > 1) {
       return "More than one contact found with this name, please be more specific.";
     }
-    const contactId = resultData.results[0].id;
+    const contactId = resultData?.results[0]?.id;
     // const name = resultData.results[0].properties;
-    console.log(resultData[0].properties);
-
-    return `Identificador de contacto obtenido: ${contactId} 
-    `;
+    return `Identificador de contacto obtenido: ${contactId}`;
  
   } catch (error) {
     console.error("Error creating associations:", error);

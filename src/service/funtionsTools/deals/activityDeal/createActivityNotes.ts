@@ -46,7 +46,7 @@ export const createActivityNotes = async (props: Props) => {
 
   try {
     const result = await axios.post(apiUrl, body, { headers });
-    const data = result.data;
+    const data = result?.data;
     return `Nota añadida correctamente.  Puede ver los detalles en:  https://app.hubspot.com/contacts/${idAccount}/deal/${dealId}.`;
   } catch (error) {
     console.error("Error creating note:", error);

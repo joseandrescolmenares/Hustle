@@ -7,10 +7,10 @@ export async function reply(dataMessage: any) {
     return;
   }
 
-  console.log(dataMessage.entry[0].changes[0].value.messages[0], "message");
+  console.log(dataMessage?.entry[0]?.changes[0]?.value?.messages[0], "message");
 
-  if (dataMessage.entry[0].changes[0].value.messages[0].type === "audio") {
-    const phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
+  if (dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type === "audio") {
+    const phoneNumber = dataMessage?.entry[0]?.changes[0]?.value?.messages[0]?.from;
     const messageResponse =
       "Estamos actualmente enfocados en el desarrollo de esta nueva característica. Pronto podrás disfrutar de la capacidad de enviar mensajes de audio para enriquecer aún más tu experiencia con nuestra plataforma. Mientras tanto, agradecemos tu comprensión y te invitamos a continuar utilizando la función actual de mensajes en texto.🤘💥";
 
