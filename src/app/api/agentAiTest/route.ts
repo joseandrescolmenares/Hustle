@@ -20,25 +20,29 @@ import { companyContactAssociations } from "@/service/funtionsTools/company/asso
 import { createtaskDeals } from "@/service/funtionsTools/deals/activityDeal/createTaskDeal";
 
 import { Contact } from "lucide-react";
+import { handleCall } from "@/service/funtionsTools/handleCall";
 
 export async function GET(request: Request) {
-  // const token =
-  //   "CKmDsovYMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFEZNCAmFSTenmzVxmr_Vs9DIHt_uOj0AAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABQhRZQIcrK0cz29qpiicxdqvktroay0oDbmExUgBaAA";
+  // const token = "CLuAkbfYMRIUAAEDUAAA-SIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFFI-XDKcuUli4JtRMa8R8e_dGTGZOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgMQAAAAAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUnl72-iGvPb9a0dzsV3oZOEyPCwtKA25hMVIAWgA";
 
   // const props = {
   //   token,
-  //   idAccount :"44543727",
-  //   contactId: "1551",
-  //   dealId:"17397502107"
+  //   fromObjectType:"calls",
+  //     fromObjectId:"sssd",
+  //     toObjectId:"",
+  //     toObjectType:""
+
   // };
-  // // const data = await createtaskDeals(props);
-  // // const jose = await renewTokenAgent("+541126336301")
-  // const data = await contactDealAssociation(props);
-  // const data =await  dealContactAssociation({token})
-  // const  data = await getOwners(token)
-  // const data = await createActivityNotes(props)
-  // const data = await createNewDeals(dataProp);
-  // const data = await updateDeal(props);
+
+
+  // // // const data = await createtaskDeals(props);
+  // // // const jose = await renewTokenAgent("+541126336301")
+  // // const data = await contactDealAssociation(props);
+  // // const data =await  dealContactAssociation({token})
+  // // const  data = await getOwners(token)
+  // // const data = await createActivityNotes(props)
+  // // const data = await createNewDeals(dataProp);
+  // const data = await handleCall(props);
   // const data = await getStage(token);
 
   // const  data = contactDealAssociation(props)

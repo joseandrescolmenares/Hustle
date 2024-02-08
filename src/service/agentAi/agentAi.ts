@@ -11,7 +11,7 @@ import {
   DynamicStructuredTool,
 } from "@langchain/community/tools/dynamic";
 import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
-import { string, z } from "zod";
+import { string, z, Schema } from "zod";
 import { getDataCompany } from "../funtionsTools/company/getDataCompany";
 import { handleDeal } from "../funtionsTools/deals/handleDeal";
 import { dealCompanyAssociation } from "../funtionsTools/deals/association/createDealCompanyAssociation";
@@ -36,6 +36,7 @@ import { createtaskDeals } from "../funtionsTools/deals/activityDeal/createTaskD
 import { title } from "process";
 import { createActivitytaskCompany } from "../funtionsTools/company/activityCompany/createTaskCompany";
 import { createActivitytaskContact } from "../funtionsTools/contact/activityContact/createTaskContact";
+import { handleCall } from "../funtionsTools/handleCall";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
@@ -112,7 +113,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const handleNewAndUpdatedContact = new DynamicStructuredTool({
     name: "handleNewAndUpdatedContact",
     description:
-      "Creates or updates a contact(contacto) in HubSpot, allowing configuration of fields such as the contact's phone number, first name, last name, company, email address, website, and lifecycle stage. Performs Create or Update action. If the action is Update, contactId is required to successfully complete the update.",
+      "Creates or updates a contact(contacto) in HubSpot, allowing configuration of fields such as the contact's phone number, first name, last name, company, email address, website, and lifecyclestage. Performs Create or Update action. If the action is Update, contactId is required to successfully complete the update.",
     schema: z.object({
       phone: z.string().describe("The contact's phone number").optional(),
       firstname: z
@@ -182,28 +183,29 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const createAssociation = new DynamicStructuredTool({
     name: "createAssociation",
     description:
-      "This function facilitates the creation of associations between objects within HubSpot, such as creating associations between a deal(negocio) and a contact(contacto), between a contact and a company(empresa), or between a company and a deal. It is crucial to provide unique identifiers for both the source record and the target object to ensure the success of the association process. Additionally, specifying the object name is essential for the proper execution of this operation.",
+      "This function facilitates the creation of associations between objects within HubSpot, such as creating associations between a business and a contact(contacto), between a contact and a company(empresa), or between a company and a deal(negocio) or a call(llamada) and a contact. To ensure the success of the association process, it is critical to provide unique identifiers for both the source record and the target object. In addition, specifying the object name is essential for the correct execution of this operation, to execute this function successfully you must first provide the following parameters.",
 
     schema: z.object({
       fromObjectType: z
         .string()
         .describe(
-          'This parameter represents the type of object from which the association is being established. Use the name of the object (e.g., "contact" for contacts, "company" for companies, "deal" for deals).'
+          'This parameter represents the type of object from which the association is established. Use the object name (e.g. "contact" for contacts, "company" for companies, "deal" for deals, "calls" for calls).'
         ),
+
       fromObjectId: z
         .string()
         .describe(
-          "This parameter represents the ID of the record from which the association is being established. For example, it could be the ID of a contact(contacto), the ID of a deal(negocio), or the ID of a company(empresa)."
+          "This parameter represents the ID of the record from which the association is established. For example, it can be the ID of a contact, the ID of a deal(negocio), the ID of a company(empresa) or the ID of a call record(registro de llamada)."
         ),
       toObjectType: z
         .string()
         .describe(
-          "This parameter represents the type of object to which the record is being associated. You should provide the name of the object type to which you are associating the record. Similar to fromObjectType, the options are contact, company, and deal."
+          "This parameter represents the type of object to which the record is being associated. You should provide the name of the object type to which you are associating the record. Similar to fromObjectType, the options are contact(contacto), company(empresa), deal(negocio) and calls(llamada)."
         ),
       toObjectId: z
         .string()
         .describe(
-          "This parameter represents the ID of the record to which the record from fromObjectId is being associated. You should provide the specific ID of the record to which you want to associate the record from fromObjectId, such as the ID of a company, deal, or contact."
+          "This parameter represents the ID of the record to which the record from fromObjectId is being associated. You should provide the specific ID of the record to which you want to associate the record from fromObjectId, such as the ID of a company, deal, contact or call"
         ),
     }),
     func: async ({
@@ -357,26 +359,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const associateContactWithCompany = new DynamicStructuredTool({
-    name: "associateContactWithCompany",
-    description:
-      "This function is responsible for establishing associations between companies(empresas) and contacts, and it is crucial to provide unique identifiers for both to ensure the success of the association.",
-    schema: z.object({
-      idCompany: z
-        .string()
-        .describe("represents the company(empresa) identifier "),
-      idContact: z.string().describe("represents the contact identifier"),
-    }),
-    func: async ({ idCompany, idContact }) => {
-      const props = { token, idAccount, idCompany, idContact };
-      return await companyContactAssociations(props);
-    },
-  });
-
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",
     description:
-      "This function allows searching for companies by their name, providing detailed information, including the unique identifier (ID) and the company (compañía) name. The retrieved data can be used in other functions.",
+      "This function allows searching for companies by their name, providing detailed information, including the unique identifier (ID) and the company(empresa) name. The retrieved data can be used in other functions.",
     schema: z.object({
       nameCompany: z
         .string()
@@ -482,45 +468,6 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const associateDealWithContact = new DynamicStructuredTool({
-    name: "associateDealWithContact",
-    description:
-      "This function associates Contacts(Contacto) with a deal (Negocio), and it is crucial to provide unique identifiers for both to ensure the success of the association. Obtaining specific identifiers for both deals and contacts is of vital importance for the proper functioning of this operation.",
-
-    schema: z.object({
-      contactId: z.string().describe("represents the contact identifier"),
-      dealId: z
-        .string()
-        .describe("represents the deal(Negocio) id to perform the association"),
-    }),
-    func: async ({ contactId, dealId }) => {
-      const props = { token, idAccount, contactId, dealId };
-      return await dealContactAssociation(props);
-    },
-  });
-
-  const associateDealWithCompany = new DynamicStructuredTool({
-    name: "associateDealWithCompany",
-    description:
-      "The function establishes associations between a deal(Negocio) and a company(empresa). By specifying the unique identifiers of the deal(Negocio) and the company(empresa), this function allows to establish a seamless link between these entities within the CRM system. The company(empresa) identifier and the transaction identifier are essential to make this association.",
-    schema: z.object({
-      idDeals: z
-        .string()
-        .describe(
-          "represents the company(empresa)'s id to perform the association."
-        )
-        .default(""),
-      idCompany: z
-        .string()
-        .describe("represents the company(empresa) identifier ")
-        .default(""),
-    }),
-    func: async ({ idDeals, idCompany }) => {
-      const props = { idCompany, idDeals, token, idAccount };
-      return await dealCompanyAssociation(props);
-    },
-  });
-
   const getStageForDeal = new DynamicTool({
     name: "getStageForDeal",
     description:
@@ -547,10 +494,94 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
+  const handleNewAndUpdatedCallRecord = new DynamicStructuredTool({
+    name: "handleNewAndUpdatedCallRecord",
+    description:
+      "Creates or updates a call record in the HubSpot CRM. In case the action is update please provide the callId to complete the execution successfully.",
+    schema: z.object({
+      callTitle: z.string().describe("The title of the call."),
+      callBody: z
+        .string()
+        .describe(
+          "The description of the call, including any notes that you want to add."
+        ),
+      callDuration: z
+        .string()
+        .describe("The duration of the call in milliseconds."),
+      callFromNumber: z
+        .string()
+        .describe("The phone number that the call was made from."),
+      callRecordingUrl: z
+        .string()
+        .describe(
+          "The URL that stores the call recording. URLS to .mp3 or .wav files can be played back on CRM records. Only HTTPS,  secure URLs will be accepted"
+        ),
+      callStatus: z
+        .string()
+        .describe(
+          "The status of the call. The statuses are: BUSY, CALLING_CRM_USER, CANCELED, COMPLETED, CONNECTING, FAILED, IN_PROGRESS, NO_ANSWER, QUEUED, and RINGING, choose only one, the one you think corresponds."
+        ),
+      callToNumber: z
+        .string()
+        .describe("The phone number that received the call."),
+
+      callId: z
+        .string()
+        .describe(
+          "Identifier of the call to update. it is very important and mandatory to pass this parameter."
+        )
+        .optional(),
+    }),
+    func: async ({
+      callBody,
+      callDuration,
+      callFromNumber,
+      callStatus,
+      callRecordingUrl,
+      callTitle,
+      callToNumber,
+      callId,
+    }) => {
+      const props = {
+        token,
+        idAccount,
+        callBody,
+        callDuration,
+        callFromNumber,
+        callStatus,
+        callRecordingUrl,
+        callTitle,
+        callToNumber,
+        callId,
+      };
+      return await handleCall(props);
+    },
+  });
+
+  const handleNewAndUpdatedCommunication = new DynamicStructuredTool({
+    name: "handleNewAndUpdatedCommunication",
+    description:
+      "Programa o actualiza una reunión en HubSpot, con detalles como el nombre de la reunión, la descripción, la ubicación, la hora de inicio y fin, etc.",
+    schema: z.object({}),
+    func: async () => {
+      return "";
+    },
+  });
+
+  const handleNewAndUpdatedMeeting = new DynamicStructuredTool({
+    name: "handleNewAndUpdatedMeeting",
+    description:
+      "Programa o actualiza una reunión en HubSpot, con detalles como el nombre de la reunión, la descripción, la ubicación, la hora de inicio y fin, etc.",
+    schema: z.object({}),
+    func: async () => {
+      return " ";
+    },
+  });
+
   const handleNewAndUpdatedDeals = new DynamicStructuredTool({
     name: "handleNewAndUpdatedDeals",
     description:
-      "Creates or Updates a deal(Negocio) in HubSpot, allowing setting fields such as deal name, amount, closing date, and deal stage.This function performs two actions: Create or Update. If the action is Update, the dealId is required to successfully complete the update.",
+      "Creates or Updates a deal(Negocio) in HubSpot, allowing setting fields such as dealname, amount, closedate, and dealstage. This function performs two actions: Create or Update. If the action is Update, the dealId is required to successfully complete the update.",
     schema: z.object({
       amount: z
         .number()
@@ -601,18 +632,16 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   });
 
   const tools = [
+    handleNewAndUpdatedCallRecord,
     handleNewAndUpdatedDeals,
     getCompanyInfoByName,
-    // associateDealWithCompany,
     getStageForDeal,
     getContactInfoByName,
-    // associateDealWithContact,
     createAssociation,
     addNoteWithDeal,
     getDealInfoByName,
     handleNewAndUpdatedCompany,
     handleNewAndUpdatedContact,
-    // associateContactWithCompany,
     createTaskAndAssociateWithDeal,
     createTaskAndAssociateWithCompany,
     createTaskAndAssociateWithContact,
@@ -620,7 +649,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
 
   const llm = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: "gpt-4-turbo-preview",
+    modelName: "gpt-3.5-turbo-0125",
     temperature: 0,
   });
   const promptTemplate = await pull<ChatPromptTemplate>(
@@ -648,7 +677,6 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const result = await agentExecutor.invoke({
     input: message,
     chat_history: [],
-    tools,
   });
 
   return result;

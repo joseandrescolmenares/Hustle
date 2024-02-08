@@ -72,7 +72,7 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
     const res = await axios.post(url, data, { headers });
 
     const resultData = res.data;
-    console.log(resultData);
+
     if (resultData.total === 0) {
       return "No contact found with the specified criteria.";
     }
@@ -81,8 +81,10 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
     }
     const contactId = resultData.results[0].id;
     // const name = resultData.results[0].properties;
+    console.log(resultData[0].properties);
 
-    return `Identificador de contacto obtenido: ${contactId}`;
+    return `Identificador de contacto obtenido: ${contactId} 
+    `;
  
   } catch (error) {
     console.error("Error creating associations:", error);
