@@ -4,11 +4,11 @@ interface Props {
   token: string;
   callTitle: string;
   callBody: string;
-  callDuration: string;
-  callFromNumber: string;
-  callToNumber: string;
-  callRecordingUrl: string;
-  callStatus: string;
+  // callDuration: string;
+  // callFromNumber: string;
+  // callToNumber: string;
+  // callRecordingUrl: string;
+  // callStatus: string;
   dealId: string | undefined;
   callId: string | undefined;
   idAccount: string;
@@ -18,11 +18,11 @@ export const handleCall = async (props: Props) => {
     token,
     callTitle,
     callBody,
-    callDuration,
-    callFromNumber,
-    callRecordingUrl,
-    callStatus,
-    callToNumber,
+    // callDuration,
+    // callFromNumber,
+    // callRecordingUrl,
+    // callToNumber,
+    // callStatus,
     dealId,
     idAccount,
   } = props;
@@ -39,11 +39,11 @@ export const handleCall = async (props: Props) => {
       hs_timestamp: timestamp,
       hs_call_title: callTitle,
       hs_call_body: callBody,
-      hs_call_duration: callDuration,
-      hs_call_from_number: callFromNumber,
-      hs_call_to_number: callToNumber,
-      hs_call_recording_url: callRecordingUrl,
-      hs_call_status: callStatus,
+      // hs_call_duration: callDuration,
+      // hs_call_from_number: callFromNumber,
+      // hs_call_to_number: callToNumber,
+      // hs_call_recording_url: callRecordingUrl,
+      // hs_call_status: callStatus,
       // "hubspot_owner_id": "11349275740",
     },
     associations: [

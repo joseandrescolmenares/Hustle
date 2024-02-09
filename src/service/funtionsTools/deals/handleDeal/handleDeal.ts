@@ -40,7 +40,7 @@ export const handleDeal = async (dataProp: DataProps) => {
     });
 
     const data = await response.json();
-    // const name = data?.properties?.dealname;
+  
 
     return `El Negocio  se ha creado correctamente. Puede ver la información [aquí](https://app.hubspot.com/contacts/${idAccount}/deal/${data.id}).
     `;

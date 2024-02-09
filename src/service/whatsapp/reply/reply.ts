@@ -32,6 +32,7 @@ export async function reply(dataMessage: any) {
   sendMessage(obj2);
 
   const responseBotWhatsapp = await agentAi(messageBody, phoneNumber);
+  // const responseBotWhatsapp = await agentAi(llm, tools, prompt);
   messageResponse = responseBotWhatsapp?.output;
 
   console.log("llegue hasta abajo en reply");

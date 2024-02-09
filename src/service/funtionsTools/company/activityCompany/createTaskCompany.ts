@@ -1,4 +1,6 @@
+import { DynamicStructuredTool } from "@langchain/community/tools/dynamic";
 import axios from "axios";
+import { z } from "zod";
 
 interface Props {
   idAccount: string;
@@ -66,3 +68,4 @@ export const createActivitytaskCompany = async (props: Props) => {
     return "Error adding note. Please try again later. We apologize for the inconvenience.";
   }
 };
+

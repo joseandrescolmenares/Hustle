@@ -13,41 +13,34 @@ import {
 import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
 import { string, z, Schema } from "zod";
 import { getDataCompany } from "../funtionsTools/company/getDataCompany";
-import { handleDeal } from "../funtionsTools/deals/handleDeal";
-import { dealCompanyAssociation } from "../funtionsTools/deals/association/createDealCompanyAssociation";
+
 import { getSearchContacts } from "../funtionsTools/contact/getSearchContact";
 import { getStage } from "../funtionsTools/deals/getStage";
-import { dealContactAssociation } from "../funtionsTools/deals/association/dealContactAssociation";
+
 import { createActivityNotes } from "../funtionsTools/deals/activityDeal/createActivityNotes";
 import { getDataDeal } from "../funtionsTools/deals/getDataDeal";
 
-import { handleCompany } from "../funtionsTools/company/handleCompany";
-import { updateDeal } from "../funtionsTools/deals/updateDeal";
-import { handleContact } from "../funtionsTools/contact/handleContact";
-import { RunnableWithMessageHistory } from "@langchain/core/runnables";
-
-import { createAssociationObject } from "../funtionsTools/createAssociationObject";
-import { companyContactAssociations } from "../funtionsTools/company/association/companyContact";
-import { MessagesPlaceholder } from "@langchain/core/prompts";
-
-import { UpstashRedisChatMessageHistory } from "@langchain/community/stores/message/upstash_redis";
-import { Input } from "@/app/components/ui/Input";
-import { createtaskDeals } from "../funtionsTools/deals/activityDeal/createTaskDeal";
-import { title } from "process";
 import { createActivitytaskCompany } from "../funtionsTools/company/activityCompany/createTaskCompany";
 import { createActivitytaskContact } from "../funtionsTools/contact/activityContact/createTaskContact";
-import { handleCall } from "../funtionsTools/handleCall";
+
+import { descriptionHandleDeal } from "../funtionsTools/deals/handleDeal/descriptionHandleDeal";
+import { descriptionHandleCall } from "../funtionsTools/handleCall/descriptionHandleCall";
+import { descriptionHandleTask } from "../funtionsTools/handleTask/descriptionHandleTask";
+import { descriptionHandleCompany } from "../funtionsTools/company/handleCompany/descriptionHandleCompany";
+import { descriptionHandleAssociationObject } from "../funtionsTools/createAssociationsObject/descriptionHandleAssociationObject";
+import { descriptionHandleContact } from "../funtionsTools/contact/handleContact/descriptionHandleContact";
 
 export const agentAi = async (message: string, phoneNumber: string) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
   const token = validateDataAccount?.token;
   const idAccount = validateDataAccount?.idAccount;
+  const propsCredential = { token, idAccount };
 
   if (!idAccount || !token) {
     return;
   }
 
-  // funrtion contact
+  // funtion contact
 
   const createTaskAndAssociateWithContact = new DynamicStructuredTool({
     name: "createTaskAndAssociateWithContact",
@@ -110,122 +103,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const handleNewAndUpdatedContact = new DynamicStructuredTool({
-    name: "handleNewAndUpdatedContact",
-    description:
-      "Creates or updates a contact(contacto) in HubSpot, allowing configuration of fields such as the contact's phone number, first name, last name, company, email address, website, and lifecyclestage. Performs Create or Update action. If the action is Update, contactId is required to successfully complete the update.",
-    schema: z.object({
-      phone: z.string().describe("The contact's phone number").optional(),
-      firstname: z
-        .string()
-        .describe("The first name of the contact.")
-        .optional()
-        .default(""),
-      lastname: z.string().describe("The last name of the contact.").optional(),
-      company: z
-        .string()
-        .describe("The name of the company associated with the contact.")
-        .optional()
-        .default(""),
-      website: z
-        .string()
-        .describe("The website linked to the contact.")
-        .optional()
-        .default(""),
-      email: z
-        .string()
-        .describe("The email address of the contact.")
-        .optional(),
-      lifecyclestage: z
-        .string()
-        .describe("The current stage in the contact's lifecycle.")
-        .optional(),
+  const handleNewAndUpdatedContact = descriptionHandleContact(propsCredential);
 
-      contactId: z
-        .string()
-        .describe(
-          "Identifier of the contact(contacto) to update. It is very important and mandatory to pass this parameter when executing the update action."
-        )
-        .optional(),
-      jobtitle: z
-        .string()
-        .describe(`"Position" or "Job title" of a contact"`)
-        .optional(),
-    }),
-    func: async ({
-      phone,
-      firstname,
-      lastname,
-      company,
-      email,
-      lifecyclestage,
-      website,
-      contactId,
-      jobtitle,
-    }) => {
-      const props = {
-        token,
-        idAccount,
-        phone,
-        firstname,
-        lastname,
-        company,
-        email,
-        lifecyclestage,
-        website,
-        contactId,
-        jobtitle,
-      };
-      return await handleContact(props);
-    },
-  });
-
-  const createAssociation = new DynamicStructuredTool({
-    name: "createAssociation",
-    description:
-      "This function facilitates the creation of associations between objects within HubSpot, such as creating associations between a business and a contact(contacto), between a contact and a company(empresa), or between a company and a deal(negocio). To ensure the success of the association process, it is critical to provide unique identifiers for both the source record and the target object. In addition, specifying the object name is essential for the correct execution of this operation, to execute this function successfully you must first provide the parameters.",
-
-    schema: z.object({
-      fromObjectType: z
-        .string()
-        .describe(
-          'This parameter represents the type of object from which the association is established. Use the object name (e.g. "contact" for contacts, "company" for companies, "deal" for deals).'
-        ),
-
-      fromObjectId: z
-        .string()
-        .describe(
-          "This parameter represents the ID of the record from which the association is established. For example, it can be the ID of a contact(contacto), the ID of a deal(negocio) or the ID of a company(empresa)."
-        ),
-      toObjectType: z
-        .string()
-        .describe(
-          "This parameter represents the type of object to which the record is being associated. You should provide the name of the object type to which you are associating the record. Similar to fromObjectType, the options are contact(contacto), company(empresa) and deal(negocio)."
-        ),
-      toObjectId: z
-        .string()
-        .describe(
-          "This parameter represents the ID of the record to which the record from fromObjectId is being associated. You should provide the specific ID of the record to which you want to associate the record from fromObjectId, such as the ID of a company, deal or contact."
-        ),
-    }),
-    func: async ({
-      fromObjectType,
-      fromObjectId,
-      toObjectId,
-      toObjectType,
-    }) => {
-      const props = {
-        token,
-        idAccount,
-
-        fromObjectType,
-        fromObjectId,
-        toObjectId,
-        toObjectType,
-      };
-      return await createAssociationObject(props);
-    },
-  });
+  const createAssociation = descriptionHandleAssociationObject(propsCredential);
 
   const getContactInfoByName = new DynamicStructuredTool({
     name: "getContactInfoByName",
@@ -246,8 +126,6 @@ export const agentAi = async (message: string, phoneNumber: string) => {
       return await getSearchContacts(dataProp);
     },
   });
-
-  // funtion company
 
   const createTaskAndAssociateWithCompany = new DynamicStructuredTool({
     name: "createTaskAndAssociateWithCompany",
@@ -310,56 +188,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const handleNewAndUpdatedCompany = new DynamicStructuredTool({
-    name: "handleNewAndUpdatedCompany",
-    description:
-      "Creates or updates a company(empresa) in HubSpot, allowing configuration of fields such as the company(empresa) name, phone number, city, domain, and industry. Performs Create or Update action. If the action is Update, companyId is required to successfully complete the update. Only modifies the properties specified by the user.",
-    schema: z.object({
-      phone: z
-        .number()
-        .describe("Contact phone number of the company")
-        .optional(),
-      name: z
-        .string()
-        .describe("Full name of the company")
-        .optional()
-        .default(""),
-      city: z
-        .string()
-        .describe("Location or city where the company is based.")
-        .optional()
-        .default(""),
-      industry: z
-        .string()
-        .describe("Industry to which the company belongs")
-        .optional()
-        .default(""),
-      domain: z
-        .string()
-        .describe("Primary web domain of the company.")
-        .optional()
-        .default(""),
-      companyId: z
-        .string()
-        .describe(
-          "Identifier of the company(empresa) to update. It is very important and mandatory to pass this parameter when executing the update action"
-        )
-        .optional(),
-    }),
-    func: async ({ phone, name, city, industry, domain, companyId }) => {
-      const props = {
-        token,
-        idAccount,
-        phone,
-        name,
-        city,
-        industry,
-        domain,
-        companyId,
-      };
-      return await handleCompany(props);
-    },
-  });
+  const handleNewAndUpdatedCompany = descriptionHandleCompany(propsCredential);
 
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",
@@ -407,68 +236,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  // funtions deals :
-
-  const createTaskAndAssociateWithDeal = new DynamicStructuredTool({
-    name: "createTaskAndAssociateWithDeal",
-    description: `Creates a new task and directly associates it with a specific deal (Negocio). For the association, it is essential to provide the deal's identifier (id), which must be a numerical value.
-    `,
-    schema: z.object({
-      idDeal: z
-        .number()
-        .describe(
-          "The identifier (id) specifies the deal (Negocio) to which the task should be associated. This property is essential and must be provided for the successful association."
-        ),
-      type: z
-        .string()
-        .describe(
-          "The type of task. Values include EMAIL, CALL, or TODO. Choose the one that best fits based on user input."
-        ),
-      time: z
-        .string()
-        .describe(
-          "Required. This field marks the task's due date. You can use a Unix timestamp in milliseconds or UTC format."
-        ),
-      title: z.string().describe("The title of the task."),
-      priority: z
-        .string()
-        .describe(
-          "The priority of the task. Values include LOW, MEDIUM, or HIGH. Choose the one that best fits based on user input."
-        ),
-      status: z
-        .string()
-        .describe(
-          "The status of the task, either COMPLETED or NOT_STARTED. Choose one based on user input."
-        ),
-      messageBody: z.string().describe("Body of the note or message."),
-      ownerId: z.string().describe("ID of the task owner.").optional(),
-    }),
-    func: async ({
-      idDeal,
-      messageBody,
-      time,
-      title,
-      status,
-      type,
-      priority,
-      ownerId,
-    }) => {
-      const props = {
-        token,
-        idDeal,
-        idAccount,
-        messageBody,
-        time,
-        title,
-        status,
-        type,
-        priority,
-        ownerId,
-      };
-
-      return await createtaskDeals(props);
-    },
-  });
+  const createTaskAndAssociateWithDeal = descriptionHandleTask(propsCredential);
 
   const getStageForDeal = new DynamicTool({
     name: "getStageForDeal",
@@ -496,205 +264,8 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const createOrUpdateCallRecordForDeal = new DynamicStructuredTool({
-    name: "createOrUpdateCallRecordForDeal",
-    description:
-      "Creates or updates a call record. If updating, provide the callId. If creating, associate with a deal(negocio). Ensure to provide the dealId for association",
-    schema: z.object({
-      callTitle: z.string().describe("The title of the call."),
-      callBody: z
-        .string()
-        .describe(
-          "The description of the call, including any notes that you want to add."
-        ),
-      callDuration: z
-        .string()
-        .describe("The duration of the call in milliseconds."),
-      callFromNumber: z
-        .string()
-        .describe("The phone number that the call was made from."),
-      callRecordingUrl: z
-        .string()
-        .describe(
-          "The URL that stores the call recording. URLS to .mp3 or .wav files can be played back on CRM records. Only HTTPS,  secure URLs will be accepted"
-        ),
-      callStatus: z
-        .string()
-        .describe(
-          "The status of the call. The statuses are: BUSY, CALLING_CRM_USER, CANCELED, COMPLETED, CONNECTING, FAILED, IN_PROGRESS, NO_ANSWER, QUEUED, and RINGING, choose only one, the one you think corresponds."
-        ),
-      callToNumber: z
-        .string()
-        .describe("The phone number that received the call."),
-
-      callId: z
-        .string()
-        .describe(
-          "Identifier of the call to update. it is very important and mandatory to pass this parameter."
-        )
-        .optional(),
-      dealId: z
-        .string()
-        .describe(
-          "Deal(negocio) identifier to associate. It is very important and mandatory to pass this parameter."
-        )
-        .optional(),
-    }),
-    func: async ({
-      callBody,
-      callDuration,
-      callFromNumber,
-      callStatus,
-      callRecordingUrl,
-      callTitle,
-      callToNumber,
-      callId,
-      dealId,
-    }) => {
-      const props = {
-        token,
-        idAccount,
-        callBody,
-        callDuration,
-        callFromNumber,
-        callStatus,
-        callRecordingUrl,
-        callTitle,
-        callToNumber,
-        callId,
-        dealId,
-      };
-      return await handleCall(props);
-    },
-  });
-
-  const createCallRecordForContact = new DynamicStructuredTool({
-    name: "createCallRecordForContact",
-    description:
-      "Creates or updates a call record in the HubSpot CRM. In case the action is update please provide the callId to complete the execution successfully.",
-    schema: z.object({
-      callTitle: z.string().describe("The title of the call."),
-      callBody: z
-        .string()
-        .describe(
-          "The description of the call, including any notes that you want to add."
-        ),
-      callDuration: z
-        .string()
-        .describe("The duration of the call in milliseconds."),
-      callFromNumber: z
-        .string()
-        .describe("The phone number that the call was made from."),
-      callRecordingUrl: z
-        .string()
-        .describe(
-          "The URL that stores the call recording. URLS to .mp3 or .wav files can be played back on CRM records. Only HTTPS,  secure URLs will be accepted"
-        ),
-      callStatus: z
-        .string()
-        .describe(
-          "The status of the call. The statuses are: BUSY, CALLING_CRM_USER, CANCELED, COMPLETED, CONNECTING, FAILED, IN_PROGRESS, NO_ANSWER, QUEUED, and RINGING, choose only one, the one you think corresponds."
-        ),
-      callToNumber: z
-        .string()
-        .describe("The phone number that received the call."),
-
-      callId: z
-        .string()
-        .describe(
-          "Identifier of the call to update. it is very important and mandatory to pass this parameter."
-        )
-        .optional(),
-    }),
-    func: async ({
-      callBody,
-      callDuration,
-      callFromNumber,
-      callStatus,
-      callRecordingUrl,
-      callTitle,
-      callToNumber,
-      callId,
-    }) => {
-      const props = {
-        token,
-        idAccount,
-        callBody,
-        callDuration,
-        callFromNumber,
-        callStatus,
-        callRecordingUrl,
-        callTitle,
-        callToNumber,
-        callId,
-      };
-      return "";
-    },
-  });
-
-  const createCallRecordForCompany = new DynamicStructuredTool({
-    name: "createCallRecordForCompany",
-    description:
-      "Creates or updates a call record in the HubSpot CRM. In case the action is update please provide the callId to complete the execution successfully.",
-    schema: z.object({
-      callTitle: z.string().describe("The title of the call."),
-      callBody: z
-        .string()
-        .describe(
-          "The description of the call, including any notes that you want to add."
-        ),
-      callDuration: z
-        .string()
-        .describe("The duration of the call in milliseconds."),
-      callFromNumber: z
-        .string()
-        .describe("The phone number that the call was made from."),
-      callRecordingUrl: z
-        .string()
-        .describe(
-          "The URL that stores the call recording. URLS to .mp3 or .wav files can be played back on CRM records. Only HTTPS,  secure URLs will be accepted"
-        ),
-      callStatus: z
-        .string()
-        .describe(
-          "The status of the call. The statuses are: BUSY, CALLING_CRM_USER, CANCELED, COMPLETED, CONNECTING, FAILED, IN_PROGRESS, NO_ANSWER, QUEUED, and RINGING, choose only one, the one you think corresponds."
-        ),
-      callToNumber: z
-        .string()
-        .describe("The phone number that received the call."),
-
-      callId: z
-        .string()
-        .describe(
-          "Identifier of the call to update. it is very important and mandatory to pass this parameter."
-        )
-        .optional(),
-    }),
-    func: async ({
-      callBody,
-      callDuration,
-      callFromNumber,
-      callStatus,
-      callRecordingUrl,
-      callTitle,
-      callToNumber,
-      callId,
-    }) => {
-      const props = {
-        token,
-        idAccount,
-        callBody,
-        callDuration,
-        callFromNumber,
-        callStatus,
-        callRecordingUrl,
-        callTitle,
-        callToNumber,
-        callId,
-      };
-      return "";
-    },
-  });
+  const createOrUpdateCallRecordForDeal =
+    descriptionHandleCall(propsCredential);
 
   const handleNewAndUpdatedCommunication = new DynamicStructuredTool({
     name: "handleNewAndUpdatedCommunication",
@@ -716,58 +287,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const handleNewAndUpdatedDeals = new DynamicStructuredTool({
-    name: "handleNewAndUpdatedDeals",
-    description:
-      "Creates or Updates a deal(Negocio) in HubSpot, allowing setting fields such as dealname, amount, closedate, and dealstage. This function performs two actions: Create or Update. If the action is Update, the dealId is required to successfully complete the update.",
-    schema: z.object({
-      amount: z
-        .number()
-        .describe("represents the monetary amount or monetary value"),
-      dealname: z
-        .string()
-        .describe("represents the name of the deal(Negocio)."),
-      dealstage: z
-        .string()
-        .nullable()
-        .describe(
-          "Current stage of a deal(Negocio) or commercial negotiation within the sales process. No identifier is required unless explicitly needed. Retrieve it using the 'getDealStage' function if necessary"
-        )
-        .optional()
-        .default(null),
-
-      closedate: z
-        .string()
-        .describe(
-          "this property defines the date on which the operation will be closed, for this property it is important to follow this format, for example: '2019-12-07T16:50:06.678Z'."
-        )
-        .optional(),
-      dealId: z
-        .string()
-        .describe(
-          "Identifier of the deal(Negocio) to update. it is very important and mandatory to pass this parameter."
-        )
-        .optional(),
-    }),
-    func: async ({
-      amount,
-      dealname,
-      dealstage,
-      closedate,
-      dealId,
-    }): Promise<string> => {
-      const dataParams = {
-        amount,
-        dealname,
-        dealstage,
-        closedate,
-        token,
-        idAccount,
-        dealId,
-      };
-      return await handleDeal(dataParams);
-    },
-  });
+  const handleNewAndUpdatedDeals = descriptionHandleDeal(propsCredential);
 
   const tools = [
     createOrUpdateCallRecordForDeal,
@@ -785,11 +305,15 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     createTaskAndAssociateWithContact,
   ];
 
+  //   const toolNames = tools.map(tool => tool.name).join(', ');
+  // console.log(toolNames)
+
   const llm = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
     modelName: "gpt-4-turbo-preview",
     temperature: 0,
   });
+
   const promptTemplate = await pull<ChatPromptTemplate>(
     "hustle/openai-tools-agent"
   );
@@ -810,11 +334,14 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const agentExecutor = new AgentExecutor({
     agent,
     tools,
+    handleParsingErrors:
+      "Please try it again, paying special attention to the values of the parameters",
   });
 
   const result = await agentExecutor.invoke({
     input: message,
     chat_history: [],
+    // toolNames
   });
 
   return result;
