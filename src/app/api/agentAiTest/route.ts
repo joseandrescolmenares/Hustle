@@ -26,26 +26,26 @@ import { handleMeeting } from "@/service/funtionsTools/handleMeeting/handleMeeti
 
 
 export async function GET(request: Request) {
-  const token =
-    "CPujpq_aMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFPfTVCQY90RluqMk6cKNb4faXaQ0OkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IU4Q-43pjg7t-tFhyG75Q7m3NWvXlKA25hMVIAWgA";
+//   const token =
+//     "CPujpq_aMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFPfTVCQY90RluqMk6cKNb4faXaQ0OkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IU4Q-43pjg7t-tFhyG75Q7m3NWvXlKA25hMVIAWgA";
 
-  const props = {
-    token,
-    // idObject: "19044137052",
-    // object: "empresa",
-    // title:"esto es una prueba de reunio ",
-    // textBody:"resuniom",
-    // idAccount:"44543727",
-    // meetingNotes:"",
-    // timeStamp:""
-  };
-
-
-
-const email = "joseandrescolmenares02@gmail.com"
+//   const props = {
+//     token,
+//     // idObject: "19044137052",
+//     // object: "empresa",
+//     // title:"esto es una prueba de reunio ",
+//     // textBody:"resuniom",
+//     // idAccount:"44543727",
+//     // meetingNotes:"",
+//     // timeStamp:""
+//   };
 
 
-  const data = await getOwners(token, email);
+
+// const email = "joseandrescolmenares02@gmail.com"
+
+
+//   const data = await getOwners(token, email);
   // // // const jose = await renewTokenAgent("+541126336301")
   // // const data = await contactDealAssociation(props);
   // // const data =await  dealContactAssociation({token})
@@ -56,7 +56,7 @@ const email = "joseandrescolmenares02@gmail.com"
   // const data = await getStage(token);
 
   // const  data = contactDealAssociation(props)
-  return NextResponse.json({ data: data });
+  return NextResponse.json({ data: "jose" });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"
