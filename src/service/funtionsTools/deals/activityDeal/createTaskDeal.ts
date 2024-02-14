@@ -11,6 +11,7 @@ interface Props {
   priority: string;
   type: string;
   idDeal: number;
+  propertiesOwnerid?: Promise<string>;
 }
 export const createtaskDeals = async (props: Props) => {
   const {
@@ -24,6 +25,7 @@ export const createtaskDeals = async (props: Props) => {
     type,
     priority,
     onwerId,
+    propertiesOwnerid,
   } = props;
   const apiUrl = "https://api.hubapi.com/crm/v3/objects/tasks";
 
@@ -34,7 +36,7 @@ export const createtaskDeals = async (props: Props) => {
       hs_task_status: status,
       hs_task_subject: title,
       hs_task_priority: priority,
-      hubspot_owner_id: onwerId,
+      hubspot_owner_id: propertiesOwnerid,
       hs_task_type: type,
     },
     associations: [

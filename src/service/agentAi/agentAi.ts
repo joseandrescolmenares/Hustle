@@ -29,12 +29,21 @@ import { descriptionHandleTask } from "../funtionsTools/handleTask/descriptionHa
 import { descriptionHandleCompany } from "../funtionsTools/company/handleCompany/descriptionHandleCompany";
 import { descriptionHandleAssociationObject } from "../funtionsTools/createAssociationsObject/descriptionHandleAssociationObject";
 import { descriptionHandleContact } from "../funtionsTools/contact/handleContact/descriptionHandleContact";
+import { describeHandleComunications } from "../funtionsTools/handleComunications/describeHandleComunications";
+import { descriptionHandleMeeting } from "../funtionsTools/handleMeeting/descriptionHandleMeeting";
+import { getOwners } from "../funtionsTools/owner/getOwners";
 
-export const agentAi = async (message: string, phoneNumber: string) => {
+export const agentAi = async (
+  message: string,
+  phoneNumber: string,
+  email: string
+) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
+
   const token = validateDataAccount?.token;
   const idAccount = validateDataAccount?.idAccount;
-  const propsCredential = { token, idAccount };
+  const propertiesOwnerid = await getOwners(token, email);
+  const propsCredential = { token, idAccount, propertiesOwnerid };
 
   if (!idAccount || !token) {
     return;
@@ -97,6 +106,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         type,
         priority,
         ownerId,
+        propertiesOwnerid,
       };
 
       return await createActivitytaskContact(props);
@@ -159,7 +169,10 @@ export const agentAi = async (message: string, phoneNumber: string) => {
           "The status of the task, either COMPLETED or NOT_STARTED. Choose one based on user input."
         ),
       messageBody: z.string().describe("Body of the note or message."),
-      ownerId: z.string().describe("ID of the task owner.").optional(),
+      ownerId: z
+        .string()
+        .describe("ID of the task owner.")
+        .optional()
     }),
     func: async ({
       idCompany,
@@ -182,6 +195,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         type,
         priority,
         ownerId,
+        propertiesOwnerid
       };
 
       return await createActivitytaskCompany(props);
@@ -231,7 +245,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
         ),
     }),
     func: async ({ messageNotesBody, onwerId, dealId }) => {
-      const props = { token, messageNotesBody, onwerId, dealId, idAccount };
+      const props = { token, messageNotesBody, onwerId, dealId, idAccount,propertiesOwnerid };
       return await createActivityNotes(props);
     },
   });
@@ -264,33 +278,17 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     },
   });
 
-  const createOrUpdateCallRecordForDeal =
-    descriptionHandleCall(propsCredential);
+  const manageMeetingRecord = descriptionHandleMeeting(propsCredential);
 
-  const handleNewAndUpdatedCommunication = new DynamicStructuredTool({
-    name: "handleNewAndUpdatedCommunication",
-    description:
-      "Programa o actualiza una reunión en HubSpot, con detalles como el nombre de la reunión, la descripción, la ubicación, la hora de inicio y fin, etc.",
-    schema: z.object({}),
-    func: async () => {
-      return "";
-    },
-  });
+  const createOrUpdateCallRecord = descriptionHandleCall(propsCredential);
 
-  const handleNewAndUpdatedMeeting = new DynamicStructuredTool({
-    name: "handleNewAndUpdatedMeeting",
-    description:
-      "Programa o actualiza una reunión en HubSpot, con detalles como el nombre de la reunión, la descripción, la ubicación, la hora de inicio y fin, etc.",
-    schema: z.object({}),
-    func: async () => {
-      return " ";
-    },
-  });
+  const registerMessageAndAssociateWithObjects =
+    describeHandleComunications(propsCredential);
 
   const handleNewAndUpdatedDeals = descriptionHandleDeal(propsCredential);
 
   const tools = [
-    createOrUpdateCallRecordForDeal,
+    createOrUpdateCallRecord,
     handleNewAndUpdatedDeals,
     getCompanyInfoByName,
     getStageForDeal,
@@ -303,10 +301,9 @@ export const agentAi = async (message: string, phoneNumber: string) => {
     createTaskAndAssociateWithDeal,
     createTaskAndAssociateWithCompany,
     createTaskAndAssociateWithContact,
+    registerMessageAndAssociateWithObjects,
+    manageMeetingRecord,
   ];
-
-  //   const toolNames = tools.map(tool => tool.name).join(', ');
-  // console.log(toolNames)
 
   const llm = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
@@ -321,6 +318,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const getCurrentDate = () => {
     return new Date().toISOString();
   };
+
   const prompt = await promptTemplate.partial({
     currentDateAndTime: getCurrentDate,
   });
@@ -341,7 +339,7 @@ export const agentAi = async (message: string, phoneNumber: string) => {
   const result = await agentExecutor.invoke({
     input: message,
     chat_history: [],
-    // toolNames
+    tools,
   });
 
   return result;

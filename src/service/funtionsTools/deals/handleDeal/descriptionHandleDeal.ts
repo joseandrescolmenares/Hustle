@@ -5,11 +5,13 @@ import { handleDeal } from "./handleDeal";
 export interface PropsCredential {
   token: string;
   idAccount: string;
+  propertiesOwnerid?: Promise<string>;
 }
 
 export const descriptionHandleDeal = ({
   token,
   idAccount,
+  propertiesOwnerid
 }: PropsCredential) => {
   return new DynamicStructuredTool({
     name: "handleNewAndUpdatedDeals",
@@ -26,7 +28,7 @@ export const descriptionHandleDeal = ({
         .string()
         .nullable()
         .describe(
-          "Current stage of a deal(Negocio) or commercial negotiation within the sales process. No identifier is required unless explicitly needed. Retrieve it using the 'getDealStage' function if necessary"
+          "Current stage of a deal(Negocio) or commercial negotiation within the sales process. No identifier is required unless explicitly needed. Retrieve it using the 'getStageForDeal' function if necessary"
         )
         .optional()
         .default(null),
@@ -43,6 +45,7 @@ export const descriptionHandleDeal = ({
           "Identifier of the deal(Negocio) to update. it is very important and mandatory to pass this parameter."
         )
         .optional(),
+        ownerId:z.string().describe("").optional()
     }),
     func: async ({
       amount,
@@ -50,6 +53,7 @@ export const descriptionHandleDeal = ({
       dealstage,
       closedate,
       dealId,
+      ownerId
     }): Promise<string> => {
       const dataParams = {
         amount,
@@ -59,6 +63,8 @@ export const descriptionHandleDeal = ({
         token,
         idAccount,
         dealId,
+        ownerId,
+        propertiesOwnerid
       };
       return await handleDeal(dataParams);
     },

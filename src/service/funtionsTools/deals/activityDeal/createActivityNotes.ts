@@ -1,27 +1,35 @@
 import axios from "axios";
 
 interface Props {
-  idAccount: string,
+  idAccount: string;
   token: string;
   onwerId?: string;
   messageNotesBody: string;
   dealId?: string;
+  propertiesOwnerid?: Promise<string>;
 }
 export const createActivityNotes = async (props: Props) => {
-  const { onwerId, token, messageNotesBody, dealId,  idAccount} = props;
+  const {
+    onwerId,
+    token,
+    messageNotesBody,
+    dealId,
+    idAccount,
+    propertiesOwnerid,
+  } = props;
   const apiUrl = "https://api.hubapi.com/crm/v3/objects/notes";
 
   const getCurrentDate = () => {
     return new Date().toISOString();
   };
 
-  const data = getCurrentDate()
+  const data = getCurrentDate();
 
   const body = {
     properties: {
       hs_timestamp: data,
       hs_note_body: messageNotesBody,
-      hubspot_owner_id: onwerId,
+      hubspot_owner_id: propertiesOwnerid,
       hs_attachment_ids: "",
     },
     associations: [
@@ -51,6 +59,5 @@ export const createActivityNotes = async (props: Props) => {
   } catch (error) {
     console.error("Error creating note:", error);
     return "Error adding note. Please try again later. We apologize for the inconvenience.";
-
   }
 };

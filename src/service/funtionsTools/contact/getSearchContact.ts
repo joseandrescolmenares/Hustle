@@ -2,27 +2,22 @@ import axios from "axios";
 
 interface PropsDataContact {
   token: string;
-  contactName?: string ;
-  email?: string 
+  contactName?: string;
+  email?: string;
 }
 export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
   const { contactName, token, email } = propsDataContact;
 
   let firstName, lastName;
-  let searchEmail =  email;
+  let searchEmail = email;
 
   if (!searchEmail) {
     searchEmail = contactName;
   }
 
-  if (contactName?.includes(" ")) {
-    const [firstNamePart, lastNamePart] = contactName?.split(" ");
-    firstName = firstNamePart;
-    lastName = lastNamePart;
-  } else {
-    firstName = contactName;
-    lastName;
-  }
+  const [firstNamePart, lastNamePart]: any = contactName?.split(" ");
+  firstName = firstNamePart;
+  lastName = lastNamePart;
 
   try {
     const url = "https://api.hubapi.com/crm/v3/objects/contacts/search";
@@ -82,7 +77,6 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
     const contactId = resultData?.results[0]?.id;
     // const name = resultData.results[0].properties;
     return `Identificador de contacto obtenido: ${contactId}`;
- 
   } catch (error) {
     console.error("Error creating associations:", error);
     return "No contact found with the specified name or email. Please check your input and try again.";

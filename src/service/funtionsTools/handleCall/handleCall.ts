@@ -9,24 +9,40 @@ interface Props {
   // callToNumber: string;
   // callRecordingUrl: string;
   // callStatus: string;
-  dealId: string | undefined;
-  callId: string | undefined;
+  callId?: string;
   idAccount: string;
+  object: string;
+  objectId: string;
+  propertiesOwnerid?: Promise<string>;
+  ownerId?: string;
 }
 export const handleCall = async (props: Props) => {
   const {
     token,
     callTitle,
     callBody,
+    object,
+    propertiesOwnerid,
+    ownerId,
     // callDuration,
     // callFromNumber,
     // callRecordingUrl,
     // callToNumber,
     // callStatus,
-    dealId,
     idAccount,
+    objectId,
   } = props;
 
+  const objectName = object.charAt(0).toLowerCase() + object.slice(1);
+
+  let typeId;
+  if (objectName == "contact" || objectName == "contacto") {
+    typeId = 194;
+  } else if (objectName == "company " || objectName == "empresa") {
+    typeId = 182;
+  } else if (objectName == "deal" || objectName == "negocio") {
+    typeId = 206;
+  }
   const getCurrentDate = () => {
     return new Date().toISOString();
   };
@@ -39,22 +55,17 @@ export const handleCall = async (props: Props) => {
       hs_timestamp: timestamp,
       hs_call_title: callTitle,
       hs_call_body: callBody,
-      // hs_call_duration: callDuration,
-      // hs_call_from_number: callFromNumber,
-      // hs_call_to_number: callToNumber,
-      // hs_call_recording_url: callRecordingUrl,
-      // hs_call_status: callStatus,
-      // "hubspot_owner_id": "11349275740",
+      hubspot_owner_id: propertiesOwnerid,
     },
     associations: [
       {
         to: {
-          id: dealId,
+          id: objectId,
         },
         types: [
           {
             associationCategory: "HUBSPOT_DEFINED",
-            associationTypeId: 206,
+            associationTypeId: typeId,
           },
         ],
       },
@@ -68,12 +79,13 @@ export const handleCall = async (props: Props) => {
 
   try {
     const result = await axios.post(apiUrl, body, { headers });
-    const data = result.data;
-    const id = data.id;
-    console.log(id, "caleandodod");
-    return `registro de llamada  creada con exito, se asocio al negocio correctamente lo puedes ver aca,https://app.hubspot.com/contacts/${idAccount}/deal/${dealId}`;
+    const data = result?.data;
+
+    return `registro de llamada  creada con exito, se asocio al negocio correctamente lo puedes ver aca : https://app.hubspot.com/contacts/${idAccount}/${
+      objectName == "company" ? "companies" : objectName
+    }/${objectId}`;
   } catch (error) {
     console.error("Error creating note:", error);
-    return "Error adding note. Please try again later. We apologize for the inconvenience.";
+    return "Error adding call. Please try again later. We apologize for the inconvenience.";
   }
 };

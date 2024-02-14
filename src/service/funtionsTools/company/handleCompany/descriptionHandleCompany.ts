@@ -3,7 +3,7 @@ import { z } from "zod";
 import { handleCompany } from "./handleCompany";
 import { PropsCredential } from "../../deals/handleDeal/descriptionHandleDeal";
 
-export const descriptionHandleCompany = ({token, idAccount}:PropsCredential ) => {
+export const descriptionHandleCompany = ({token, idAccount,propertiesOwnerid}:PropsCredential ) => {
   return new DynamicStructuredTool({
     name: "handleNewAndUpdatedCompany",
     description:
@@ -39,6 +39,7 @@ export const descriptionHandleCompany = ({token, idAccount}:PropsCredential ) =>
           "Identifier of the company(empresa) to update. It is very important and mandatory to pass this parameter when executing the update action"
         )
         .optional(),
+        onwerId: z.string().describe("").optional()
     }),
     func: async ({ phone, name, city, industry, domain, companyId }) => {
       const props = {
@@ -50,6 +51,7 @@ export const descriptionHandleCompany = ({token, idAccount}:PropsCredential ) =>
         industry,
         domain,
         companyId,
+        propertiesOwnerid
       };
       return await handleCompany(props);
     },

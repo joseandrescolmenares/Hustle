@@ -56,6 +56,8 @@ export async function GET(request: Request) {
 
       const { portalId } = resulAccount.data;
 
+      console.log(resulAccount.data,"dataaa cuenta")
+
       const { data, error } = await supabase
         .from("teams")
         .update({

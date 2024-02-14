@@ -9,10 +9,12 @@ export interface DataProps {
   idAccount?: string;
   dealstage: string | null;
   dealId?: string;
+  propertiesOwnerid?:Promise<string>
+  ownerId?:string
 }
 
 export const handleDeal = async (dataProp: DataProps) => {
-  const { amount, dealname, closedate, token, idAccount, dealstage, dealId } =
+  const { amount, dealname, closedate, token, idAccount, dealstage, dealId, propertiesOwnerid, ownerId} =
     dataProp;
 
   if (dealId) {
@@ -27,6 +29,7 @@ export const handleDeal = async (dataProp: DataProps) => {
       dealstage,
       dealname,
       closedate,
+      hubspot_owner_id: propertiesOwnerid,
     },
   };
   try {

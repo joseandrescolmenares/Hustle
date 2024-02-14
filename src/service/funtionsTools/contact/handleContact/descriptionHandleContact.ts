@@ -1,10 +1,14 @@
-import React from 'react'
-import { handleContact } from './handleContact';
-import { z } from 'zod';
-import { DynamicStructuredTool } from '@langchain/community/tools/dynamic';
-import { PropsCredential } from '../../deals/handleDeal/descriptionHandleDeal';
+import React from "react";
+import { handleContact } from "./handleContact";
+import { z } from "zod";
+import { DynamicStructuredTool } from "@langchain/community/tools/dynamic";
+import { PropsCredential } from "../../deals/handleDeal/descriptionHandleDeal";
 
-export const descriptionHandleContact = ({token, idAccount}:PropsCredential ) => {
+export const descriptionHandleContact = ({
+  token,
+  idAccount,
+  propertiesOwnerid 
+}: PropsCredential) => {
   return new DynamicStructuredTool({
     name: "handleNewAndUpdatedContact",
     description:
@@ -44,8 +48,13 @@ export const descriptionHandleContact = ({token, idAccount}:PropsCredential ) =>
         .optional(),
       jobtitle: z
         .string()
-        .describe(`"Position" or "Job title" of a contact"`)
+        .describe("Position or Job title of a contact")
         .optional(),
+        ownerId: z
+        .string()
+        .describe(
+          "Identifier of the contact owner or creator. It is the ID of the user responsible for the contact in HubSpot."
+        )
     }),
     func: async ({
       phone,
@@ -57,6 +66,8 @@ export const descriptionHandleContact = ({token, idAccount}:PropsCredential ) =>
       website,
       contactId,
       jobtitle,
+      ownerId
+      
     }) => {
       const props = {
         token,
@@ -70,8 +81,10 @@ export const descriptionHandleContact = ({token, idAccount}:PropsCredential ) =>
         website,
         contactId,
         jobtitle,
+        ownerId,
+        propertiesOwnerid
       };
       return await handleContact(props);
     },
   });
-}
+};

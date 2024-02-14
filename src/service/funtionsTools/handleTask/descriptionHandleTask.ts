@@ -7,6 +7,7 @@ import { PropsCredential } from "../deals/handleDeal/descriptionHandleDeal";
 export const descriptionHandleTask = ({
   token,
   idAccount,
+  propertiesOwnerid 
 }: PropsCredential) => {
   return new DynamicStructuredTool({
     name: "createTaskAndAssociateWithDeal",
@@ -63,6 +64,7 @@ export const descriptionHandleTask = ({
         type,
         priority,
         ownerId,
+        propertiesOwnerid 
       };
 
       return await createtaskDeals(props);

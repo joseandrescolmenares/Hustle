@@ -11,7 +11,9 @@ export interface PropsContact {
   website?: string;
   lifecyclestage?: string;
   contactId?: string;
-  jobtitle?:string
+  jobtitle?: string;
+  ownerId: string;
+  propertiesOwnerid?:Promise<string>
 }
 
 export const handleContact = async (dataProp: PropsContact) => {
@@ -26,29 +28,31 @@ export const handleContact = async (dataProp: PropsContact) => {
     firstname,
     lastname,
     contactId,
-    jobtitle
+    jobtitle,
+    ownerId,
+    propertiesOwnerid
   } = dataProp;
 
   if (contactId) {
     return await updateContact(dataProp);
   }
-
-  const url = "https://api.hubapi.com/crm/v3/objects/contacts";
-
-  const requestBody = {
-    properties: {
-      email,
-      firstname,
-      lastname,
-      phone,
-      company,
-      website,
-      lifecyclestage,
-      jobtitle
-    },
-  };
-
   try {
+    const url = "https://api.hubapi.com/crm/v3/objects/contacts";
+
+    const requestBody = {
+      properties: {
+        email,
+        firstname,
+        lastname,
+        phone,
+        company,
+        website,
+        lifecyclestage,
+        jobtitle,
+        hubspot_owner_id: propertiesOwnerid,
+      },
+    };
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
