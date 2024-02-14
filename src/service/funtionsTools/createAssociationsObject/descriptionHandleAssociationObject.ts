@@ -19,7 +19,7 @@ export const descriptionHandleAssociationObject = ({token, idAccount}:PropsCrede
       fromObjectId: z
         .string()
         .describe(
-          "This parameter represents the ID of the record from which the association is established. For example, it can be the ID of a contact(contacto), the ID of a deal(negocio) or the ID of a company(empresa)."
+          "This parameter represents the ID of the object from which the association is established. For example, it can be the ID of a contact(contacto), the ID of a deal(negocio) or the ID of a company(empresa)."
         ),
       toObjectType: z
         .string()

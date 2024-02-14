@@ -3,6 +3,7 @@ import { sendMessage } from "../sendMessage";
 import { validateNumber } from "@/lib/validateNumber";
 import { cookies } from "next/headers";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { transcribeAudio } from "../transcribeAudio/transcribeAudio";
 
 export async function reply(dataMessage: any) {
   const cookieStore = cookies();
@@ -19,8 +20,13 @@ export async function reply(dataMessage: any) {
   if (dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type !== "text") {
     const phoneNumber =
       dataMessage?.entry[0]?.changes[0]?.value?.messages[0]?.from;
+
+    const id = dataMessage?.entry[0]?.changes[0]?.value?.messages[0].audio.id;
+
+    const urlAudio = transcribeAudio(id);
+
     console.log(
-      dataMessage?.entry[0]?.changes[0]?.value?.messages[0].audio,
+      dataMessage?.entry[0]?.changes[0]?.value?.messages[0].audio.id,
       "audio"
     );
     // const messageResponse =
@@ -55,8 +61,8 @@ export async function reply(dataMessage: any) {
 
   if (dataEmail == null) return;
 
-  const email = dataEmail[0]?.emailCrm
-  console.log(email,email);
+  const email = dataEmail[0]?.emailCrm;
+  console.log(email, email);
   const responseBotWhatsapp = await agentAi(messageBody, phoneNumber, email);
   messageResponse = responseBotWhatsapp?.output;
 
