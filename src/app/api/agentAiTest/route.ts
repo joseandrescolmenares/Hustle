@@ -1,28 +1,28 @@
-import { supabase } from "@/lib/ClientSupabase";
+// import { supabase } from "@/lib/ClientSupabase";
 import { NextResponse } from "next/server";
-import { renewToken } from "@/service/renewToken";
-import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
-import { getAllCompanies } from "@/service/hubspot/company/getAllCompanies";
-import { renewTokenAgent } from "@/service/funtionsTools/renewTokenAgent";
+// import { renewToken } from "@/service/renewToken";
+// import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
+// import { getAllCompanies } from "@/service/hubspot/company/getAllCompanies";
+// import { renewTokenAgent } from "@/service/funtionsTools/renewTokenAgent";
 
-import axios from "axios";
-import { getSearchContacts } from "@/service/funtionsTools/contact/getSearchContact";
+// import axios from "axios";
+// import { getSearchContacts } from "@/service/funtionsTools/contact/getSearchContact";
 
-import { getStage } from "@/service/funtionsTools/deals/getStage";
-import { dealContactAssociation } from "@/service/funtionsTools/deals/association/dealContactAssociation";
-import { getOwners } from "@/service/funtionsTools/owner/getOwners";
-import { createActivityNotes } from "@/service/funtionsTools/deals/activityDeal/createActivityNotes";
-import { getDataCompany } from "@/service/funtionsTools/company/getDataCompany";
-import { getDataDeal } from "@/service/funtionsTools/deals/getDataDeal";
-import { updateDeal } from "@/service/funtionsTools/deals/handleDeal/updateDeal";
+// import { getStage } from "@/service/funtionsTools/deals/getStage";
+// import { dealContactAssociation } from "@/service/funtionsTools/deals/association/dealContactAssociation";
+// import { getOwners } from "@/service/funtionsTools/owner/getOwners";
+// import { createActivityNotes } from "@/service/funtionsTools/deals/activityDeal/createActivityNotes";
+// import { getDataCompany } from "@/service/funtionsTools/company/getDataCompany";
+// import { getDataDeal } from "@/service/funtionsTools/deals/getDataDeal";
+// import { updateDeal } from "@/service/funtionsTools/deals/handleDeal/updateDeal";
 
-import { companyContactAssociations } from "@/service/funtionsTools/company/association/companyContact";
-import { createtaskDeals } from "@/service/funtionsTools/deals/activityDeal/createTaskDeal";
+// import { companyContactAssociations } from "@/service/funtionsTools/company/association/companyContact";
+// import { createtaskDeals } from "@/service/funtionsTools/deals/activityDeal/createTaskDeal";
 
-import { Contact } from "lucide-react";
-import { handleCall } from "@/service/funtionsTools/handleCall/handleCall";
-import { handleComunications } from "@/service/funtionsTools/handleComunications/handleComunications";
-import { handleMeeting } from "@/service/funtionsTools/handleMeeting/handleMeeting";
+// import { Contact } from "lucide-react";
+// import { handleCall } from "@/service/funtionsTools/handleCall/handleCall";
+// import { handleComunications } from "@/service/funtionsTools/handleComunications/handleComunications";
+// import { handleMeeting } from "@/service/funtionsTools/handleMeeting/handleMeeting";
 
 
 export async function GET(request: Request) {
