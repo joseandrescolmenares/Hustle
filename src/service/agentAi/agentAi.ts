@@ -49,8 +49,6 @@ export const agentAi = async (
     return;
   }
 
-  // funtion contact
-
   const createTaskAndAssociateWithContact = new DynamicStructuredTool({
     name: "createTaskAndAssociateWithContact",
     description: `Creates a new task and directly associates it with a specific contact(Contacto). For the association, it is essential to provide the contact identifier (id), which must be a numerical value.
