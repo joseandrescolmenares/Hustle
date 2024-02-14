@@ -169,10 +169,7 @@ export const agentAi = async (
           "The status of the task, either COMPLETED or NOT_STARTED. Choose one based on user input."
         ),
       messageBody: z.string().describe("Body of the note or message."),
-      ownerId: z
-        .string()
-        .describe("ID of the task owner.")
-        .optional()
+      ownerId: z.string().describe("ID of the task owner.").optional(),
     }),
     func: async ({
       idCompany,
@@ -195,7 +192,7 @@ export const agentAi = async (
         type,
         priority,
         ownerId,
-        propertiesOwnerid
+        propertiesOwnerid,
       };
 
       return await createActivitytaskCompany(props);
@@ -245,7 +242,14 @@ export const agentAi = async (
         ),
     }),
     func: async ({ messageNotesBody, onwerId, dealId }) => {
-      const props = { token, messageNotesBody, onwerId, dealId, idAccount,propertiesOwnerid };
+      const props = {
+        token,
+        messageNotesBody,
+        onwerId,
+        dealId,
+        idAccount,
+        propertiesOwnerid,
+      };
       return await createActivityNotes(props);
     },
   });
