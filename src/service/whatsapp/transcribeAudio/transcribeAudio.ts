@@ -21,7 +21,7 @@ export const transcribeAudio = async (id: string) => {
     url: result?.url,
   };
 
-  const downloadUrl = await axios.post("http://localhost:3001/transcribeAudio",dataBody, { headers });
+  const downloadUrl = await axios.post("https://mongrel-creative-definitely.ngrok-free.app/transcribeAudio",dataBody, { headers });
   const resultDownload = downloadUrl.data;
 
   console.log(resultDownload,"dosss")
