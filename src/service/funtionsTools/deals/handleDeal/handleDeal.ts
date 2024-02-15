@@ -26,7 +26,7 @@ export const handleDeal = async (dataProp: DataProps) => {
   const requestBody = {
     properties: {
       amount,
-      // dealstage,
+      dealstage,
       dealname,
       closedate,
       hubspot_owner_id: propertiesOwnerid,
