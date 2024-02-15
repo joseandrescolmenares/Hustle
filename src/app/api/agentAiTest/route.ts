@@ -1,4 +1,5 @@
 // import { supabase } from "@/lib/ClientSupabase";
+import { transcribeAudio } from "@/service/whatsapp/transcribeAudio/transcribeAudio";
 import { NextResponse } from "next/server";
 // import { renewToken } from "@/service/renewToken";
 // import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
@@ -24,28 +25,26 @@ import { NextResponse } from "next/server";
 // import { handleComunications } from "@/service/funtionsTools/handleComunications/handleComunications";
 // import { handleMeeting } from "@/service/funtionsTools/handleMeeting/handleMeeting";
 
-
 export async function GET(request: Request) {
-//   const token =
-//     "CPujpq_aMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFPfTVCQY90RluqMk6cKNb4faXaQ0OkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IU4Q-43pjg7t-tFhyG75Q7m3NWvXlKA25hMVIAWgA";
+  // const token =
+  //   "CPujpq_aMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFPfTVCQY90RluqMk6cKNb4faXaQ0OkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IU4Q-43pjg7t-tFhyG75Q7m3NWvXlKA25hMVIAWgA";
 
-//   const props = {
-//     token,
-//     // idObject: "19044137052",
-//     // object: "empresa",
-//     // title:"esto es una prueba de reunio ",
-//     // textBody:"resuniom",
-//     // idAccount:"44543727",
-//     // meetingNotes:"",
-//     // timeStamp:""
-//   };
+  // const props = {
+  //   token,
+  //   // idObject: "19044137052",
+  //   // object: "empresa",
+  //   // title:"esto es una prueba de reunio ",
+  //   // textBody:"resuniom",
+  //   // idAccount:"44543727",
+  //   // meetingNotes:"",
+  //   // timeStamp:""
+  // };
+  const id = "jose";
+  const res = await transcribeAudio(id);
 
+  // const email = "joseandrescolmenares02@gmail.com"
 
-
-// const email = "joseandrescolmenares02@gmail.com"
-
-
-//   const data = await getOwners(token, email);
+  //   const data = await getOwners(token, email);
   // // // const jose = await renewTokenAgent("+541126336301")
   // // const data = await contactDealAssociation(props);
   // // const data =await  dealContactAssociation({token})
@@ -56,7 +55,7 @@ export async function GET(request: Request) {
   // const data = await getStage(token);
 
   // const  data = contactDealAssociation(props)
-  return NextResponse.json({ data: "jose" });
+  return NextResponse.json({ data: res });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"

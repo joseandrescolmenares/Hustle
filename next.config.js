@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    // experimental: {
-    //     serverActions: true,
-    //   },
-  
-}
+module.exports = {
+    // distDir: 'build',
+    // basePath: '/docs',
 
-module.exports = nextConfig
+  }
+
