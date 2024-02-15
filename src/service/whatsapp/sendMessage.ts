@@ -4,12 +4,15 @@ import { agentAi } from "../agentAi/agentAi";
 interface DataMessage {
   phoneNumber?: string;
   messageResponse?: string;
+  typeMessage?: string;
+  messageResponseAudio?: string;
 }
 
 export async function sendMessage(dataMessage: DataMessage) {
   try {
     const accessToken = process.env.WHATSAPP_TOKEN;
     const url = `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_ID_NUMBER}/messages`;
+
     const data = {
       messaging_product: "whatsapp",
       recipient_type: "individual",
@@ -17,7 +20,10 @@ export async function sendMessage(dataMessage: DataMessage) {
       type: "text",
       text: {
         preview_url: false,
-        body: dataMessage?.messageResponse,
+        body:
+          dataMessage?.typeMessage == "text"
+            ? dataMessage?.messageResponse
+            : dataMessage?.messageResponseAudio,
       },
     };
 

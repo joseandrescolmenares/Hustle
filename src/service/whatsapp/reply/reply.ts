@@ -15,44 +15,17 @@ export async function reply(dataMessage: any) {
     return;
   }
 
-  console.log(dataMessage?.entry[0]?.changes[0]?.value?.messages[0], "message");
-
-  if (dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type !== "text") {
-    const phoneNumber =
-      dataMessage?.entry[0]?.changes[0]?.value?.messages[0]?.from;
-
-    const id = dataMessage?.entry[0]?.changes[0]?.value?.messages[0].audio.id;
-
-    const urlAudio = transcribeAudio(id);
-
-    console.log(
-      dataMessage?.entry[0]?.changes[0]?.value?.messages[0].audio.id,
-      "audio"
-    );
-    // const messageResponse =
-    //   "Estamos actualmente enfocados en el desarrollo de esta nueva característica. Pronto podrás disfrutar de la capacidad de enviar mensajes de audio para enriquecer aún más tu experiencia con nuestra plataforma. Mientras tanto, agradecemos tu comprensión y te invitamos a continuar utilizando la función actual de mensajes en texto.🤘💥";
-
-    // const obj = { phoneNumber, messageResponse };
-    // return sendMessage(obj);
-    return;
-  }
-
   const phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
-  const messageBody =
-    dataMessage.entry[0].changes[0].value.messages[0].text.body;
 
   if (!(await validateNumber(phoneNumber))?.validate.status) {
     const message = await validateNumber(phoneNumber);
     const response = {
       phoneNumber,
       messageResponse: message?.validate?.message,
+      type: "text",
     };
     return sendMessage(response);
   }
-
-  let messageResponse = "¡Lo tengo! Procesando...";
-  const obj2 = { messageResponse, phoneNumber };
-  sendMessage(obj2);
 
   const { data: dataEmail, error } = await supabaseClient
     .from("users")
@@ -62,13 +35,57 @@ export async function reply(dataMessage: any) {
   if (dataEmail == null) return;
 
   const email = dataEmail[0]?.emailCrm;
+
+  if (dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type == "audio") {
+    let messageResponseAudio = "¡Lo tengo! Procesando... 🎧🎧";
+    const messageAudio = {
+      messageResponseAudio,
+      phoneNumber,
+      typeMessage: "audio",
+    };
+    sendMessage(messageAudio);
+
+    const id = dataMessage?.entry[0]?.changes[0]?.value?.messages[0].audio.id;
+
+    const transcribedText: string | undefined = await transcribeAudio(id);
+
+    messageResponseAudio = `🎧 Audio transcrito:
+  ${transcribedText}`;
+    const messageResponseTranscribed = {
+      messageResponseAudio,
+      phoneNumber,
+      typeMessage: "audio",
+    };
+    sendMessage(messageResponseTranscribed);
+
+    const responseBotWhatsappAudio = await agentAi(
+      transcribedText,
+      phoneNumber,
+      email
+    );
+    messageResponseAudio = responseBotWhatsappAudio?.output;
+    console.log(transcribedText, "transcribedText");
+    const messageResponseAudioAgent = {
+      messageResponseAudio,
+      phoneNumber,
+      typeMessage: "audio",
+    };
+    sendMessage(messageResponseAudioAgent);
+    return;
+  }
+  const messageBody =
+    dataMessage?.entry[0]?.changes[0]?.value.messages[0]?.text?.body;
+  let messageResponse = "¡Lo tengo! Procesando...";
+  const obj2 = { messageResponse, phoneNumber, typeMessage: "text" };
+  sendMessage(obj2);
+
   console.log(email, email);
   const responseBotWhatsapp = await agentAi(messageBody, phoneNumber, email);
   messageResponse = responseBotWhatsapp?.output;
 
   console.log("llegue hasta abajo en reply");
 
-  const response = { phoneNumber, messageResponse };
+  const response = { phoneNumber, messageResponse, typeMessage: "text" };
   sendMessage(response);
 
   return;

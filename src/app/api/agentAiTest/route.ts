@@ -39,8 +39,8 @@ export async function GET(request: Request) {
   //   // meetingNotes:"",
   //   // timeStamp:""
   // };
-  const id = "jose";
-  const res = await transcribeAudio(id);
+  // const id = "jose";
+  // const res = await transcribeAudio(id);
 
   // const email = "joseandrescolmenares02@gmail.com"
 
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
   // const data = await getStage(token);
 
   // const  data = contactDealAssociation(props)
-  return NextResponse.json({ data: res });
+  return NextResponse.json({ data: "jose" });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"

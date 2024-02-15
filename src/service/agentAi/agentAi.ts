@@ -34,7 +34,7 @@ import { descriptionHandleMeeting } from "../funtionsTools/handleMeeting/descrip
 import { getOwners } from "../funtionsTools/owner/getOwners";
 
 export const agentAi = async (
-  message: string,
+  message: string | undefined,
   phoneNumber: string,
   email: string
 ) => {
