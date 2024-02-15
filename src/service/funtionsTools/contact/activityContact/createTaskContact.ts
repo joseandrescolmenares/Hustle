@@ -11,7 +11,7 @@ interface Props {
   priority?: string;
   type?: string;
   contactId?: number;
-  propertiesOwnerid?: Promise<string>
+  propertiesOwnerid?: Promise<string>;
 }
 export const createActivitytaskContact = async (props: Props) => {
   const {
@@ -25,7 +25,7 @@ export const createActivitytaskContact = async (props: Props) => {
     type,
     priority,
     onwerId,
-    propertiesOwnerid
+    propertiesOwnerid,
   } = props;
   const apiUrl = "https://api.hubapi.com/crm/v3/objects/tasks";
 
