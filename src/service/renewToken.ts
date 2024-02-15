@@ -33,7 +33,7 @@ export async function renewToken(refresh_token: string, phoneNumber: string) {
     return response?.data.access_token;
   } catch (error) {
     console.error("Error al renovar el token de acceso:", error);
-    const props = { phoneNumber, messageResponse: "Hubo un error  relacionado a la cuenta de Hubspot por favor comunicarse con el equipo de meethustle.io" };
+    const props = { phoneNumber, messageResponse: "Hubo un error  relacionado a la cuenta de Hubspot por favor comunicarse con el equipo de meethustle.io", typeMessage: "text" };
     sendMessage(props);
     return "Hubo un error al renovar el token de acceso";
   }

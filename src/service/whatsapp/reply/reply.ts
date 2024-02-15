@@ -22,11 +22,10 @@ export async function reply(dataMessage: any) {
     const response = {
       phoneNumber,
       messageResponse: message?.validate?.message,
-      type: "text",
+      typeMessage: "text",
     };
     return sendMessage(response);
   }
-
   const { data: dataEmail, error } = await supabaseClient
     .from("users")
     .select("emailCrm")

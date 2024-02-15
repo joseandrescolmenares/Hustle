@@ -32,6 +32,7 @@ import { descriptionHandleContact } from "../funtionsTools/contact/handleContact
 import { describeHandleComunications } from "../funtionsTools/handleComunications/describeHandleComunications";
 import { descriptionHandleMeeting } from "../funtionsTools/handleMeeting/descriptionHandleMeeting";
 import { getOwners } from "../funtionsTools/owner/getOwners";
+import { descriptionGetOwnerData } from "../funtionsTools/owner/describeHandleOwner";
 
 export const agentAi = async (
   message: string | undefined,
@@ -226,12 +227,12 @@ export const agentAi = async (
     schema: z.object({
       onwerId: z
         .string()
-        .describe("Identifier of the owner associated with the note.")
+        .describe("Owner ID associated with the note. You can obtain it from getOwnerData.")
         .optional()
         .default(""),
       messageNotesBody: z
         .string()
-        .describe("Body of the note or message. ")
+        .describe("Body of the note or message.")
         .default("esto es una nota"),
       dealId: z
         .string()
@@ -262,6 +263,8 @@ export const agentAi = async (
       return await getStage(validateDataAccount?.token);
     },
   });
+
+  const getOwnerData = descriptionGetOwnerData(propsCredential)
 
   const getDealInfoByName = new DynamicStructuredTool({
     name: "getDealInfoByName",
@@ -305,11 +308,12 @@ export const agentAi = async (
     createTaskAndAssociateWithContact,
     registerMessageAndAssociateWithObjects,
     manageMeetingRecord,
+    getOwnerData
   ];
 
   const llm = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: "gpt-3.5-turbo-1106",
+    modelName: "gpt-3.5-turbo-0125",
     temperature: 0,
   });
 

@@ -26,14 +26,17 @@ export const renewTokenAgent = async (phoneNumber: string) => {
   const { refresh_token }: any = id_integrations || {};
   console.log(refresh_token, "token_refresh");
 
-
   if (!refresh_token || !hubspotAccount) {
-    const props = { phoneNumber, messageResponse: "Hubo un error  relacionado a la cuenta de Hubspot por favor comunicarse con el equipo de meethustle.io" };
+    const props = {
+      phoneNumber,
+      messageResponse:
+        "Hubo un error  relacionado a la cuenta de Hubspot por favor comunicarse con el equipo de meethustle.io",
+      typeMessage: "text",
+    };
     return sendMessage(props);
-
   }
 
-  const token = await renewToken(refresh_token,phoneNumber);
+  const token = await renewToken(refresh_token, phoneNumber);
 
   return { token, idAccount: hubspotAccount };
 };

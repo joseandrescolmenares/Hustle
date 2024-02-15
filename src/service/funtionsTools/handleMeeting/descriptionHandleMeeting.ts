@@ -6,7 +6,7 @@ import { handleMeeting } from "./handleMeeting";
 export const descriptionHandleMeeting = ({
   token,
   idAccount,
-  propertiesOwnerid 
+  propertiesOwnerid,
 }: PropsCredential) => {
   return new DynamicStructuredTool({
     name: "manageMeetingRecord",
@@ -41,7 +41,12 @@ export const descriptionHandleMeeting = ({
         .describe(
           "The internal notes you take for your team during a meeting that are not included in the attendee meeting description"
         ),
-        ownerId: z.string().describe("").optional()
+      ownerId: z
+        .string()
+        .describe(
+          "Owner ID associated with the meeting record. You can obtain it from getOwnerData."
+        )
+        .optional(),
     }),
     func: async ({
       // callDuration,
@@ -56,7 +61,7 @@ export const descriptionHandleMeeting = ({
       idObject,
       timeStamp,
       meetingNotes,
-      ownerId
+      ownerId,
     }) => {
       const props = {
         token,
@@ -72,7 +77,7 @@ export const descriptionHandleMeeting = ({
         // callStatus,
         // callRecordingUrl,
         // callToNumber
-        propertiesOwnerid ,
+        propertiesOwnerid,
         title,
         meetingId,
       };

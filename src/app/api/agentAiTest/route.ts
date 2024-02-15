@@ -1,4 +1,6 @@
 // import { supabase } from "@/lib/ClientSupabase";
+
+import { handleOwners } from "@/service/funtionsTools/owner/handleOwner";
 import { transcribeAudio } from "@/service/whatsapp/transcribeAudio/transcribeAudio";
 import { NextResponse } from "next/server";
 // import { renewToken } from "@/service/renewToken";
@@ -27,7 +29,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   // const token =
-  //   "CPujpq_aMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFPfTVCQY90RluqMk6cKNb4faXaQ0OkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IU4Q-43pjg7t-tFhyG75Q7m3NWvXlKA25hMVIAWgA";
+  //   "CKahru_aMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFGC_eS41XcnJzWWdo1Adi8WMu0caOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUAMdJE4U4SH0ihNw80kg2-vrJ0xpKA25hMVIAWgA";
 
   // const props = {
   //   token,
@@ -53,7 +55,7 @@ export async function GET(request: Request) {
   // // const data = await createNewDeals(dataProp);
   // const data = await handleCall(props);
   // const data = await getStage(token);
-
+// const data = await handleOwners(token)
   // const  data = contactDealAssociation(props)
   return NextResponse.json({ data: "jose" });
 }

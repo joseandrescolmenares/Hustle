@@ -5,7 +5,6 @@ import { sendMessage } from "@/service/whatsapp/sendMessage";
 import { agentAi } from "@/service/agentAi/agentAi";
 import { reply } from "@/service/whatsapp/reply/reply";
 
-
 export async function GET(request: Request) {
   const verificationToken = process.env.WHATSAPP_VERIFICATION_TOKEN;
   const { searchParams } = new URL(request.url);
@@ -17,7 +16,7 @@ export async function GET(request: Request) {
     return new Response(challenge, { status: 200 });
   }
 
-  return new Response("bad toke400");
+  return new Response("bad token 400");
 }
 
 export async function POST(request: Request) {
@@ -31,5 +30,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ status: 500 });
   }
 }
-
-

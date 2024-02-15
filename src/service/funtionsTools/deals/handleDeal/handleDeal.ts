@@ -45,7 +45,7 @@ export const handleDeal = async (dataProp: DataProps) => {
     const data = await response.json();
   
 
-    return `El Negocio  se ha creado correctamente. Puede ver la información [aquí](https://app.hubspot.com/contacts/${idAccount}/deal/${data.id}).
+    return `Response: El Negocio  se ha creado correctamente. Puede ver la información [aquí](https://app.hubspot.com/contacts/${idAccount}/deal/${data.id}).
     `;
   } catch (error: any) {
     return "The function encountered an error and couldn't create the new deal. Please try again later. We apologize for the inconvenience.";
