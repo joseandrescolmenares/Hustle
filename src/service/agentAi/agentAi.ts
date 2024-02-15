@@ -313,7 +313,7 @@ export const agentAi = async (
 
   const llm = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: "gpt-3.5-turbo-0125",
+    modelName: "gpt-4-turbo-preview",
     temperature: 0,
   });
 

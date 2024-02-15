@@ -67,7 +67,7 @@ export const handleContact = async (dataProp: PropsContact) => {
 
     console.log(data);
 
-    return `Proceso completado con éxito. el  contact  ${name}  se creo correctamente.. Puede ver los detalles acá : https://app.hubspot.com/contacts/${idAccount}/contact/${data.id}.
+    return `Response: Proceso completado con éxito. el  contact  ${name}  se creo correctamente.. Puede ver los detalles acá [Link]: https://app.hubspot.com/contacts/${idAccount}/contact/${data.id}.
       `;
   } catch (error: any) {
     return "The function encountered an error and couldn't create the new deal. Please try again later. We apologize for the inconvenience.";
