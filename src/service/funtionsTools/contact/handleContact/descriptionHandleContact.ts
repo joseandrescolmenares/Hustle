@@ -54,7 +54,7 @@ export const descriptionHandleContact = ({
         .string()
         .describe(
           "Identifier of the contact owner or creator. It is the ID of the user responsible for the contact in HubSpot."
-        )
+        ).optional()
     }),
     func: async ({
       phone,

@@ -12,7 +12,7 @@ export interface PropsContact {
   lifecyclestage?: string;
   contactId?: string;
   jobtitle?: string;
-  ownerId: string;
+  ownerId?: string;
   propertiesOwnerid?:Promise<string>
 }
 
