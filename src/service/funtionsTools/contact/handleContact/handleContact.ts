@@ -49,7 +49,7 @@ export const handleContact = async (dataProp: PropsContact) => {
         website,
         lifecyclestage,
         jobtitle,
-        hubspot_owner_id: propertiesOwnerid,
+        hubspot_owner_id: ownerId ?  ownerId : propertiesOwnerid,
       },
     };
 

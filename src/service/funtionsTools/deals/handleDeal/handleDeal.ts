@@ -9,13 +9,22 @@ export interface DataProps {
   idAccount?: string;
   dealstage: string | null;
   dealId?: string;
-  propertiesOwnerid?:Promise<string>
-  ownerId?:string
+  propertiesOwnerid?: Promise<string>;
+  ownerId?: string;
 }
 
 export const handleDeal = async (dataProp: DataProps) => {
-  const { amount, dealname, closedate, token, idAccount, dealstage, dealId, propertiesOwnerid, ownerId} =
-    dataProp;
+  const {
+    amount,
+    dealname,
+    closedate,
+    token,
+    idAccount,
+    dealstage,
+    dealId,
+    propertiesOwnerid,
+    ownerId,
+  } = dataProp;
 
   if (dealId) {
     return await updateDeal(dataProp);
@@ -29,7 +38,7 @@ export const handleDeal = async (dataProp: DataProps) => {
       dealstage,
       dealname,
       closedate,
-      hubspot_owner_id: propertiesOwnerid,
+      hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
     },
   };
   try {
@@ -43,7 +52,6 @@ export const handleDeal = async (dataProp: DataProps) => {
     });
 
     const data = await response.json();
-  
 
     return `Response: El Negocio  se ha creado correctamente. Puede ver la información [aquí](https://app.hubspot.com/contacts/${idAccount}/deal/${data.id}).
     `;

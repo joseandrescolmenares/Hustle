@@ -3,7 +3,7 @@ import axios from "axios";
 interface Props {
   idAccount: string;
   token: string;
-  onwerId?: string;
+  ownerId?: string;
   messageBody: string;
   time: string;
   status: string;
@@ -24,7 +24,7 @@ export const createtaskDeals = async (props: Props) => {
     status,
     type,
     priority,
-    onwerId,
+    ownerId,
     propertiesOwnerid,
   } = props;
   const apiUrl = "https://api.hubapi.com/crm/v3/objects/tasks";
@@ -36,7 +36,7 @@ export const createtaskDeals = async (props: Props) => {
       hs_task_status: status,
       hs_task_subject: title,
       hs_task_priority: priority,
-      hubspot_owner_id: propertiesOwnerid,
+      hubspot_owner_id: ownerId?  ownerId:  propertiesOwnerid,
       hs_task_type: type,
     },
     associations: [

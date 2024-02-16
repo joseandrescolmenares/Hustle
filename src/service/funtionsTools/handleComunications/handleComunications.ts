@@ -7,12 +7,21 @@ interface PropsComunication {
   textBody: string;
   idObject: string;
   object: string;
-  propertiesOwnerid?:Promise<string>
-  ownerId?:string
+  propertiesOwnerid?: Promise<string>;
+  ownerId?: string;
 }
 
 export const handleComunications = async (props: PropsComunication) => {
-  const { token, idAccount, channelType, textBody, idObject, object,propertiesOwnerid } = props;
+  const {
+    token,
+    idAccount,
+    channelType,
+    textBody,
+    idObject,
+    object,
+    propertiesOwnerid,
+    ownerId,
+  } = props;
   const apiUrl = "https://api.hubapi.com/crm/v3/objects/communications";
 
   const objectName = object.charAt(0).toLowerCase() + object.slice(1);
@@ -38,7 +47,7 @@ export const handleComunications = async (props: PropsComunication) => {
       hs_communication_logged_from: "CRM",
       hs_communication_body: textBody,
       hs_timestamp: time,
-      hubspot_owner_id: propertiesOwnerid,
+      hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
     },
 
     associations: [

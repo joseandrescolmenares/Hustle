@@ -55,7 +55,7 @@ export const handleCall = async (props: Props) => {
       hs_timestamp: timestamp,
       hs_call_title: callTitle,
       hs_call_body: callBody,
-      hubspot_owner_id: propertiesOwnerid,
+      hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
     },
     associations: [
       {

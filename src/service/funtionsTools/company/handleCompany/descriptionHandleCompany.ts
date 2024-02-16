@@ -39,9 +39,9 @@ export const descriptionHandleCompany = ({token, idAccount,propertiesOwnerid}:Pr
           "Identifier of the company(empresa) to update. It is very important and mandatory to pass this parameter when executing the update action"
         )
         .optional(),
-        onwerId: z.string().describe("Owner ID associated with the company(empresa). This field determines the ID of the user who appears as the owner of the company.").optional()
+        ownerId: z.string().describe("Owner ID associated with the company(empresa). This field determines the ID of the user who appears as the owner of the company.").optional()
     }),
-    func: async ({ phone, name, city, industry, domain, companyId }) => {
+    func: async ({ phone, name, city, industry, domain, companyId, ownerId }) => {
       const props = {
         token,
         idAccount,
@@ -51,7 +51,8 @@ export const descriptionHandleCompany = ({token, idAccount,propertiesOwnerid}:Pr
         industry,
         domain,
         companyId,
-        propertiesOwnerid
+        propertiesOwnerid,
+        ownerId
       };
       return await handleCompany(props);
     },

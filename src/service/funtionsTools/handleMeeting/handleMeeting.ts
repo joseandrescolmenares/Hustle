@@ -53,7 +53,7 @@ export const handleMeeting = async (props: PropsMeeting) => {
   const body = {
     properties: {
       hs_timestamp: time,
-      hubspot_owner_id: propertiesOwnerid,
+      hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
       hs_meeting_title: title,
       hs_meeting_body: textBody,
       hs_internal_meeting_notes: meetingNotes,

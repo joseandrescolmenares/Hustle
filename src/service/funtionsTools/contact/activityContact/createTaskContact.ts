@@ -36,7 +36,7 @@ export const createActivitytaskContact = async (props: Props) => {
       hs_task_status: status,
       hs_task_subject: title,
       hs_task_priority: priority,
-      hubspot_owner_id: propertiesOwnerid,
+      hubspot_owner_id: onwerId ? onwerId :  propertiesOwnerid,
       hs_task_type: type,
     },
     associations: [

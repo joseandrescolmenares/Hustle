@@ -3,14 +3,14 @@ import axios from "axios";
 interface Props {
   idAccount: string;
   token: string;
-  onwerId?: string;
+  ownerId?: string;
   messageNotesBody: string;
   dealId?: string;
   propertiesOwnerid?: Promise<string>;
 }
 export const createActivityNotes = async (props: Props) => {
   const {
-    onwerId,
+    ownerId,
     token,
     messageNotesBody,
     dealId,
@@ -29,7 +29,7 @@ export const createActivityNotes = async (props: Props) => {
     properties: {
       hs_timestamp: data,
       hs_note_body: messageNotesBody,
-      hubspot_owner_id: propertiesOwnerid,
+      hubspot_owner_id:  ownerId ?  ownerId : propertiesOwnerid,
       hs_attachment_ids: "",
     },
     associations: [

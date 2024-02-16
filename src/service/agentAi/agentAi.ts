@@ -225,9 +225,11 @@ export const agentAi = async (
     description:
       "Registers or creates a new note and directly associates it with a specific deal(Negocio). Providing the deal(Negocio)'s id is essential for the association. The note may include a customizable message.",
     schema: z.object({
-      onwerId: z
+      ownerId: z
         .string()
-        .describe("Owner ID associated with the note. You can obtain it from getOwnerData.")
+        .describe(
+          "Owner ID associated with the note. You can obtain it from getOwnerData."
+        )
         .optional()
         .default(""),
       messageNotesBody: z
@@ -240,11 +242,11 @@ export const agentAi = async (
           "Identifier of the deal(Negocio) to which the note is to be associated. this property is mandatory to associate"
         ),
     }),
-    func: async ({ messageNotesBody, onwerId, dealId }) => {
+    func: async ({ messageNotesBody, ownerId, dealId }) => {
       const props = {
         token,
         messageNotesBody,
-        onwerId,
+        ownerId,
         dealId,
         idAccount,
         propertiesOwnerid,
@@ -264,7 +266,7 @@ export const agentAi = async (
     },
   });
 
-  const getOwnerData = descriptionGetOwnerData(propsCredential)
+  const getOwnerData = descriptionGetOwnerData(propsCredential);
 
   const getDealInfoByName = new DynamicStructuredTool({
     name: "getDealInfoByName",
@@ -308,7 +310,7 @@ export const agentAi = async (
     createTaskAndAssociateWithContact,
     registerMessageAndAssociateWithObjects,
     manageMeetingRecord,
-    getOwnerData
+    getOwnerData,
   ];
 
   const llm = new ChatOpenAI({
@@ -339,7 +341,7 @@ export const agentAi = async (
     agent,
     tools,
     handleParsingErrors:
-      "Please try it again, paying special attention to the values of the parameters",
+      "Please try again, paying special attention to the values of the parameters and the user input.",
   });
 
   const result = await agentExecutor.invoke({

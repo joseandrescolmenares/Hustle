@@ -57,7 +57,7 @@ export const descriptionHandleCall = ({
           "The type of object (e.g., company(empresa), deal(negocio), contact(contacto)"
         ),
 
-        ownerId: z.string().describe("").optional()
+        ownerId: z.string().describe("Owner ID associated with the call record. You can obtain it from getOwnerData").optional()
     }),
     func: async ({
       // callDuration,

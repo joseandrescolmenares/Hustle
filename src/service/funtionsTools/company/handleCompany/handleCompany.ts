@@ -10,6 +10,7 @@ export interface DataProps {
   city: string;
   companyId?: string;
   propertiesOwnerid?: Promise<string>;
+  ownerId?: string;
 }
 
 export const handleCompany = async (dataProp: DataProps) => {
@@ -23,6 +24,7 @@ export const handleCompany = async (dataProp: DataProps) => {
     city,
     companyId,
     propertiesOwnerid,
+    ownerId,
   } = dataProp;
 
   if (companyId) {
@@ -38,7 +40,7 @@ export const handleCompany = async (dataProp: DataProps) => {
       domain,
       city,
       industry,
-      hubspot_owner_id: propertiesOwnerid,
+      hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
     },
   };
   try {

@@ -5,7 +5,7 @@ import { z } from "zod";
 interface Props {
   idAccount: string;
   token: string;
-  onwerId?: string;
+  ownerId?: string;
   messageBody: string;
   time: string;
   status: string;
@@ -13,7 +13,7 @@ interface Props {
   priority: string;
   type: string;
   idCompany?: number;
-  propertiesOwnerid?: Promise<string>
+  propertiesOwnerid?: Promise<string>;
 }
 export const createActivitytaskCompany = async (props: Props) => {
   const {
@@ -26,8 +26,8 @@ export const createActivitytaskCompany = async (props: Props) => {
     status,
     type,
     priority,
-    onwerId,
-    propertiesOwnerid
+    ownerId,
+    propertiesOwnerid,
   } = props;
   const apiUrl = "https://api.hubapi.com/crm/v3/objects/tasks";
 
@@ -38,7 +38,7 @@ export const createActivitytaskCompany = async (props: Props) => {
       hs_task_status: status,
       hs_task_subject: title,
       hs_task_priority: priority,
-      hubspot_owner_id: propertiesOwnerid,
+      hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
       hs_task_type: type,
     },
     associations: [
@@ -70,4 +70,3 @@ export const createActivitytaskCompany = async (props: Props) => {
     return "Error adding note. Please try again later. We apologize for the inconvenience.";
   }
 };
-

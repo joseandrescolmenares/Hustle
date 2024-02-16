@@ -13,6 +13,8 @@ export const updateContact = async (props: PropsContact) => {
     firstname,
     lastname,
     contactId,
+    ownerId,
+    propertiesOwnerid,
   } = props;
 
   const url = `https://api.hubapi.com/crm/v3/objects/contacts/${contactId}`;
@@ -28,6 +30,7 @@ export const updateContact = async (props: PropsContact) => {
         company,
         website,
         lifecyclestage,
+        hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
       },
     },
 
