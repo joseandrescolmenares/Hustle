@@ -30,14 +30,14 @@ import { NextResponse } from "next/server";
 // import { handleMeeting } from "@/service/funtionsTools/handleMeeting/handleMeeting";
 
 export async function GET(request: Request) {
-  const token =
-    "CMqYwqvbMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFLMW2NNX4wKsVLkc9QVBXOW_tBI3OkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUKXXJbT0NjPn8kjjHHkfCKf221q1KA25hMVIAWgA";
+  // const token =
+  //   "CMqYwqvbMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFLMW2NNX4wKsVLkc9QVBXOW_tBI3OkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUKXXJbT0NjPn8kjjHHkfCKf221q1KA25hMVIAWgA";
 
-  const props = {
-    token,
-    amount:1000,
-    dealstage: null,
-    dealname:"jose properties"
+  // const props = {
+  //   token,
+  //   amount:1000,
+  //   dealstage: null,
+  //   dealname:"jose properties"
     // idObject: "19044137052",
     // object: "empresa",
     // title:"esto es una prueba de reunio ",
@@ -45,11 +45,11 @@ export async function GET(request: Request) {
     // idAccount:"44543727",
     // meetingNotes:"",
     // timeStamp:""
-  };
+  // };
   // const id = "jose";
   // const res = await transcribeAudio(id);
 
-  const deal = await handleDeal(props);
+  // const deal = await handleDeal(props);
 
   // const email = "joseandrescolmenares02@gmail.com"
 
@@ -64,7 +64,7 @@ export async function GET(request: Request) {
   // const data = await getStage(token);
   // const data = await handleOwners(token)
   // const  data = contactDealAssociation(props)
-  return NextResponse.json({ data: deal });
+  return NextResponse.json({ data: "jose" });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"
