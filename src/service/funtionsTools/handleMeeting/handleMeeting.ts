@@ -10,7 +10,7 @@ interface PropsMeeting {
   object: string;
   timeStamp: string;
   meetingId?: string;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
   ownerId?: string;
 }
 

@@ -11,7 +11,7 @@ interface Props {
   priority: string;
   type: string;
   idDeal: number;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
 }
 export const createtaskDeals = async (props: Props) => {
   const {

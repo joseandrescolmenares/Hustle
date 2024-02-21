@@ -5,7 +5,7 @@ import { handleDeal } from "./handleDeal";
 export interface PropsCredential {
   token: string;
   idAccount: string;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
 }
 
 export const descriptionHandleDeal = ({

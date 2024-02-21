@@ -37,6 +37,7 @@ export default function Onboarding() {
     phone: "",
     organizationSize: "",
     crmName: "",
+    email: "",
   });
 
   console.log(inputTeam);
@@ -57,6 +58,7 @@ export default function Onboarding() {
         phone: inputTeam.phone.trim(),
         organizationSize: inputTeam.organizationSize.trim(),
         crmName: inputTeam.crmName.trim(),
+        email: inputTeam.email.trim(),
       };
       setLoandingData(true);
       const data = await axios.post("/api/supabase/createTeam", cleanedData);
@@ -126,6 +128,17 @@ export default function Onboarding() {
                       handleInputChange("firstname", e.target.value)
                     }
                   />
+                    <InputField
+                    type="email"
+                    id="email"
+                    label="email using CRM"
+                    placeholder="max@meethustle.io"
+                    value={inputTeam.email}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleInputChange("email", e.target.value)
+                    }
+                  />
+                
                   <InputField
                     type="text"
                     id="phone"

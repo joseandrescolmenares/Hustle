@@ -6,7 +6,7 @@ interface Props {
   ownerId?: string;
   messageNotesBody: string;
   dealId?: string;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
 }
 export const createActivityNotes = async (props: Props) => {
   const {

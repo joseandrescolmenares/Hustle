@@ -13,7 +13,7 @@ interface Props {
   idAccount: string;
   object: string;
   objectId: string;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
   ownerId?: string;
 }
 export const handleCall = async (props: Props) => {

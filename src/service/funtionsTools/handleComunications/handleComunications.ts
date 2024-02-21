@@ -7,7 +7,7 @@ interface PropsComunication {
   textBody: string;
   idObject: string;
   object: string;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
   ownerId?: string;
 }
 

@@ -9,7 +9,7 @@ export interface DataProps {
   idAccount?: string;
   dealstage: string | null;
   dealId?: string;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
   ownerId?: string;
   pais?: string;
 }

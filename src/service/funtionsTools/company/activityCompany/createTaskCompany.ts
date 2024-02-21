@@ -13,7 +13,7 @@ interface Props {
   priority: string;
   type: string;
   idCompany?: number;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
 }
 export const createActivitytaskCompany = async (props: Props) => {
   const {

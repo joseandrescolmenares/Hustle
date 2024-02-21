@@ -19,6 +19,9 @@ export const getOwners = async (token: string, email: string) => {
   }
 
   const { id } = findByEmail(data?.results, email);
+  if (!id) {
+    return "";
+  }
 
-  return  id
+  return id;
 };

@@ -11,7 +11,7 @@ interface Props {
   priority?: string;
   type?: string;
   contactId?: number;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
 }
 export const createActivitytaskContact = async (props: Props) => {
   const {

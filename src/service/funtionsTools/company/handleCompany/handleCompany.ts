@@ -9,7 +9,7 @@ export interface DataProps {
   domain: string;
   city: string;
   companyId?: string;
-  propertiesOwnerid?: Promise<string>;
+  propertiesOwnerid?: Promise<string> | string;
   ownerId?: string;
 }
 

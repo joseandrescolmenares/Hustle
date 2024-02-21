@@ -13,7 +13,7 @@ export interface PropsContact {
   contactId?: string;
   jobtitle?: string;
   ownerId?: string;
-  propertiesOwnerid?:Promise<string>
+  propertiesOwnerid?:Promise<string> | string
 }
 
 export const handleContact = async (dataProp: PropsContact) => {

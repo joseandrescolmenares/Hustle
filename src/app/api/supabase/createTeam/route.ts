@@ -5,8 +5,14 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 export async function POST(request: Request) {
   try {
-    const { nameCompany, firstname, phone, organizationSize, crmName } =
-      await request.json();
+    const {
+      nameCompany,
+      firstname,
+      phone,
+      organizationSize,
+      crmName,
+      email,
+    } = await request.json();
     const cookieStore = cookies();
     const token = cookieStore.get("access_token")?.value;
     const userId = cookieStore.get("userId")?.value;
@@ -57,6 +63,7 @@ export async function POST(request: Request) {
           isOnboarding: true,
           correo: user.email,
           phoneNumber: phone,
+          emailCrm: email,
         },
       ]);
 
