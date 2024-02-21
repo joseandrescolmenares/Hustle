@@ -11,6 +11,7 @@ export interface DataProps {
   dealId?: string;
   propertiesOwnerid?: Promise<string>;
   ownerId?: string;
+  pais?: string;
 }
 
 export const handleDeal = async (dataProp: DataProps) => {
@@ -24,6 +25,7 @@ export const handleDeal = async (dataProp: DataProps) => {
     dealId,
     propertiesOwnerid,
     ownerId,
+    pais,
   } = dataProp;
 
   if (dealId) {
@@ -39,6 +41,7 @@ export const handleDeal = async (dataProp: DataProps) => {
       dealname,
       closedate,
       hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
+      pais: "Colombia",
     },
   };
   try {

@@ -1,6 +1,8 @@
 // import { supabase } from "@/lib/ClientSupabase";
 
+import { handleDeal } from "@/service/funtionsTools/deals/handleDeal/handleDeal";
 import { handleOwners } from "@/service/funtionsTools/owner/handleOwner";
+import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 import { transcribeAudio } from "@/service/whatsapp/transcribeAudio/transcribeAudio";
 import { NextResponse } from "next/server";
 // import { renewToken } from "@/service/renewToken";
@@ -28,21 +30,26 @@ import { NextResponse } from "next/server";
 // import { handleMeeting } from "@/service/funtionsTools/handleMeeting/handleMeeting";
 
 export async function GET(request: Request) {
-  // const token =
-  //   "CKahru_aMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFGC_eS41XcnJzWWdo1Adi8WMu0caOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUAMdJE4U4SH0ihNw80kg2-vrJ0xpKA25hMVIAWgA";
+  const token =
+    "CMqYwqvbMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFLMW2NNX4wKsVLkc9QVBXOW_tBI3OkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUKXXJbT0NjPn8kjjHHkfCKf221q1KA25hMVIAWgA";
 
-  // const props = {
-  //   token,
-  //   // idObject: "19044137052",
-  //   // object: "empresa",
-  //   // title:"esto es una prueba de reunio ",
-  //   // textBody:"resuniom",
-  //   // idAccount:"44543727",
-  //   // meetingNotes:"",
-  //   // timeStamp:""
-  // };
+  const props = {
+    token,
+    amount:1000,
+    dealstage: null,
+    dealname:"jose properties"
+    // idObject: "19044137052",
+    // object: "empresa",
+    // title:"esto es una prueba de reunio ",
+    // textBody:"resuniom",
+    // idAccount:"44543727",
+    // meetingNotes:"",
+    // timeStamp:""
+  };
   // const id = "jose";
   // const res = await transcribeAudio(id);
+
+  const deal = await handleDeal(props);
 
   // const email = "joseandrescolmenares02@gmail.com"
 
@@ -55,9 +62,9 @@ export async function GET(request: Request) {
   // // const data = await createNewDeals(dataProp);
   // const data = await handleCall(props);
   // const data = await getStage(token);
-// const data = await handleOwners(token)
+  // const data = await handleOwners(token)
   // const  data = contactDealAssociation(props)
-  return NextResponse.json({ data: "jose" });
+  return NextResponse.json({ data: deal });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"

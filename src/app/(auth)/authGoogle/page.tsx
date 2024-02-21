@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { supabase } from "@/lib/ClientSupabase";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
+
 
 export default function AuthGoogle() {
   const router = useRouter();

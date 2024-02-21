@@ -313,6 +313,17 @@ export const agentAi = async (
     getOwnerData,
   ];
 
+  // const models = new ChatOpenAI({
+  //   openAIApiKey: process.env.OPENAI_API_KEY,
+  //   modelName: "gpt-4-turbo-preview",
+  //   temperature: 0,
+  // });
+
+  // const prePromptTemplate = await pull<ChatPromptTemplate>(
+  //   "hustle/openai-tools-agent"
+  // );
+
+
   const llm = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
     modelName: "gpt-4-turbo-preview",
