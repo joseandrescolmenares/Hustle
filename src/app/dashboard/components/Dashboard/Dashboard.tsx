@@ -1,4 +1,5 @@
 import Image from "next/image";
+import qr from "../../../../../public/qr.jpeg"
 
 interface DashboardProps {
   crm: string;
@@ -16,7 +17,7 @@ export default async function Dashboard({ crm }: DashboardProps) {
         <div className="flex gap-5">
           <button className="  p-3 bg-customPurple rounded-lg  relative">
             <Image
-            className=" absolute right-1 bottom-1 "
+              className=" absolute right-1 bottom-1 "
               src="/verified.png"
               width={25}
               height={35}
@@ -97,6 +98,14 @@ export default async function Dashboard({ crm }: DashboardProps) {
               ></path>
             </svg>
           </button>
+        </div>
+        <div>
+          <Image width={300} height={300} src={qr} alt="qr"/>
+        </div>
+        <div className=" ml-7">
+          <a className=" p-5 bg-customPurple text-cyan-50  py-2 px-5 rounded h-6 w-8" href="https://wa.link/gur22i">
+            Comienza  ahora!
+          </a>
         </div>
       </div>
       <div className="flex items-start">

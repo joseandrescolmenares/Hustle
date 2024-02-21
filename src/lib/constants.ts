@@ -20,5 +20,5 @@ export const cards = [
     link: "",
     underConstruction: true,
   },
-  { name: "otros", image: "/otro.png", link: "", underConstruction: true },
+  // { name: "otros", image: "/otro.png", link: "", underConstruction: true },
 ];
