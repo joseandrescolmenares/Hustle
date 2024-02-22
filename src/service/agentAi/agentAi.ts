@@ -221,9 +221,9 @@ export const agentAi = async (
   });
 
   const addNoteWithDeal = new DynamicStructuredTool({
-    name: "addNoteWithDeal",
+    name:"registerNoteForDeal",
     description:
-      "Registers or creates a new note and directly associates it with a specific deal(Negocio). Providing the deal(Negocio)'s id is essential for the association. The note may include a customizable message.",
+      "Registers and creates a new note and directly associates it with a specific deal(Negocio). Providing the deal(Negocio)'s id is essential for the association. The note may include a customizable message.",
     schema: z.object({
       ownerId: z
         .string()
