@@ -4,8 +4,9 @@ import { Button } from "@/app/components/ui/Button";
 import { InputField } from "@/app/onboarding/components/InputField";
 import { supabase } from "@/lib/ClientSupabase";
 import Cookies from "js-cookie";
-import { handleAuthSignup } from "@/app/(auth)/sign-up/page";
+
 import { toast } from "sonner";
+import { handleAuthSignup } from "@/app/(auth)/sign-up/handleSignUp";
 
 const InviteUser = ({ setUsers,users }: any) => {
   const team = Cookies.get("team");
