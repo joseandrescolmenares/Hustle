@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { handleAuthSignup } from "@/app/(auth)/sign-up/page";
 import { toast } from "sonner";
 
-const InviteUser = ({ setUsers }: any) => {
+const InviteUser = ({ setUsers,users }: any) => {
   const team = Cookies.get("team");
   const [input, setInput] = useState({
     email: "",
@@ -22,6 +22,7 @@ const InviteUser = ({ setUsers }: any) => {
     try {
       const password = input?.phoneNumber;
       const registreUser = await handleAuthSignup(input?.email, password);
+      console.log(registreUser, "vovute");
       if (registreUser?.data?.user?.id) {
         const { data: dataUser } = await supabase
           .from("users")
@@ -35,16 +36,20 @@ const InviteUser = ({ setUsers }: any) => {
               phoneNumber: input?.phoneNumber,
               emailCrm: input?.email,
             },
-          ])
-
-        console.log(dataUser, "invute");
+          ]).select()
+          if(dataUser == null) return
+          console.log(dataUser[0], "invute");
+          setUsers([...users, dataUser[0]])
+ 
       } else {
         toast.error("Error inviting user");
       }
+      
     } catch (error) {
       console.error("Error inviting user:", error);
       toast.error("Error inviting user");
     }
+    
   };
 
   return (

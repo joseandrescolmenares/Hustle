@@ -42,11 +42,21 @@ export default function SheetSide() {
 
     setUsers(dataUsers);
   };
-  console.log(users,"user")
+  console.log(users, "user");
 
   useEffect(() => {
     getUser();
   }, []);
+
+  const creatoUser = users?.find(
+    (userGuest: { rol: string }): any => userGuest.rol == "creator"
+  )?.correo;
+
+  const  guesttUser =users?.find(
+    (userGuest: { rol: string }): any => userGuest.rol == "guest"
+  )?.correo;
+  
+
   return (
     <div>
       <Sheet onOpenChange={() => setInvite(false)}>
@@ -67,13 +77,8 @@ export default function SheetSide() {
                 </p>
               </div>
               <p className="text-sm font-medium leading-none p-2 bg-slate-200/50 rounded-sm">
-              {" "}
-                {
-                  users.find(
-                    (userGuest: { rol: string }): any =>
-                      userGuest.rol == "creator"
-                  )?.correo
-                }
+                {" "}
+                {creatoUser}
               </p>
               <div className="flex gap-2">
                 {/* <Switch checked={true} /> */}
@@ -81,7 +86,7 @@ export default function SheetSide() {
               </div>
             </div>
           </div>
-          <div className="space-y-8 mt-8">
+          <div className="space-y-8 mt-8 overflow-scroll h-72">
             <Label htmlFor="name" className="text-right">
               Team
             </Label>
@@ -115,10 +120,10 @@ export default function SheetSide() {
                   </div>
                 </div>
               ))}
-           <p>no  hay tiene invitado</p>
+            {/* {guesttUser ? <p>No guest</p> : null} */}
           </div>
           <div className=" mt-9">
-            {invite ? <InviteUser setUsers={setUsers} /> : null}
+            {invite ? <InviteUser setUsers={setUsers} users={users} /> : null}
             <Button onClick={() => setInvite(true)}>invite </Button>
           </div>
         </SheetContent>
