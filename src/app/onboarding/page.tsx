@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { InputField } from "./components/InputField";
+import { SelectGroup, SelectLabel } from "@radix-ui/react-select";
 
 export default function Onboarding() {
   const router = useRouter();
@@ -38,6 +39,7 @@ export default function Onboarding() {
     organizationSize: "",
     crmName: "",
     email: "",
+    codeNumber: "",
   });
 
   console.log(inputTeam);
@@ -46,8 +48,8 @@ export default function Onboarding() {
     setInputTeam({ ...inputTeam, [field]: value });
   };
 
-  const handlePlanChange = (value: string) => {
-    handleInputChange("statusAccount", value);
+  const handleNumberChange = (value: string) => {
+    handleInputChange("codeNumber", value);
   };
 
   const handleCreateTeam = async () => {
@@ -59,6 +61,7 @@ export default function Onboarding() {
         organizationSize: inputTeam.organizationSize.trim(),
         crmName: inputTeam.crmName.trim(),
         email: inputTeam.email.trim(),
+        codeNumber: inputTeam.codeNumber.trim(),
       };
       setLoandingData(true);
       const data = await axios.post("/api/supabase/createTeam", cleanedData);
@@ -128,7 +131,7 @@ export default function Onboarding() {
                       handleInputChange("firstname", e.target.value)
                     }
                   />
-                    <InputField
+                  <InputField
                     type="email"
                     id="email"
                     label="email using CRM"
@@ -138,17 +141,40 @@ export default function Onboarding() {
                       handleInputChange("email", e.target.value)
                     }
                   />
-                
-                  <InputField
-                    type="text"
-                    id="phone"
-                    label="Phone number"
-                    placeholder="+54 911 190 230 01"
-                    value={inputTeam.phone}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      handleInputChange("phone", e.target.value)
-                    }
-                  />
+                  <div className="flex justify-start  items-center ">
+                    <div>
+                      <Label>Phone number</Label>
+                      <div className="flex items-center gap-1">
+                        <Select
+                          onValueChange={(value) => handleNumberChange(value)}
+                        >
+                          <SelectTrigger className="w-[70px] mt-2">
+                            <SelectValue placeholder="+54" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem value="521">🇲🇽(+52)</SelectItem>
+                              <SelectItem value="549">🇦🇷(+54)</SelectItem>
+                              {/* <SelectItem value="blueberry">Blueberry</SelectItem>
+                      <SelectItem value="grapes">Grapes</SelectItem>
+                      <SelectItem value="pineapple">Pineapple</SelectItem> */}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+
+                        <InputField
+                          type="text"
+                          id="phone"
+                          label=""
+                          placeholder="11 190 230 01"
+                          value={inputTeam.phone}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            handleInputChange("phone", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <InputField
                     type="text"
                     id="crmName"
@@ -170,32 +196,6 @@ export default function Onboarding() {
                     }
                   />
                 </div>
-                {/* <div className="space-y-2">
-                  <Label htmlFor="plan">Subscription plan</Label>
-                  <Select
-                    onValueChange={(value) =>
-                      setInputTeam({ ...inputTeam, statusAccount: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a plan" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="free">
-                        <span className="font-medium">Free</span> -{" "}
-                        <span className="text-muted-foreground">
-                          Trial for two weeks
-                        </span>
-                      </SelectItem>
-                      <SelectItem value="pro">
-                        <span className="font-medium">Pro</span> -{" "}
-                        <span className="text-muted-foreground">
-                          $9/month per user
-                        </span>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div> */}
               </div>
               <DialogFooter className="border-b border-gray-400 rounded-md px-4 py-2">
                 {/* <Button variant="outline">Cancel</Button> */}

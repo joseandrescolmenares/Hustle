@@ -12,12 +12,14 @@ export async function POST(request: Request) {
       organizationSize,
       crmName,
       email,
+      codeNumber
     } = await request.json();
     const cookieStore = cookies();
     const token = cookieStore.get("access_token")?.value;
     const userId = cookieStore.get("userId")?.value;
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-
+    const newValueNumber = codeNumber.replace(/\+/g, '') + phone;
+ 
     const { data: dataIntegrations, error: errorIntegrations } = await supabase
       .from("integrations")
       .insert([{ isHubspot: false, isSlack: false }])
@@ -38,7 +40,7 @@ export async function POST(request: Request) {
           id_integrations: dataIntegrations[0]?.id_integrations,
           nameCompany: nameCompany,
           firstname: firstname,
-          phone: phone,
+          phone: newValueNumber,
           organizationSize: organizationSize,
           crmName: crmName,
         },
@@ -62,7 +64,7 @@ export async function POST(request: Request) {
           rol: "creator",
           isOnboarding: true,
           correo: user.email,
-          phoneNumber: phone,
+          phoneNumber: newValueNumber,
           emailCrm: email,
         },
       ]);
