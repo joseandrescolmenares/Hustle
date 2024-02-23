@@ -35,11 +35,11 @@ export default function Onboarding() {
   const [inputTeam, setInputTeam] = React.useState({
     nameCompany: "",
     firstname: "",
-    phone: "",
+    // phone: "",
     organizationSize: "",
     crmName: "",
     email: "",
-    codeNumber: "",
+    // codeNumber: "",
   });
 
   console.log(inputTeam);
@@ -48,20 +48,20 @@ export default function Onboarding() {
     setInputTeam({ ...inputTeam, [field]: value });
   };
 
-  const handleNumberChange = (value: string) => {
-    handleInputChange("codeNumber", value);
-  };
+  // const handleNumberChange = (value: string) => {
+  //   handleInputChange("codeNumber", value);
+  // };
 
   const handleCreateTeam = async () => {
     try {
       const cleanedData = {
         nameCompany: inputTeam?.nameCompany.trim(),
         firstname: inputTeam.firstname.trim(),
-        phone: inputTeam.phone.trim(),
+        // phone: inputTeam.phone.trim(),
         organizationSize: inputTeam.organizationSize.trim(),
         crmName: inputTeam.crmName.trim(),
         email: inputTeam.email.trim(),
-        codeNumber: inputTeam.codeNumber.trim(),
+        // codeNumber: inputTeam.codeNumber.trim(),
       };
       setLoandingData(true);
       const data = await axios.post("/api/supabase/createTeam", cleanedData);
@@ -141,7 +141,7 @@ export default function Onboarding() {
                       handleInputChange("email", e.target.value)
                     }
                   />
-                  <div className="flex justify-start  items-center ">
+                  {/* <div className="flex justify-start  items-center ">
                     <div>
                       <Label>Phone number</Label>
                       <div className="flex items-center gap-1">
@@ -155,9 +155,9 @@ export default function Onboarding() {
                             <SelectGroup>
                               <SelectItem value="521">🇲🇽(+52)</SelectItem>
                               <SelectItem value="549">🇦🇷(+54)</SelectItem>
-                              {/* <SelectItem value="blueberry">Blueberry</SelectItem>
+                              <SelectItem value="blueberry">Blueberry</SelectItem>
                       <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem> */}
+                      <SelectItem value="pineapple">Pineapple</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -174,7 +174,7 @@ export default function Onboarding() {
                         />
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <InputField
                     type="text"
                     id="crmName"

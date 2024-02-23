@@ -4,6 +4,7 @@ import { validateNumber } from "@/lib/validateNumber";
 import { cookies } from "next/headers";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { transcribeAudio } from "../transcribeAudio/transcribeAudio";
+import { supabase } from "@/lib/ClientSupabase";
 
 export async function reply(dataMessage: any) {
   const cookieStore = cookies();
@@ -16,6 +17,38 @@ export async function reply(dataMessage: any) {
   }
 
   const phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
+  const messageTextStart =
+    dataMessage?.entry[0]?.changes[0]?.value.messages[0]?.text?.body;
+
+  const parts = messageTextStart.split(" ");
+  if (parts.length > 0 && parts[0] === "start/") {
+    const afterStart = parts.slice(1).join(" ");
+
+    const validatecode = async () => {
+      const { data: dataUser, error } = await supabase
+        .from("users")
+        .update({ phoneNumber: phoneNumber })
+        .eq("codeTeam", afterStart)
+        .select();
+      const user = dataUser?.[0].id_user;
+
+      if (!user) {
+        sendMessage({
+          phoneNumber,
+          typeMessage: "text",
+          messageResponse: "hubo un error con su codigo",
+        });
+        return;
+      } else {
+        return sendMessage({
+          phoneNumber,
+          typeMessage: "text",
+          messageResponse: "Welcome a Hutle Copilot",
+        });
+      }
+    };
+    return validatecode();
+  }
 
   if (!(await validateNumber(phoneNumber))?.validate.status) {
     const message = await validateNumber(phoneNumber);

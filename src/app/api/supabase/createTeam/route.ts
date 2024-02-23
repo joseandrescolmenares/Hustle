@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const token = cookieStore.get("access_token")?.value;
     const userId = cookieStore.get("userId")?.value;
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-    const newValueNumber = codeNumber.replace(/\+/g, '') + phone;
+    // const newValueNumber = codeNumber.replace(/\+/g, '') + phone;
  
     const { data: dataIntegrations, error: errorIntegrations } = await supabase
       .from("integrations")
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
           id_integrations: dataIntegrations[0]?.id_integrations,
           nameCompany: nameCompany,
           firstname: firstname,
-          phone: newValueNumber,
+          // phone: newValueNumber,
           organizationSize: organizationSize,
           crmName: crmName,
         },
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
           rol: "creator",
           isOnboarding: true,
           correo: user.email,
-          phoneNumber: newValueNumber,
+          // phoneNumber: newValueNumber,
           emailCrm: email,
         },
       ]);

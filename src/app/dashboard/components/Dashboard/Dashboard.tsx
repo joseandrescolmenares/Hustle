@@ -1,10 +1,23 @@
 import Image from "next/image";
-import qr from "../../../../../public/qr.jpeg"
-
+import qr from "../../../../../public/qr.jpeg";
+import { supabase } from "@/lib/ClientSupabase";
+import { cookies } from "next/headers";
+import React from "react";
+import ReactDOM from "react-dom";
+import QRCode from "react-qr-code";
 interface DashboardProps {
   crm: string;
 }
 export default async function Dashboard({ crm }: DashboardProps) {
+  const Cookies = cookies();
+  const userId = Cookies.get("userId")?.value;
+  let { data: user, error } = await supabase
+    .from("users")
+    .select("codeTeam")
+    .eq("id_user", userId);
+
+  const code = user?.[0]?.codeTeam;
+
   return (
     <div className="w-full flex justify-between h-screen p-10">
       <div className="flex w-full flex-col gap-10">
@@ -99,12 +112,18 @@ export default async function Dashboard({ crm }: DashboardProps) {
             </svg>
           </button>
         </div>
-        <div>
-          <Image width={300} height={300} src={qr} alt="qr"/>
-        </div>
+        <div>{/* <Image width={300} height={300} src={qr} alt="qr"/> */}</div>
+        <QRCode
+            value={`https://wa.me/+525525106749?text=start/%20${code} `}
+          />
         <div className=" ml-7">
-          <a className=" p-5 bg-customPurple text-cyan-50  py-2 px-5 rounded h-6 w-8" href="https://wa.link/gur22i">
-            Comienza  ahora!
+         
+          ,
+          <a
+            className=" p-5 bg-customPurple text-cyan-50  py-2 px-5 rounded h-6 w-8 mt-10"
+            href={`https://wa.me/+525525106749?text=start/%20${code}`}
+          >
+            Comienza ahora!
           </a>
         </div>
       </div>
