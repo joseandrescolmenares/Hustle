@@ -5,7 +5,7 @@ import { InputField } from "@/app/onboarding/components/InputField";
 import { supabase } from "@/lib/ClientSupabase";
 import Cookies from "js-cookie";
 
-import { toast } from "sonner";
+import { Toaster, toast } from 'sonner'
 import { handleAuthSignup } from "@/app/(auth)/sign-up/handleSignUp";
 
 const InviteUser = ({ setUsers,users }: any) => {
@@ -23,7 +23,7 @@ const InviteUser = ({ setUsers,users }: any) => {
     try {
       const password = input?.phoneNumber;
       const registreUser = await handleAuthSignup(input?.email, password);
-      console.log(registreUser, "vovute");
+  
       if (registreUser?.data?.user?.id) {
         const { data: dataUser } = await supabase
           .from("users")
@@ -41,6 +41,7 @@ const InviteUser = ({ setUsers,users }: any) => {
           if(dataUser == null) return
           console.log(dataUser[0], "invute");
           setUsers([...users, dataUser[0]])
+          toast.success("se envio con exito")
  
       } else {
         toast.error("Error inviting user");
@@ -55,6 +56,7 @@ const InviteUser = ({ setUsers,users }: any) => {
 
   return (
     <div className="mt-5 w-full flex flex-col justify-center items-center gap-5">
+       <Toaster  richColors  position="top-right"/>
       <div className="w-full">
         <InputField
           type="email"

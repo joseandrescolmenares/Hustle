@@ -86,7 +86,7 @@ export default function SheetSide() {
               </div>
             </div>
           </div>
-          <div className="space-y-8 mt-8 overflow-scroll h-72">
+          <div className="space-y-8 mt-8 overflow-scroll max-h-72">
             <Label htmlFor="name" className="text-right">
               Team
             </Label>
@@ -120,9 +120,9 @@ export default function SheetSide() {
                   </div>
                 </div>
               ))}
-            {/* {guesttUser ? <p>No guest</p> : null} */}
+            {!guesttUser ? <p>No guest</p> : null}
           </div>
-          <div className=" mt-9">
+          <div className="mt-9">
             {invite ? <InviteUser setUsers={setUsers} users={users} /> : null}
             <Button onClick={() => setInvite(true)}>invite </Button>
           </div>
