@@ -26,13 +26,13 @@ const dashboard = async () => {
   const isHubspot: any = integrations[0]?.isHubspot;
 
 
-  // if (!isHubspot) {
-  //   return (
-  //     <div className=" w-full flex  justify-center items-center ml-7 flex-col">
-  //       <TableItem />
-  //     </div>
-  //   );
-  // }
+  if (!isHubspot) {
+    return (
+      <div className=" w-full flex  justify-center items-center ml-7 flex-col">
+        <TableItem />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex  justify-center items-center h-screen">
