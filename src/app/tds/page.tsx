@@ -1,6 +1,6 @@
 import React from "react";
 
-export const page = () => {
+ const tds = () => {
   return (
     <div>
       <h1 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
@@ -44,3 +44,5 @@ export const page = () => {
     </div>
   );
 };
+
+export default tds
