@@ -90,7 +90,7 @@ const Privacy = () => {
       cambios. Los cambios a esta Política de privacidad son efectivos cuando se
       publican en esta página. Contacte con nosotros Si tiene alguna pregunta
       sobre esta Política de privacidad, puede ponerse en contacto con nosotros:
-      Por correo electrónico: joseandrescolmenares02@gmail.com
+      Por correo electrónico: jose@meethustle.io
       </p>
     </div>
   );
