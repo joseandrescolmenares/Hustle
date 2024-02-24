@@ -3,8 +3,10 @@ import React from "react";
 
 const Privacy = () => {
   return (
-    <div>
-      Política de Privacidad de Meethustle.io Última actualización: 21/02/20124
+    <div className=" flex justify-center items-center flex-col m-6 ">
+      <h1 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0"> Política de Privacidad de Meethustle.io</h1>
+      <p className=" w-2/5 mt-3 leading-10 [&:not(:first-child)]:mt-6">
+      Última actualización: 21/02/20124
       Meethustle.io (`nosotros``, `nuestro`` o `nuestros``) opera el sitio web
       Meethustle.io (el `Servicio``). Esta página le informa sobre nuestras
       políticas con respecto a la recopilación, uso y divulgación de información
@@ -89,6 +91,7 @@ const Privacy = () => {
       publican en esta página. Contacte con nosotros Si tiene alguna pregunta
       sobre esta Política de privacidad, puede ponerse en contacto con nosotros:
       Por correo electrónico: joseandrescolmenares02@gmail.com
+      </p>
     </div>
   );
 };

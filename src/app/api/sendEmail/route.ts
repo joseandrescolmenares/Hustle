@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   console.log(email, urlInvite ,"send")
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Acme <max@meethustle.io>',
+      from: 'max@meethustle.io',
       to: [email],
       subject: "invitacion a usar Hustle Copilot",
       react: EmailTemplate({
