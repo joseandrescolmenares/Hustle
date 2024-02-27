@@ -3,7 +3,7 @@ import axios from "axios";
 interface Props {
   token: string;
   callTitle: string;
-  callBody: string;
+  callBody?: string;
   // callDuration: string;
   // callFromNumber: string;
   // callToNumber: string;

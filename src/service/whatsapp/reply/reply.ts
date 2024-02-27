@@ -43,7 +43,11 @@ export async function reply(dataMessage: any) {
         return sendMessage({
           phoneNumber,
           typeMessage: "text",
-          messageResponse: "Welcome a Hutle Copilot",
+          messageResponse: `Hubspot ✔️
+          Try with voice 🎙️ or text:
+          "Create a new contact John Smith and link to a new company IBM."
+          "Log a call with John Smith for today at 8 AM and add a note: They are waiting for the proposal."
+          "Add a task to the John Smith to send proposal by tomorrow 2 PM.`,
         });
       }
     };
@@ -79,7 +83,7 @@ export async function reply(dataMessage: any) {
 
     const id = dataMessage?.entry[0]?.changes[0]?.value?.messages[0].audio.id;
 
-    const transcribedText: string | undefined = await transcribeAudio(id);
+    const transcribedText: string = await transcribeAudio(id);
 
     messageResponseAudio = `🎧 Audio transcrito:
   ${transcribedText}`;

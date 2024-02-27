@@ -1,5 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
-import type { ChatPromptTemplate } from "@langchain/core/prompts";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
 import {
   createOpenAIToolsAgent,
   AgentExecutor,
@@ -13,6 +13,7 @@ import {
 import { renewTokenAgent } from "../funtionsTools/renewTokenAgent";
 import { string, z, Schema } from "zod";
 import { getDataCompany } from "../funtionsTools/company/getDataCompany";
+import { StringOutputParser } from "@langchain/core/output_parsers";
 
 import { getSearchContacts } from "../funtionsTools/contact/getSearchContact";
 import { getStage } from "../funtionsTools/deals/getStage";
@@ -33,9 +34,14 @@ import { describeHandleComunications } from "../funtionsTools/handleComunication
 import { descriptionHandleMeeting } from "../funtionsTools/handleMeeting/descriptionHandleMeeting";
 import { getOwners } from "../funtionsTools/owner/getOwners";
 import { descriptionGetOwnerData } from "../funtionsTools/owner/describeHandleOwner";
+import { ChatMessageHistory } from "@langchain/community/stores/message/in_memory";
+import {
+  RunnableConfig,
+  RunnableWithMessageHistory,
+} from "@langchain/core/runnables";
 
 export const agentAi = async (
-  message: string | undefined,
+  message: string,
   phoneNumber: string,
   email: string
 ) => {
@@ -221,7 +227,7 @@ export const agentAi = async (
   });
 
   const addNoteWithDeal = new DynamicStructuredTool({
-    name:"registerNoteForDeal",
+    name: "registerNoteForDeal",
     description:
       "Registers and creates a new note and directly associates it with a specific deal(Negocio). Providing the deal(Negocio)'s id is essential for the association. The note may include a customizable message.",
     schema: z.object({
@@ -313,20 +319,114 @@ export const agentAi = async (
     getOwnerData,
   ];
 
-  // const models = new ChatOpenAI({
-  //   openAIApiKey: process.env.OPENAI_API_KEY,
-  //   modelName: "gpt-4-turbo-preview",
-  //   temperature: 0,
+  const models = new ChatOpenAI({
+    openAIApiKey: process.env.OPENAI_API_KEY,
+    modelName: "gpt-3.5-turbo-0125",
+    temperature: 0,
+  });
+  const outputParser = new StringOutputParser();
+
+  const plannerPrompt = ChatPromptTemplate.fromTemplate(`
+  Your function is to understand the user-provided {input}, without adding or inventing information. Do not include superfluous steps. Follow these instructions to provide the correct result and formatted text:
+
+  Detailed Reading: Read the entire message carefully to understand all the requests and details provided.
+  
+  Task Breakdown: Divide the message into individual tasks and address them one by one to avoid confusion or errors. Clearly identify each action that needs to be taken and the order in which they should be carried out.
+  
+  Plan the Execution Order: Organize the tasks in a logical order, taking into account possible dependencies between them.
+  
+  Methodical Execution: Carry out the actions step by step, ensuring to complete each one before moving on to the next.
+  
+  Consult the following examples:
+  
+  Input:
+  Create a deal named Meta and associate it with the company named Whatsapp, then create the contact for Mark Zuckerberg and associate it with the deal.
+  
+  Output:
+  Create the deal named Meta.
+  Search for the company named Whatsapp.
+  Associate the deal named Meta with the company Whatsapp.
+  Create the contact for Mark Zuckerberg.
+  Associate the deal named Meta with the contact for Mark Zuckerberg.,
+  
+  Input:
+  Create a deal Amazon.
+  
+  Output:
+  Create a deal named Amazon.,
+  
+  
+  Input:
+  Associate the contact named Max with the deal named Redix.
+  
+  Output:
+  Search for the contact named Max.
+  Search for the deal named Redix.
+  Associate the contact named Max with the deal named Redix.,
+  
+  Input:
+  Register or add a note to the deal for OpenAI that says tomorrow I have a meeting.
+  
+  Output:
+  Create a note for the deal named OpenAI that says: "Tomorrow I have a meeting".,
+  
+  Input:
+  Register a meeting with the deal for Amazon that says: we had a meeting for onboarding.
+  
+  Output:
+  Register a meeting with the deal named Amazon that says: "We had a meeting for onboarding".,
+  
+
+  Consult the following examples in Spanish:
+
+Input:
+Crear un negocio llamado Meta y asociarlo con la empresa llamada Whatsapp, luego crear el contacto para Mark Zuckerberg y asociarlo con el negocio.
+
+Output:
+Crear el negocio llamado "Meta".
+Buscar la empresa llamada Whatsapp.
+Asociar el negocio llamado Meta con la empresa Whatsapp.
+Crear el contacto para Mark Zuckerberg.
+Asociar el negocio llamado Meta con el contacto para Mark Zuckerberg.,
+
+Input:
+Crear un negocio Amazon.
+
+Output:
+Crear un negocio llamado Amazon.,
+
+Input:
+Asociar el contacto llamado Max con el negocio llamado Redix.
+
+Output:
+Buscar el contacto llamado Max.
+Buscar el negocio llamado Redix.
+Asociar el contacto llamado Max con el negocio llamado Redix.,
+
+Input:
+Registrar o agregar una nota al negocio de OpenAI que diga que mañana tengo una reunión.
+
+Output:
+Crear una nota para el negocio llamado OpenAI que diga: "Mañana tengo una reunión".,
+
+Input:
+Registrar una reunión con el negocio para Amazon que dice: tuvimos una reunión para la incorporación.
+
+Output:
+Registrar una reunión con el negocio llamado Amazon que dice: "Tuvimos una reunión para la incorporación".
+
+###IMPORTANT: Do not add any additional text. It is crucial not to complete any text. In the final response, provide only the output result, without any additional information. It is fundamental to provide only the formatted text without any extra details. Provide the response according to the language corresponding to the user input. Note that when "Negocio" is written, it refers to "Deal", and when "empresa" is written, it refers to "Company".
+No inventar nada y no utilizar ejemplos como respuesta, simplemente dar el mismo texto del input formateado.`);
+
+  const llmChain = plannerPrompt.pipe(models).pipe(outputParser);
+
+  // const step = await llmChain.invoke({
+  //   input: message,
   // });
-
-  // const prePromptTemplate = await pull<ChatPromptTemplate>(
-  //   "hustle/openai-tools-agent"
-  // );
-
 
   const llm = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: "gpt-4-turbo-preview",
+    modelName: "gpt-4-0125-preview",
     temperature: 0,
   });
 
@@ -347,18 +447,30 @@ export const agentAi = async (
     tools,
     prompt,
   });
+  const messageHistory = new ChatMessageHistory();
 
   const agentExecutor = new AgentExecutor({
     agent,
     tools,
     handleParsingErrors:
       "Please try again, paying special attention to the values of the parameters and the user input.",
+    verbose: true,
   });
 
-  const result = await agentExecutor.invoke({
+  const config: RunnableConfig = { configurable: { sessionId: phoneNumber } };
+  const withHistory = new RunnableWithMessageHistory({
+    runnable: agentExecutor,
+    getMessageHistory: (_sessionId: string) => messageHistory,
+    inputMessagesKey: "input",
+    historyMessagesKey: "chat_history",
+    config,
+  });
+
+  const result = await withHistory.invoke({
     input: message,
     chat_history: [],
     tools,
+    config,
   });
 
   return result;

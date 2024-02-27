@@ -11,10 +11,18 @@ export const descriptionHandleMeeting = ({
   return new DynamicStructuredTool({
     name: "manageMeetingRecord",
     description:
-      "This tool is specifically designed to register meeting details, ensuring smooth management of meetings across different contexts. It allows for the creation or update of meeting records, associating them with objects such as company(empresa), deal(negocio), or contact(contacto). In case of updating, the meetingId must be provided.",
+      "This function is specifically designed to create or register meeting records. It allows creating or updating meeting records, associating them with objects such as company(empresa), deal(negocio), or contact(contacto). In case of an update, the meetingId must be provided. Do not invent or add any additional text.",
     schema: z.object({
-      title: z.string().describe("The title of the meeting."),
-      textBody: z.string().describe("The meeting description"),
+      title: z
+        .string()
+        .describe("The title of the meeting. If it doesn't have a title, do not invent any title.")
+        .optional()
+        .default(""),
+      textBody: z
+        .string()
+        .describe("The meeting description")
+        .optional()
+        .default(""),
       meetingId: z
         .string()
         .describe(
@@ -24,12 +32,12 @@ export const descriptionHandleMeeting = ({
       idObject: z
         .string()
         .describe(
-          "The ID of the object (company(empresa), deal(negocio), or contact(contacto)) to which the message activity will be associated"
+          "The ID of the object company(Empresa), deal(Negocio), or contact(Contacto) to which the message activity will be associated"
         ),
       object: z
         .string()
         .describe(
-          "The type of object (e.g., company(empresa), deal(negocio), contact(contacto)"
+          "The type of object (e.g., company(Empresa), deal(Negocio), contact(Contacto)"
         ),
       timeStamp: z
         .string()
@@ -40,7 +48,7 @@ export const descriptionHandleMeeting = ({
         .string()
         .describe(
           "The internal notes you take for your team during a meeting that are not included in the attendee meeting description"
-        ),
+        ).optional().default(""),
       ownerId: z
         .string()
         .describe(

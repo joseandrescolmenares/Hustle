@@ -7,7 +7,7 @@ import { createTemporaryFile } from "./createTemporaryFile";
 
 export const transcribeAudio = async (
   id: string
-): Promise<string | undefined> => {
+): Promise<any> => {
   const token = process.env.WHATSAPP_TOKEN || "";
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -35,9 +35,8 @@ export const transcribeAudio = async (
 
         if (error) throw error;
 
-        // console.dir(result, { depth: null });
-        const transcript: string | undefined =
-          result?.results?.channels[0]?.alternatives[0]?.transcript;
+        const transcript: string =
+          result?.results?.channels?.[0]?.alternatives?.[0]?.transcript;
         return transcript;
       };
 

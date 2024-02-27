@@ -22,10 +22,16 @@ import {
 } from "../../../components/ui/Form";
 import { Input } from "../../../components/ui/Input";
 import { redirect } from "next/dist/server/api-utils";
+import { TbPassword } from "react-icons/tb";
 
 export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const router = useRouter();
+  const formSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(5)
+
+  })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

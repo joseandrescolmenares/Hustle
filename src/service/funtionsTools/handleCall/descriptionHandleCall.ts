@@ -18,7 +18,7 @@ export const descriptionHandleCall = ({
         .string()
         .describe(
           "The description of the call, including any notes that you want to add."
-        ),
+        ).optional(),
       // callDuration: z
       //   .string()
       //   .describe("The duration of the call in milliseconds."),
@@ -49,7 +49,7 @@ export const descriptionHandleCall = ({
       objectId: z
         .string()
         .describe(
-          "The ID of the object (company(empresa), deal(negocio), or contact(contacto)) to which the message activity will be associated"
+          "The ID of the object company(empresa), deal(negocio), or contact(contacto) to which the message activity will be associated"
         ),
       object: z
         .string()

@@ -3,7 +3,7 @@ import axios from "axios";
 interface PropsMeeting {
   token: string;
   idAccount: string;
-  meetingNotes: string;
+  meetingNotes?: string;
   title: string;
   textBody: string;
   idObject: string;
@@ -52,11 +52,11 @@ export const handleMeeting = async (props: PropsMeeting) => {
   }
   const body = {
     properties: {
-      hs_timestamp: time,
+      hs_timestamp: timeStamp ? timeStamp : time,
       hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
-      hs_meeting_title: title,
+      // hs_meeting_title: title,
       hs_meeting_body: textBody,
-      hs_internal_meeting_notes: meetingNotes,
+      // hs_internal_meeting_notes: meetingNotes,
       // hs_meeting_external_url:
       // https://Zoom.com/0000",
       hs_meeting_location: "Remote",
