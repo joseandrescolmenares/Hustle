@@ -19,40 +19,7 @@ export async function reply(dataMessage: any) {
   const phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
   const messageTextStart =
     dataMessage?.entry[0]?.changes[0]?.value.messages[0]?.text?.body;
-
-  const parts = messageTextStart.split(" ");
-  if (parts.length > 0 && parts[0] === "start/") {
-    const afterStart = parts.slice(1).join(" ");
-
-    const validatecode = async () => {
-      const { data: dataUser, error } = await supabase
-        .from("users")
-        .update({ phoneNumber: phoneNumber })
-        .eq("codeTeam", afterStart)
-        .select();
-      const user = dataUser?.[0].id_user;
-
-      if (!user) {
-        sendMessage({
-          phoneNumber,
-          typeMessage: "text",
-          messageResponse: "hubo un error con su codigo",
-        });
-        return;
-      } else {
-        return sendMessage({
-          phoneNumber,
-          typeMessage: "text",
-          messageResponse: `Hubspot ✔️
-          Try with voice 🎙️ or text:
-          "Create a new contact John Smith and link to a new company IBM."
-          "Log a call with John Smith for today at 8 AM and add a note: They are waiting for the proposal."
-          "Add a task to the John Smith to send proposal by tomorrow 2 PM.`,
-        });
-      }
-    };
-    return validatecode();
-  }
+    
 
   if (!(await validateNumber(phoneNumber))?.validate.status) {
     const message = await validateNumber(phoneNumber);
@@ -109,6 +76,42 @@ export async function reply(dataMessage: any) {
     sendMessage(messageResponseAudioAgent);
     return;
   }
+
+  const parts = messageTextStart?.split(" ");
+  if (parts.length > 0 && parts[0] === "start/") {
+    const afterStart = parts.slice(1).join(" ");
+    
+    const validatecode = async () => {
+      const { data: dataUser, error } = await supabase
+        .from("users")
+        .update({ phoneNumber: phoneNumber })
+        .eq("codeTeam", afterStart)
+        .select();
+      const user = dataUser?.[0].id_user;
+
+      if (!user) {
+        sendMessage({
+          phoneNumber,
+          typeMessage: "text",
+          messageResponse: "hubo un error con su codigo",
+        });
+        return;
+      } else {
+        return sendMessage({
+          phoneNumber,
+          typeMessage: "text",
+          messageResponse: `Hubspot ✔️
+          Try with voice 🎙️ or text:
+          "Create a new contact John Smith and link to a new company IBM."
+          "Log a call with John Smith for today at 8 AM and add a note: They are waiting for the proposal."
+          "Add a task to the John Smith to send proposal by tomorrow 2 PM.`,
+        });
+      }
+    };
+    return validatecode();
+  }
+
+
   const messageBody =
     dataMessage?.entry[0]?.changes[0]?.value.messages[0]?.text?.body;
   let messageResponse = "¡Lo tengo! Procesando...";
