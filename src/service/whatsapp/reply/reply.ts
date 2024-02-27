@@ -76,6 +76,7 @@ export async function reply(dataMessage: any) {
     sendMessage(messageResponseAudioAgent);
     return;
   }
+  if(dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type == "audio") return
 
   const parts = messageTextStart?.split(" ");
   if (parts.length > 0 && parts[0] === "start/") {
