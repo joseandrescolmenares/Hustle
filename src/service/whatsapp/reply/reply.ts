@@ -19,8 +19,57 @@ export async function reply(dataMessage: any) {
   const phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
   const messageTextStart =
     dataMessage?.entry[0]?.changes[0]?.value.messages[0]?.text?.body;
+  const textCode =
+    dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type == "text";
 
-  if (!(await validateNumber(phoneNumber))?.validate.status) {
+    if(textCode){ 
+
+  const parts = messageTextStart?.split(" ");
+  if (parts.length > 0 && parts[0] === "start/") {
+    const afterStart = parts.slice(1).join(" ");
+
+    const validatecode = async () => {
+      const { data: dataUser, error } = await supabase
+        .from("users")
+        .update({ phoneNumber: phoneNumber })
+        .eq("codeTeam", afterStart)
+        .select();
+      const user = dataUser?.[0].id_user;
+
+      if (!user) {
+        sendMessage({
+          phoneNumber,
+          typeMessage: "text",
+          messageResponse: "hubo un error con su codigo",
+        });
+        return;
+      } else {
+        return sendMessage({
+          phoneNumber,
+          typeMessage: "text",
+          messageResponse: `Bienvenido a Hustle 🎊🎊
+  
+  Desde ahora, puedes olvidarte de la operación (y el tiempo) que conlleva el CRM 
+  Puedes hacer acciones como: 
+  ➕ Crear un nuevo contacto,Max Velasco
+  🔄 Asociar el contacto al negocio Hustle 
+  📞 Registrar una llamada a Jose Colmenares “Buscar en dos días”
+  📅 Registrar una reunión con el negocio Hustle “Aregar minuta”
+  ⏰ Agregar una tarea al negocio Hustle para enviar la propuesta antes de mañana a las 2 PM 
+  📑 Hacer cargas/cambios masivos (Crear 10 empresas)
+  
+  Ya sea con una nota de voz o en texto, 
+  se reflejará en tu CRM en segundos ⏱️
+            
+  ¡Disfruta tu nuevo copiloto! 🫂`,
+        });
+      }
+    };
+    return validatecode();
+  }
+}
+
+  if (!(await validateNumber(phoneNumber))?.validate?.status) {
     const message = await validateNumber(phoneNumber);
     const response = {
       phoneNumber,
@@ -75,52 +124,8 @@ export async function reply(dataMessage: any) {
     sendMessage(messageResponseAudioAgent);
     return;
   }
-  if (dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type == "audio")
-    return;
-
-  const parts = messageTextStart?.split(" ");
-  if (parts.length > 0 && parts[0] === "start/") {
-    const afterStart = parts.slice(1).join(" ");
-
-    const validatecode = async () => {
-      const { data: dataUser, error } = await supabase
-        .from("users")
-        .update({ phoneNumber: phoneNumber })
-        .eq("codeTeam", afterStart)
-        .select();
-      const user = dataUser?.[0].id_user;
-
-      if (!user) {
-        sendMessage({
-          phoneNumber,
-          typeMessage: "text",
-          messageResponse: "hubo un error con su codigo",
-        });
-        return;
-      } else {
-        return sendMessage({
-          phoneNumber,
-          typeMessage: "text",
-          messageResponse: `Bienvenido a Hustle 🎊🎊
-
-Desde ahora, puedes olvidarte de la operación (y el tiempo) que conlleva el CRM 
-Puedes hacer acciones como: 
-➕ Crear un nuevo contacto,Max Velasco
-🔄 Asociar el contacto al negocio Hustle 
-📞 Registrar una llamada a Jose Colmenares “Buscar en dos días”
-📅 Registrar una reunión con el negocio Hustle “Aregar minuta”
-⏰ Agregar una tarea al negocio Hustle para enviar la propuesta antes de mañana a las 2 PM 
-📑 Hacer cargas/cambios masivos (Crear 10 empresas)
-
-Ya sea con una nota de voz o en texto, 
-se reflejará en tu CRM en segundos ⏱️
-          
-¡Disfruta tu nuevo copiloto! 🫂`,
-        });
-      }
-    };
-    return validatecode();
-  }
+  // if (dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type == "audio")
+  //   return;
 
   const messageBody =
     dataMessage?.entry[0]?.changes[0]?.value.messages[0]?.text?.body;

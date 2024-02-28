@@ -15,7 +15,7 @@ export const getOwners = async (token: string, email: string) => {
     for (const resultado of resultados) {
       mapaResultados.set(resultado.email, resultado);
     }
-    return mapaResultados.get(emailBuscado) || null;
+    return mapaResultados.get(emailBuscado) || "";
   }
 
   const { id } = findByEmail(data?.results, email);

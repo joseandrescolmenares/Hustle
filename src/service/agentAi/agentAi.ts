@@ -43,7 +43,7 @@ import {
 export const agentAi = async (
   message: string,
   phoneNumber: string,
-  email: string
+  email: string 
 ) => {
   const validateDataAccount = await renewTokenAgent(phoneNumber);
 
@@ -298,7 +298,7 @@ export const agentAi = async (
   const registerMessageAndAssociateWithObjects =
     describeHandleComunications(propsCredential);
 
-  const handleNewAndUpdatedDeals = descriptionHandleDeal(propsCredential);
+  const handleNewAndUpdatedDeals =await descriptionHandleDeal(propsCredential);
 
   const tools = [
     createOrUpdateCallRecord,
@@ -319,12 +319,12 @@ export const agentAi = async (
     getOwnerData,
   ];
 
-  const models = new ChatOpenAI({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: "gpt-3.5-turbo-0125",
-    temperature: 0,
-  });
-  const outputParser = new StringOutputParser();
+  // const models = new ChatOpenAI({
+  //   openAIApiKey: process.env.OPENAI_API_KEY,
+  //   modelName: "gpt-3.5-turbo-0125",
+  //   temperature: 0,
+  // });
+  // const outputParser = new StringOutputParser();
 
   const plannerPrompt = ChatPromptTemplate.fromTemplate(`
   Your function is to understand the user-provided {input}, without adding or inventing information. Do not include superfluous steps. Follow these instructions to provide the correct result and formatted text:
@@ -418,7 +418,7 @@ Registrar una reunión con el negocio llamado Amazon que dice: "Tuvimos una reun
 ###IMPORTANT: Do not add any additional text. It is crucial not to complete any text. In the final response, provide only the output result, without any additional information. It is fundamental to provide only the formatted text without any extra details. Provide the response according to the language corresponding to the user input. Note that when "Negocio" is written, it refers to "Deal", and when "empresa" is written, it refers to "Company".
 No inventar nada y no utilizar ejemplos como respuesta, simplemente dar el mismo texto del input formateado.`);
 
-  const llmChain = plannerPrompt.pipe(models).pipe(outputParser);
+  // const llmChain = plannerPrompt.pipe(models).pipe(outputParser);
 
   // const step = await llmChain.invoke({
   //   input: message,
@@ -454,7 +454,7 @@ No inventar nada y no utilizar ejemplos como respuesta, simplemente dar el mismo
     tools,
     handleParsingErrors:
       "Please try again, paying special attention to the values of the parameters and the user input.",
-    verbose: true,
+  
   });
 
   const config: RunnableConfig = { configurable: { sessionId: phoneNumber } };
