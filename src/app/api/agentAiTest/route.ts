@@ -2,7 +2,7 @@
 
 import { handleDeal } from "@/service/funtionsTools/deals/handleDeal/handleDeal";
 import { handleOwners } from "@/service/funtionsTools/owner/handleOwner";
-import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
+// import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 import { transcribeAudio } from "@/service/whatsapp/transcribeAudio/transcribeAudio";
 import { NextResponse } from "next/server";
 // import { renewToken } from "@/service/renewToken";
