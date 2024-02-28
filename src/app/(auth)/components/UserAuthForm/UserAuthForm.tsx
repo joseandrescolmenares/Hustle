@@ -29,9 +29,8 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
   const router = useRouter();
   const formSchema = z.object({
     email: z.string().email(),
-    password: z.string().min(5)
-
-  })
+    password: z.string().min(5),
+  });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -66,12 +65,15 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
       if (login) {
         const { data: dataUser, error: errorUser } = await supabase
           .from("users")
-          .select("isOnboarding, id_team")
+          .select("isOnboarding,id_team")
           .eq("id_user", dataAuth?.data?.user?.id);
 
+        const userOnboarding = dataUser?.[0]?.isOnboarding;
+       if(!dataUser?.length){
+        router.push("/onboarding")
+       }
 
-        if (dataUser == null) return;
-        if (dataUser[0]?.isOnboarding) {
+        if (userOnboarding) {
           let { data: teams, error } = await supabase
             .from("teams")
             .select(
@@ -84,18 +86,16 @@ export default function UserAuthForm({ handleAuth, login }: UserAuthFormProp) {
             `
             )
             .eq("id_team", dataUser[0]?.id_team);
-            if(teams == null) return
-            const { tokenHubspot, id_integrations, refresh_token} : any = teams[0].id_integrations
-            Cookies.set("accessTokenHubspot", tokenHubspot);
-            Cookies.set("idIntegrations", id_integrations);
-            Cookies.set("refresh_token",refresh_token)
-            Cookies.set("team", dataUser[0]?.id_team);
-            router.push("/dashboard");
+          if (teams == null) return;
+          const { tokenHubspot, id_integrations, refresh_token }: any =
+            teams[0].id_integrations;
+          Cookies.set("accessTokenHubspot", tokenHubspot);
+          Cookies.set("idIntegrations", id_integrations);
+          Cookies.set("refresh_token", refresh_token);
+          Cookies.set("team", dataUser[0]?.id_team);
+          router.push("/dashboard");
         }
-       
-        
       } else router.push("/onboarding");
-
     } else {
       toast.error(
         login ? "Invalid login credentials" : "User already registered"

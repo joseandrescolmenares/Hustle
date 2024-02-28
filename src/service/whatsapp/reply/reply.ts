@@ -19,7 +19,6 @@ export async function reply(dataMessage: any) {
   const phoneNumber = dataMessage.entry[0].changes[0].value.messages[0].from;
   const messageTextStart =
     dataMessage?.entry[0]?.changes[0]?.value.messages[0]?.text?.body;
-    
 
   if (!(await validateNumber(phoneNumber))?.validate.status) {
     const message = await validateNumber(phoneNumber);
@@ -76,12 +75,13 @@ export async function reply(dataMessage: any) {
     sendMessage(messageResponseAudioAgent);
     return;
   }
-  if(dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type == "audio") return
+  if (dataMessage.entry[0]?.changes[0]?.value?.messages[0]?.type == "audio")
+    return;
 
   const parts = messageTextStart?.split(" ");
   if (parts.length > 0 && parts[0] === "start/") {
     const afterStart = parts.slice(1).join(" ");
-    
+
     const validatecode = async () => {
       const { data: dataUser, error } = await supabase
         .from("users")
@@ -101,17 +101,26 @@ export async function reply(dataMessage: any) {
         return sendMessage({
           phoneNumber,
           typeMessage: "text",
-          messageResponse: `Hubspot ✔️
-          Try with voice 🎙️ or text:
-          "Create a new contact John Smith and link to a new company IBM."
-          "Log a call with John Smith for today at 8 AM and add a note: They are waiting for the proposal."
-          "Add a task to the John Smith to send proposal by tomorrow 2 PM.`,
+          messageResponse: `Bienvenido a Hustle 🎊🎊
+
+          Desde ahora, puedes olvidarte de la operación (y el tiempo) que conlleva el CRM 
+          
+          Puedes hacer acciones como:
+          ➕ Crear un nuevo contacto, Max Velasco
+          🔄 Asociar el contacto al negocio Hustle
+          📞 Registrar una llamada a Jose Colmenares “Buscar en dos días”
+          📅 Registrar una reunión con el negocio Hustle “Aregar minuta”
+          ⏰ Agregar una tarea al negocio Hustle para enviar la propuesta antes de mañana a las 2 PM
+          📑 Hacer cargas/cambios masivos (Crear 10 empresas)
+          
+          Ya sea con una nota de voz o en texto, se reflejará en tu CRM en segundos ⏱️
+          
+          ¡Disfruta tu nuevo copiloto! 🫂`,
         });
       }
     };
     return validatecode();
   }
-
 
   const messageBody =
     dataMessage?.entry[0]?.changes[0]?.value.messages[0]?.text?.body;

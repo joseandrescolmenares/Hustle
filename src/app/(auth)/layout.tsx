@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <div className="container  flex items-center justify-center  lg:max-w-none lg:grid-cols-2 lg:px-0 h-screen sm-w-full">
       <div className=" w-3/6 h-full justify-start items-center  hidden  lg:block">
-          <Image className=" h-full w-full m-0 p-0 " src={hustle} alt="Authentication" />
+          <Image height={4000} className=" h-full w-full m-0 p-0 " src={hustle} alt="Authentication" />
         </div>
       
        

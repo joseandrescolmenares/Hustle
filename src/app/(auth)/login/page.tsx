@@ -13,6 +13,7 @@ const login = () => {
       email: email,
       password: password,
     });
+    console.log(data,"dataLOgin")
     return data;
   };
 
