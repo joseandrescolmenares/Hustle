@@ -51,6 +51,8 @@ export const descriptionHandleDeal = ({
           `Owner ID associated with the deal(negocio). This field determines the ID of the user who appears as the owner of the deal.`
         )
         .optional(),
+
+      
     }),
     func: async ({
       amount,

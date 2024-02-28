@@ -17,7 +17,6 @@ export async function GET(request: Request) {
 
   //   const refresh_token = searchParams.get("refresh_token");
   
-
   //   const response = await axios.post(
   //     "https://api.hubapi.com/oauth/v1/token",
   //     null,

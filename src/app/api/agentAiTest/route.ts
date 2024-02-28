@@ -31,39 +31,10 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   // const token =
-  //   "CMqYwqvbMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFLMW2NNX4wKsVLkc9QVBXOW_tBI3OkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUKXXJbT0NjPn8kjjHHkfCKf221q1KA25hMVIAWgA";
+  //   "CL3bz4ffMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFD66qw3BeUEgq74c0DnBpC0h5r8LOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUYmXYgB6v8B27Ve4nvvEceMchsvxKA25hMVIAWgA";
 
-  // const props = {
-  //   token,
-  //   amount:1000,
-  //   dealstage: null,
-  //   dealname:"jose properties"
-    // idObject: "19044137052",
-    // object: "empresa",
-    // title:"esto es una prueba de reunio ",
-    // textBody:"resuniom",
-    // idAccount:"44543727",
-    // meetingNotes:"",
-    // timeStamp:""
-  // };
-  // const id = "jose";
-  // const res = await transcribeAudio(id);
 
-  // const deal = await handleDeal(props);
-
-  // const email = "joseandrescolmenares02@gmail.com"
-
-  //   const data = await getOwners(token, email);
-  // // // const jose = await renewTokenAgent("+541126336301")
-  // // const data = await contactDealAssociation(props);
-  // // const data =await  dealContactAssociation({token})
-  // // const  data = await getOwners(token)
-  // // const data = await createActivityNotes(props)
-  // // const data = await createNewDeals(dataProp);
-  // const data = await handleCall(props);
-  // const data = await getStage(token);
-  // const data = await handleOwners(token)
-  // const  data = contactDealAssociation(props)
+  //   const data = await getIdDeals(token)
   return NextResponse.json({ data: "jose" });
 }
 // {

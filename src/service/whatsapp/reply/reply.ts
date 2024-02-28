@@ -103,19 +103,19 @@ export async function reply(dataMessage: any) {
           typeMessage: "text",
           messageResponse: `Bienvenido a Hustle 🎊🎊
 
-          Desde ahora, puedes olvidarte de la operación (y el tiempo) que conlleva el CRM 
-          Puedes hacer acciones como: 
-          ➕ Crear un nuevo contacto,Max Velasco
-          🔄 Asociar el contacto al negocio Hustle 
-          📞 Registrar una llamada a Jose Colmenares “Buscar en dos días”
-          📅 Registrar una reunión con el negocio Hustle “Aregar minuta”
-          ⏰ Agregar una tarea al negocio Hustle para enviar la propuesta antes de mañana a las 2 PM 
-          📑 Hacer cargas/cambios masivos (Crear 10 empresas)
+Desde ahora, puedes olvidarte de la operación (y el tiempo) que conlleva el CRM 
+Puedes hacer acciones como: 
+➕ Crear un nuevo contacto,Max Velasco
+🔄 Asociar el contacto al negocio Hustle 
+📞 Registrar una llamada a Jose Colmenares “Buscar en dos días”
+📅 Registrar una reunión con el negocio Hustle “Aregar minuta”
+⏰ Agregar una tarea al negocio Hustle para enviar la propuesta antes de mañana a las 2 PM 
+📑 Hacer cargas/cambios masivos (Crear 10 empresas)
 
-          Ya sea con una nota de voz o en texto, 
-          se reflejará en tu CRM en segundos ⏱️
+Ya sea con una nota de voz o en texto, 
+se reflejará en tu CRM en segundos ⏱️
           
-          ¡Disfruta tu nuevo copiloto! 🫂`,
+¡Disfruta tu nuevo copiloto! 🫂`,
         });
       }
     };
