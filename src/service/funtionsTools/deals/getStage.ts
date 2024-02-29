@@ -5,7 +5,7 @@ export const getStage = async (token: string) => {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-    // const data = await createNewDeals(dataProp);
+    
     const resul = await axios.get(
       "https://api.hubapi.com/crm/v3/pipelines/deals",
       { headers }
@@ -21,7 +21,9 @@ export const getStage = async (token: string) => {
       .map((stage) => `'${stage.values}' (ID: ${stage.id})`)
       .join(", ");
 
-    return `You should select the ID corresponding to the value you deem appropriate: ${stagesString} Ensure you select the id corresponding to the desired stage.`;
+      console.log(stagesString,'strin')
+
+    return `Please select the ID that corresponds to the value you consider appropriate from the following list: ${stagesString}. Make sure to choose the ID that corresponds to the stage you want.`;
 
   } catch (error) {
     console.error("Error creating associations:", error);

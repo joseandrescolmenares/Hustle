@@ -11,10 +11,10 @@ export interface DataProps {
   dealId?: string;
   propertiesOwnerid?: Promise<string> | string;
   ownerId?: string;
-  pais?: string;
+ 
 }
 
-export const handleDeal = async (dataProp: DataProps) => {
+export const handleDeal = async (dataProp: DataProps & { [key: string]: any }) => {
   const {
     amount,
     dealname,
@@ -25,7 +25,11 @@ export const handleDeal = async (dataProp: DataProps) => {
     dealId,
     propertiesOwnerid,
     ownerId,
+    ...dynamicProps
   } = dataProp;
+
+  const us = dynamicProps
+  console.log(us,"us")
 
   if (dealId) {
     return await updateDeal(dataProp);
@@ -33,13 +37,19 @@ export const handleDeal = async (dataProp: DataProps) => {
 
   const url = "https://api.hubapi.com/crm/v3/objects/deals";
 
+ 
+
   const requestBody = {
     properties: {
-      amount,
+      amount ,
       dealstage,
       dealname,
       closedate,
       hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
+      ...Object.entries(dynamicProps).reduce((acc, [key, value]) => {
+        acc[key as keyof typeof dynamicProps] = value;
+        return acc;
+      }, {} as { [key: string]: any }),
     },
   };
   try {
