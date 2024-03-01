@@ -17,23 +17,19 @@ export const descriptionHandleCompany = async ({
     name: z
       .string()
       .describe("Full name of the company")
-      .optional()
-      .default(""),
+      .optional(),
     city: z
       .string()
       .describe("Location or city where the company is based.")
-      .optional()
-      .default(""),
+      .optional(),
     industry: z
       .string()
       .describe("Industry to which the company belongs")
-      .optional()
-      .default(""),
+      .optional(),
     domain: z
       .string()
       .describe("Primary web domain of the company.")
-      .optional()
-      .default(""),
+      .optional(),
     companyId: z
       .string()
       .describe(
