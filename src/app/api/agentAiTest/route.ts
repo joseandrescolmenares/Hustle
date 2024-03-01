@@ -2,6 +2,7 @@
 
 import { handleDeal } from "@/service/funtionsTools/deals/handleDeal/handleDeal";
 import { handleOwners } from "@/service/funtionsTools/owner/handleOwner";
+import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 // import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 import { transcribeAudio } from "@/service/whatsapp/transcribeAudio/transcribeAudio";
 import { NextResponse } from "next/server";
@@ -31,11 +32,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   // const token =
-  //   "CL3bz4ffMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFD66qw3BeUEgq74c0DnBpC0h5r8LOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUYmXYgB6v8B27Ve4nvvEceMchsvxKA25hMVIAWgA";
+  //   "CO_Eu9rfMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFN4snKdPN-L-EYd6lGM-WflYdJ_xOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUiMR7UGxb1_EWiw5g0f2IOu2gpSRKA25hMVIAWgA";
 
 
   //   const data = await getIdDeals(token)
-  return NextResponse.json({ data: "jose" });
+  return NextResponse.json({ data:"jose" });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"

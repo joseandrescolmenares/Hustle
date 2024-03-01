@@ -1,6 +1,6 @@
 import axios from "axios";
 import { DataProps } from "./handleDeal";
-export const updateDeal = async (props: DataProps) => {
+export const updateDeal = async (props: DataProps & { [key: string]: any }) => {
   const {
     dealId,
     amount,
@@ -11,6 +11,7 @@ export const updateDeal = async (props: DataProps) => {
     idAccount,
     ownerId,
     propertiesOwnerid,
+    ...dynamicProps
   } = props;
 
   const url = `https://api.hubapi.com/crm/v3/objects/deals/${dealId}`;
@@ -24,6 +25,12 @@ export const updateDeal = async (props: DataProps) => {
         dealname: dealname,
         dealstage: dealstage,
         hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
+        ...Object.entries(dynamicProps).reduce((acc, [key, value]) => {
+          if (value !== "") {
+            acc[key as keyof typeof dynamicProps] = value;
+          }
+          return acc;
+        }, {} as { [key: string]: any }),
       },
     },
 

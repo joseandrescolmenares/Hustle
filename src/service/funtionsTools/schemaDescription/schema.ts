@@ -1,6 +1,11 @@
-
 import axios from "axios";
 import { z } from "zod";
+
+interface SchemaProp {
+  token: string;
+  defaultProperties: any;
+  object: string;
+}
 
 const mapFieldTypeToDescription = (
   fieldType: string,
@@ -10,19 +15,23 @@ const mapFieldTypeToDescription = (
 ) => {
   switch (type) {
     case "bool":
+
       return fieldType === "checkbox" || fieldType === "calculation_equation"
         ? "Un campo que contiene opciones binarias (por ejemplo, Yes o No, True o False)."
         : "El fieldType no es compatible con el type bool.";
+
     case "enumeration":
       if (
         fieldType === "checkbox" ||
         fieldType === "radio" ||
         fieldType === "select" ||
-        fieldType === "calculation_equation"
+        fieldType === "calculation_equation" ||
+        fieldType === "booleancheckbox"
       ) {
         const optionsString = options
-          .map((option: any) => `'${option.label}' (Value: ${option.value})`)
+          .map((option: any) => `'(key: ${option.label}': Value: ${option.value})`)
           .join(", ");
+          console.log(optionsString,"optioness")
         return `${description}, You must select the value that you feel most closely matches the user's requirements and that you feel is appropriate: ${optionsString} Be sure to select the correct value corresponding to your key.`;
       } else {
         return "El fieldType no es compatible con el type enumeration.";
@@ -53,12 +62,16 @@ const mapFieldTypeToDescription = (
   }
 };
 
-export const schema = async (token: string) => {
+export const schema = async ({
+  token,
+  defaultProperties,
+  object,
+}: SchemaProp) => {
   const headers = {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   };
-  const urlDeals = `https://api.hubapi.com/crm/v3/properties/deals`;
+  const urlDeals = `https://api.hubapi.com/crm/v3/properties/${object}`;
   const responseData: any = await axios.get(urlDeals, { headers });
   const dataCompanies = responseData?.data;
 
@@ -74,39 +87,6 @@ export const schema = async (token: string) => {
     (obj: any) => !obj.hasOwnProperty("hubspotDefined")
   );
 
-  let defaultProperties: { [key: string]: any } = {
-    amount: z
-      .number()
-      .describe("represents the monetary amount or monetary value"),
-    dealname: z.string().describe("represents the name of the deal(negocio)."),
-    dealstage: z
-      .string()
-      .nullable()
-      .describe(
-        "Current stage of a deal(negocio) or commercial negotiation within the sales process. No identifier is required unless explicitly needed. Retrieve it using the 'getStageForDeal' function if necessary"
-      )
-      .optional()
-      .default(null),
-    closedate: z
-      .string()
-      .describe(
-        "this property defines the date on which the operation will be closed, for this property it is important to follow this format, for example: '2019-12-07T16:50:06.678Z'."
-      )
-      .optional(),
-    dealId: z
-      .string()
-      .describe(
-        "Identifier of the deal(Negocio) to update. it is very important and mandatory to pass this parameter."
-      )
-      .optional(),
-    ownerId: z
-      .string()
-      .describe(
-        `Owner ID associated with the deal(negocio). This field determines the ID of the user who appears as the owner of the deal.`
-      )
-      .optional(),
-  };
-
   const schemaProperties: { [key: string]: any } = { ...defaultProperties };
   filteredData.forEach((obj: any) => {
     const description = mapFieldTypeToDescription(
@@ -116,9 +96,7 @@ export const schema = async (token: string) => {
       obj.description
     );
 
-    schemaProperties[obj.name] = z
-      .any()
-      .describe(description || "");
+    schemaProperties[obj.name] = z.any().describe(description || "").optional();
   });
 
   return z.object(schemaProperties);

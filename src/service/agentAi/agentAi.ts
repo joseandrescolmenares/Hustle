@@ -118,7 +118,7 @@ export const agentAi = async (
     },
   });
 
-  const handleNewAndUpdatedContact = descriptionHandleContact(propsCredential);
+  const handleNewAndUpdatedContact = await descriptionHandleContact(propsCredential);
 
   const createAssociation = descriptionHandleAssociationObject(propsCredential);
 
@@ -204,7 +204,7 @@ export const agentAi = async (
     },
   });
 
-  const handleNewAndUpdatedCompany = descriptionHandleCompany(propsCredential);
+  const handleNewAndUpdatedCompany = await descriptionHandleCompany(propsCredential);
 
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",

@@ -25,11 +25,14 @@ export const handleCompany = async (dataProp: DataProps) => {
     companyId,
     propertiesOwnerid,
     ownerId,
+    ...dynamicProps
   } = dataProp;
 
   if (companyId) {
     return await updateCompany(dataProp);
   }
+
+  console.log(dynamicProps, "Dynamic props");
 
   const url = "https://api.hubapi.com/crm/v3/objects/companies";
 
@@ -41,6 +44,12 @@ export const handleCompany = async (dataProp: DataProps) => {
       city,
       industry,
       hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
+      ...Object.entries(dynamicProps).reduce((acc, [key, value]) => {
+        if (value !== "") {
+          acc[key as keyof typeof dynamicProps] = value;
+        }
+        return acc;
+      }, {} as { [key: string]: any }),
     },
   };
   try {

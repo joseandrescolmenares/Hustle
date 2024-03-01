@@ -10,7 +10,7 @@ export const getIdDeals = async (token: string) => {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     };
-    const urlDeals = `https://api.hubapi.com/crm/v3/properties/deals`;
+    const urlDeals = `https://api.hubapi.com/crm/v3/properties/companies`;
     const responseData: any = await axios.get(urlDeals, { headers });
     const dataCompanies = responseData?.data;
    

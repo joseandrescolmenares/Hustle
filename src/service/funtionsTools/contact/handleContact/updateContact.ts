@@ -15,6 +15,7 @@ export const updateContact = async (props: PropsContact) => {
     contactId,
     ownerId,
     propertiesOwnerid,
+    ...dynamicProps
   } = props;
 
   const url = `https://api.hubapi.com/crm/v3/objects/contacts/${contactId}`;
@@ -31,6 +32,12 @@ export const updateContact = async (props: PropsContact) => {
         website,
         lifecyclestage,
         hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
+        ...Object.entries(dynamicProps).reduce((acc, [key, value]) => {
+          if (value !== "") {
+            acc[key as keyof typeof dynamicProps] = value;
+          }
+          return acc;
+        }, {} as { [key: string]: any }),
       },
     },
 

@@ -16,7 +16,7 @@ export interface PropsContact {
   propertiesOwnerid?:Promise<string> | string
 }
 
-export const handleContact = async (dataProp: PropsContact) => {
+export const handleContact = async (dataProp: PropsContact & { [key: string]: any }) => {
   const {
     phone,
     company,
@@ -30,7 +30,8 @@ export const handleContact = async (dataProp: PropsContact) => {
     contactId,
     jobtitle,
     ownerId,
-    propertiesOwnerid
+    propertiesOwnerid,
+    ...dynamicProps
   } = dataProp;
 
   if (contactId) {
@@ -50,6 +51,12 @@ export const handleContact = async (dataProp: PropsContact) => {
         lifecyclestage,
         jobtitle,
         hubspot_owner_id: ownerId ?  ownerId : propertiesOwnerid,
+        ...Object.entries(dynamicProps).reduce((acc, [key, value]) => {
+          if (value !== "") {
+            acc[key as keyof typeof dynamicProps] = value;
+          }
+          return acc;
+        }, {} as { [key: string]: any }),
       },
     };
 

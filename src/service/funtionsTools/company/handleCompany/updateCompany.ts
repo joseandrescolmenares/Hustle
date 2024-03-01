@@ -1,7 +1,7 @@
 import axios from "axios";
 import { DataProps } from "./handleCompany";
 
-export const updateCompany = async (dataProp: DataProps) => {
+export const updateCompany = async (dataProp: DataProps & { [key: string]: any }) => {
   const {
     phone,
     name,
@@ -13,6 +13,7 @@ export const updateCompany = async (dataProp: DataProps) => {
     companyId,
     ownerId,
     propertiesOwnerid,
+    ...dynamicProps
   } = dataProp;
 
   const url = `https://api.hubapi.com/crm/v3/objects/companies/${companyId}`;
@@ -27,6 +28,12 @@ export const updateCompany = async (dataProp: DataProps) => {
         city,
         industry,
         hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
+        ...Object.entries(dynamicProps).reduce((acc, [key, value]) => {
+          if (value !== "") {
+            acc[key as keyof typeof dynamicProps] = value;
+          }
+          return acc;
+        }, {} as { [key: string]: any }),
       },
     },
 

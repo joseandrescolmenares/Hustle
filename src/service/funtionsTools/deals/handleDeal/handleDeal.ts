@@ -37,7 +37,6 @@ export const handleDeal = async (dataProp: DataProps & { [key: string]: any }) =
 
   const url = "https://api.hubapi.com/crm/v3/objects/deals";
 
- 
 
   const requestBody = {
     properties: {
@@ -47,9 +46,11 @@ export const handleDeal = async (dataProp: DataProps & { [key: string]: any }) =
       closedate,
       hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
       ...Object.entries(dynamicProps).reduce((acc, [key, value]) => {
-        acc[key as keyof typeof dynamicProps] = value;
+        if (value !== "") {
+          acc[key as keyof typeof dynamicProps] = value;
+        }
         return acc;
-      }, {} as { [key: string]: any }),
+      }, {} as { [key: string]: any })
     },
   };
   try {
