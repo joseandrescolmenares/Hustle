@@ -15,19 +15,17 @@ export const descriptionHandleContact = async ({
     firstname: z
       .string()
       .describe("The first name of the contact.")
-      .optional()
-      .default(""),
+      .optional(),
+
     lastname: z.string().describe("The last name of the contact.").optional(),
     company: z
       .string()
       .describe("The name of the company associated with the contact.")
-      .optional()
-      .default(""),
+      .optional(),
     website: z
       .string()
       .describe("The website linked to the contact.")
-      .optional()
-      .default(""),
+      .optional(),
     email: z.string().describe("The email address of the contact.").optional(),
     lifecyclestage: z
       .string()
