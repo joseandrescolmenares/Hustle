@@ -264,6 +264,8 @@ export default function Onboarding() {
   const handleCreateTeam = async (values: z.infer<typeof formSchema>) => {
     const { email, nameCompany, firstname, organizationSize, crmName } = values;
     try {
+      setLoadingData(true);
+      await axios.post("api/sendEmail/sendOnboarding", { email, firstname });
       const cleanedData = {
         nameCompany: nameCompany.trim(),
         firstname: firstname.trim(),
@@ -271,7 +273,7 @@ export default function Onboarding() {
         crmName: crmName.trim(),
         email: email.trim(),
       };
-      setLoadingData(true);
+
       const data = await axios.post("/api/supabase/createTeam", cleanedData);
       const result = data?.data;
 
@@ -285,103 +287,107 @@ export default function Onboarding() {
     }
   };
 
-
   return (
-    <> { loadingData ? <div className="flex justify-center items-center mt-20">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-customPurple  border-t-customPurple border-r-blue-300 border-r-2"></div>
-  </div> : 
-    <Dialog open={true}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Organization Details</DialogTitle>
-          <DialogDescription>
-            Add crucial information for efficient management of products and
-            clients.
-          </DialogDescription>
-        </DialogHeader>
-        <div>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleCreateTeam)}
-              className="space-y-8"
-            >
-              <FormField
-                control={form.control}
-                name="nameCompany"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Hustle" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="firstname"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Max velazco" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="name@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="crmName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>What CRM do you use?</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Hubspot" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="organizationSize"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      How many sales representatives work in your company?
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="10" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button className="w-full" type="submit">
-                Continue
-              </Button>
-            </form>
-          </Form>
-
-          <DialogFooter className="border-b border-gray-400 rounded-md px-4 py-2"></DialogFooter>
+    <>
+      {" "}
+      {loadingData ? (
+        <div className="flex justify-center items-center mt-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-customPurple  border-t-customPurple border-r-blue-300 border-r-2"></div>
         </div>
-      </DialogContent>
-    </Dialog>
-    }</>
+      ) : (
+        <Dialog open={true}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Organization Details</DialogTitle>
+              <DialogDescription>
+                Add crucial information for efficient management of products and
+                clients.
+              </DialogDescription>
+            </DialogHeader>
+            <div>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleCreateTeam)}
+                  className="space-y-8"
+                >
+                  <FormField
+                    control={form.control}
+                    name="nameCompany"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Company name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Hustle" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="firstname"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Max velazco" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input placeholder="name@example.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="crmName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>What CRM do you use?</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Hubspot" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="organizationSize"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          How many sales representatives work in your company?
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="10" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button className="w-full" type="submit">
+                    Continue
+                  </Button>
+                </form>
+              </Form>
+
+              <DialogFooter className="border-b border-gray-400 rounded-md px-4 py-2"></DialogFooter>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   );
 }
