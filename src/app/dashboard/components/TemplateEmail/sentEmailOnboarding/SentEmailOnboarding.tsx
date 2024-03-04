@@ -21,7 +21,9 @@ export const EmailTemplateOnboarding: React.FC<
       más importante: ¡vender! Con Hustle, puedes ejecutar comandos desde
       WhatsApp o Slack para mantener tu CRM actualizado. Por ejemplo, puedes
       crear, asociar, registrar tareas/actividades y mucho más, todo de forma
-      rápida y sencilla. <br>Saludos, Max & José</br>
+      rápida y sencilla.
+      
+      Saludos, Max & José
     </p>
   </div>
 );

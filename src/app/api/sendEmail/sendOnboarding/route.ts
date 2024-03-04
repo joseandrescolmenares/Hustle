@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from: "max@meethustle.io",
       to: [email],
-      subject: "Bienvenido a tu nuevo copiloto para el CRM, Hustle Copilot",
+      subject:"Bienvenido a tu nuevo copiloto para el CRM, Hustle Copilot",
       react: EmailTemplateOnboarding({
         firstname: firstname
       }) as React.ReactElement,
