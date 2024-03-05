@@ -32,7 +32,7 @@ const mapFieldTypeToDescription = (
           .map((option: any) => `'(key: ${option.label}': Value: ${option.value})`)
           .join(", ");
           console.log(optionsString,"optioness")
-        return `${description}, You must select the value that you feel most closely matches the user's requirements and that you feel is appropriate: ${optionsString} Be sure to select the correct value corresponding to your key.`;
+        return `${description}, You must select the value that best fits the user's requirements and that you consider appropriate: ${optionsString} Make sure you select the correct value corresponding to your key, if you do not find it place a 'null'.`;
       } else {
         return "El fieldType no es compatible con el type enumeration.";
       }
