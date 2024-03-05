@@ -16,7 +16,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
     </h1>
 
     <p>
-      ¡Te han invitado a probar Hustle Copilot! Comenzar ahora ¡Descubre cómo
+      ¡Te han invitado a probar Hustle Copilot!, Descubre cómo
       Hustle Copilot puede facilitar nuestra vida laboral en el CRM!
       <br />
       Saludos.

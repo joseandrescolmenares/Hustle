@@ -335,8 +335,6 @@ export const agentAi = async (
   
   Plan the Execution Order: Organize the tasks in a logical order, taking into account possible dependencies between them.
   
-  Methodical Execution: Carry out the actions step by step, ensuring to complete each one before moving on to the next.
-  
   Consult the following examples:
   
   Input:
@@ -353,8 +351,7 @@ export const agentAi = async (
   Create a deal Amazon.
   
   Output:
-  Create a deal named Amazon.,
-  
+  Create a deal named Amazon.
   
   Input:
   Associate the contact named Max with the deal named Redix.
@@ -362,60 +359,36 @@ export const agentAi = async (
   Output:
   Search for the contact named Max.
   Search for the deal named Redix.
-  Associate the contact named Max with the deal named Redix.,
+  Associate the contact named Max with the deal named Redix.
   
   Input:
   Register or add a note to the deal for OpenAI that says tomorrow I have a meeting.
   
   Output:
-  Create a note for the deal named OpenAI that says: "Tomorrow I have a meeting".,
+  Create a note for the deal named OpenAI that says: "Tomorrow I have a meeting".
   
   Input:
   Register a meeting with the deal for Amazon that says: we had a meeting for onboarding.
   
   Output:
-  Register a meeting with the deal named Amazon that says: "We had a meeting for onboarding".,
+  Register a meeting with the deal named Amazon that says: "We had a meeting for onboarding.
+
+  Input:
+  hola
   
+  Output:
+  hola
 
-  Consult the following examples in Spanish:
+  Input:
+  Create a strike deal for Cabak company.
+  
+  Output:
+  Create a deal named strike, 
+  associate it with the company named Cabak..
 
-Input:
-Crear un negocio llamado Meta y asociarlo con la empresa llamada Whatsapp, luego crear el contacto para Mark Zuckerberg y asociarlo con el negocio.
-
-Output:
-Crear el negocio llamado "Meta".
-Buscar la empresa llamada Whatsapp.
-Asociar el negocio llamado Meta con la empresa Whatsapp.
-Crear el contacto para Mark Zuckerberg.
-Asociar el negocio llamado Meta con el contacto para Mark Zuckerberg.,
-
-Input:
-Crear un negocio Amazon.
-
-Output:
-Crear un negocio llamado Amazon.,
-
-Input:
-Asociar el contacto llamado Max con el negocio llamado Redix.
-
-Output:
-Buscar el contacto llamado Max.
-Buscar el negocio llamado Redix.
-Asociar el contacto llamado Max con el negocio llamado Redix.,
-
-Input:
-Registrar o agregar una nota al negocio de OpenAI que diga que mañana tengo una reunión.
-
-Output:
-Crear una nota para el negocio llamado OpenAI que diga: "Mañana tengo una reunión".,
-
-Input:
-Registrar una reunión con el negocio para Amazon que dice: tuvimos una reunión para la incorporación.
-
-Output:
-Registrar una reunión con el negocio llamado Amazon que dice: "Tuvimos una reunión para la incorporación".
 
 ###IMPORTANT: Do not add any additional text. It is crucial not to complete any text. In the final response, provide only the output result, without any additional information. It is fundamental to provide only the formatted text without any extra details. Provide the response according to the language corresponding to the user input. Note that when "Negocio" is written, it refers to "Deal", and when "empresa" is written, it refers to "Company".
+Identify the language of the {input} and respond in that language.
 No inventar nada y no utilizar ejemplos como respuesta, simplemente dar el mismo texto del input formateado.`);
 
   // const llmChain = plannerPrompt.pipe(models).pipe(outputParser);
