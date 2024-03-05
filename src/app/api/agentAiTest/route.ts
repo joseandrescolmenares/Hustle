@@ -2,7 +2,7 @@
 
 import { handleDeal } from "@/service/funtionsTools/deals/handleDeal/handleDeal";
 import { handleOwners } from "@/service/funtionsTools/owner/handleOwner";
-import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
+import {  postDeal } from "@/service/hubspot/deals/getIdDeals";
 // import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 import { transcribeAudio } from "@/service/whatsapp/transcribeAudio/transcribeAudio";
 import { NextResponse } from "next/server";
@@ -32,11 +32,16 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   // const token =
-  //   "CO_Eu9rfMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFN4snKdPN-L-EYd6lGM-WflYdJ_xOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUiMR7UGxb1_EWiw5g0f2IOu2gpSRKA25hMVIAWgA";
+  //   "CMzZp_3gMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFMZ9vtFvHl3GfAbBUimHDAONX8ivOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUISYRHlWpA67elSem2aVSQqhsCmRKA25hMVIAWgA";
 
+  // const datat = {
+  //   amount: 222,
+  //   dealname: "testPais",
+  //   token,
+  // };
 
-  //   const data = await getIdDeals(token)
-  return NextResponse.json({ data:"jose" });
+  // const data = await postDeal(datat);
+  return NextResponse.json({ data: "pais" });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"
