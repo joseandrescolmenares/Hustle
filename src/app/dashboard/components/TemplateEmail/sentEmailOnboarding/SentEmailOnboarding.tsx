@@ -23,7 +23,8 @@ export const EmailTemplateOnboarding: React.FC<
       crear, asociar, registrar tareas/actividades y mucho más, todo de forma
       rápida y sencilla.
       
-      Saludos, Max & José
+     <br/> 
+     Saludos, Max & José
     </p>
   </div>
 );

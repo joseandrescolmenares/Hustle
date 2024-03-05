@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from: 'max@meethustle.io',
       to: [email],
-      subject: "invitacion a usar Hustle Copilot",
+      subject: "¡Únete al equipo de Hustle Copilot y optimiza tu trabajo en el CRM!",
       react: EmailTemplate({
         firstName: email,
         url: urlInvite,
