@@ -11,9 +11,9 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
+    "@datastax/astra-db-ts": "^0.1.4",
     "@deepgram/sdk": "^3.1.9",
     "@hookform/resolvers": "^3.3.2",
-    "@langchain/community": "^0.0.25",
     "@langchain/openai": "^0.0.11",
     "@planetscale/database": "^1.14.0",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -49,6 +49,7 @@
     "next": "13.5.6",
     "node-cron": "^3.0.2",
     "npm": "^10.2.1",
+    "pg": "^8.11.3",
     "play-sound": "^1.1.6",
     "react": "^18",
     "react-confetti": "^6.1.0",
@@ -70,8 +71,10 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@langchain/community": "^0.0.35",
     "@types/fluent-ffmpeg": "^2.1.24",
     "@types/node": "^20",
+    "@types/pg": "^8.11.2",
     "@types/play-sound": "^1.1.2",
     "@types/react": "^18",
     "@types/react-copy-to-clipboard": "^5.0.7",

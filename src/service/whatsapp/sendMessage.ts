@@ -11,7 +11,9 @@ interface DataMessage {
 export async function sendMessage(dataMessage: DataMessage) {
   try {
     const accessToken = process.env.WHATSAPP_TOKEN;
-    const url = `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_ID_NUMBER}/messages`;
+    const url = `https://graph.facebook.com/v18.0/${
+      process.env.WHATSAPP_ID_NUMBER || process.env.WHATSAPP_ID_NUMBER_TEST
+    }/messages`;
 
     const data = {
       messaging_product: "whatsapp",
