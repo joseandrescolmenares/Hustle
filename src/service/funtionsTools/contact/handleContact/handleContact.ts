@@ -69,10 +69,10 @@ export const handleContact = async (dataProp: PropsContact & { [key: string]: an
       body: JSON.stringify(requestBody),
     });
 
-    const data = await response.json();
+    const data = await response?.json();
     const name = data?.properties?.firstname;
 
-    console.log(data);
+    console.log(data,"test");
 
     return `Response: Proceso completado con éxito. el  contact  ${name}  se creo correctamente.. Puede ver los detalles acá [Link]: https://app.hubspot.com/contacts/${idAccount}/contact/${data.id}.
       `;

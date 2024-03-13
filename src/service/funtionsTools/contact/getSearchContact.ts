@@ -14,10 +14,11 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
   if (!searchEmail) {
     searchEmail = contactName;
   }
-
-  const [firstNamePart, lastNamePart]: any = contactName?.split(" ");
-  firstName = firstNamePart;
-  lastName = lastNamePart;
+  if (contactName) {
+    const [firstNamePart, lastNamePart]: any = contactName?.split(" ");
+    firstName = firstNamePart;
+    lastName = lastNamePart;
+  }
 
   try {
     const url = "https://api.hubapi.com/crm/v3/objects/contacts/search";
@@ -66,16 +67,16 @@ export const getSearchContacts = async (propsDataContact: PropsDataContact) => {
 
     const res = await axios.post(url, data, { headers });
 
-    const resultData = res.data;
+    const resultData = res?.data;
+    console.log(resultData, "tes");
 
-    if (resultData.total === 0) {
+    if (resultData?.total === 0) {
       return "No contact found with the specified criteria.";
     }
-    if (resultData.total > 1) {
+    if (resultData?.total > 1) {
       return "More than one contact found with this name, please be more specific.";
     }
     const contactId = resultData?.results[0]?.id;
-    // const name = resultData.results[0].properties;
     return `Identificador de contacto obtenido: ${contactId}`;
   } catch (error) {
     console.error("Error creating associations:", error);
