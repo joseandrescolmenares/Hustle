@@ -30,7 +30,6 @@ export const postDeal = async (dataProp: DataProps ) => {
 
   const url = "https://api.hubapi.com/crm/v3/objects/deals";
 
-
   const requestBody = {
     properties: {
       amount ,

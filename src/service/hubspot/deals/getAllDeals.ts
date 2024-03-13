@@ -10,8 +10,6 @@ export const getAllDeals = async (url: string) => {
       Authorization: `Bearer ${cookieToken}`,
       "Content-Type": "application/json",
     };
-  
-  
     const urlDeals = url;
 
     const responseData: any = await axios.get(urlDeals, { headers });

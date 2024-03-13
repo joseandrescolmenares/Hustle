@@ -3,8 +3,7 @@ import { Console } from "console";
 import { cookies } from "next/headers";
 
 export const insertIdDeals = async (url: string, token:string) => {
-  // const cookiesStore = cookies();
-  // const cookieToken = cookiesStore.get("accessTokenHubspot")?.value;
+
   try {
     const headers = {
       Authorization: `Bearer ${token}`,
