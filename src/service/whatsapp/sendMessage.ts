@@ -35,8 +35,9 @@ export async function sendMessage(dataMessage: DataMessage) {
     };
 
     const response = await axios.post(url, data, { headers });
+    console.log(response)
 
-    return;
+    return 
   } catch (error) {
     console.error(`Error al enviar el mensaje: ${error}`);
     return;

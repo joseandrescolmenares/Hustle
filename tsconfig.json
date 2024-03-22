@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    // "target": "ES2020",
-    // "module": "nodenext",
+   
     "target": "es5",
     "lib": [
       "dom",
@@ -42,10 +41,3 @@
     "node_modules"
   ]
 }
-// {
-//   "compilerOptions": {
-//     ...
-//     "target": "ES2020", // or higher
-//     "module": "nodenext",
-//   }
-// }

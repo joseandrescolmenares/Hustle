@@ -23,7 +23,7 @@ export const descriptionHandleDeal = async ({
       .string()
       .nullable()
       .describe(
-        "Current stage of a deal(negocio) or commercial negotiation within the sales process. No identifier is required unless explicitly needed. Retrieve it using the 'getStageForDeal' function if necessary"
+        "The stage or status of the deal is not required unless specifically needed. In that case, it's important to retrieve the status or stage using the 'getStageForDeal' function if necessary"
       )
       .optional()
       .default(null),

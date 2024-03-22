@@ -1,11 +1,8 @@
 // import { supabase } from "@/lib/ClientSupabase";
 
-import { handleDeal } from "@/service/funtionsTools/deals/handleDeal/handleDeal";
-import { handleOwners } from "@/service/funtionsTools/owner/handleOwner";
-import {  postDeal } from "@/service/hubspot/deals/getIdDeals";
 // import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
-import { transcribeAudio } from "@/service/whatsapp/transcribeAudio/transcribeAudio";
 import { NextResponse } from "next/server";
+import { sendMessage } from "../../../service/whatsapp/sendMessage";
 // import { renewToken } from "@/service/renewToken";
 // import { getIdDeals } from "@/service/hubspot/deals/getIdDeals";
 // import { getAllCompanies } from "@/service/hubspot/company/getAllCompanies";
@@ -34,14 +31,26 @@ export async function GET(request: Request) {
   // const token =
   //   "CMzZp_3gMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFMZ9vtFvHl3GfAbBUimHDAONX8ivOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IUISYRHlWpA67elSem2aVSQqhsCmRKA25hMVIAWgA";
 
-  // const datat = {
-  //   amount: 222,
-  //   dealname: "testPais",
-  //   token,
-  // };
+  // const res = await sendMessage({
+  //   phoneNumber: "5491126336301",
+  //   typeMessage: "text",
+  //   messageResponse: `👋👋 Hola Jose
+
+  //   Recordatorio amistoso para que actualices tu CRM 🫠
+
+  //   💡Estos son casos de uso de nuestros usuarios:
+  //   -Actualizar variables personalizadas 
+  //   -Registrar tareas con fecha y hora para no olvidar ningún seguimiento 
+  //   -Registrar minutas de reuniones 
+  //   -Hacer cargas masivas (hasta 20 por mensaje)
+    
+  // Olvídate de que te vuelvan a decir que lo que no está en el CRM no existe 😣
+    
+  //   ¡Escríbeme y haré todo el trabajo por ti! 😎`,
+  // });
 
   // const data = await postDeal(datat);
-  return NextResponse.json({ data: "pais" });
+  return NextResponse.json({ data: "jose" });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"

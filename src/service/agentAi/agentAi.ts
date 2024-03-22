@@ -45,7 +45,7 @@ export const agentAi = async (
   phoneNumber: string,
   email: string 
 ) => {
-  const validateDataAccount = await renewTokenAgent(phoneNumber);
+  const validateDataAccount: any = await renewTokenAgent(phoneNumber);
 
   const token = validateDataAccount?.token;
   const idAccount = validateDataAccount?.idAccount;
