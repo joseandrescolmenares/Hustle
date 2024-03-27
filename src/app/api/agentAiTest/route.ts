@@ -29,8 +29,8 @@ import { insertIdDeals } from "@/service/hubspot/deals/insertDeals";
 // import { handleMeeting } from "@/service/funtionsTools/handleMeeting/handleMeeting";
 
 export async function GET(request: Request) {
-  const token =
-    "CLiHxozoMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFIxdZNbaqSfLKjW4sdtHtfd35SvAOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IU501ShVCWdNJThhSaT1m9ydTaJ-lKA25hMVIAWgBgAA";
+  // const token =
+  //   "CLiHxozoMRIUAAEDUAAA-TIAAED8BwkA4AcAAAQY792eFSD3hJkdKMXiigEyFIxdZNbaqSfLKjW4sdtHtfd35SvAOkEAAABBAAAAAMD_AwAAAAAAAIYAAAAAAAAADAAggI8APgDgOQAAAEAEwP__HwAQ8QMAAID__wMAAAAAAOABAADsH0IU501ShVCWdNJThhSaT1m9ydTaJ-lKA25hMVIAWgBgAA";
 
   // const res = await sendMessage({
   //   phoneNumber: "5491126336301",
@@ -51,10 +51,10 @@ export async function GET(request: Request) {
   // });
 
   // const data = await postDeal(datat);
-  const url = `https://api.hubapi.com/crm/v3/properties/deals`
-  const data = await insertIdDeals(url, token)
+  // const url = `https://api.hubapi.com/crm/v3/properties/deals`
+  // const data = await insertIdDeals(url, token)
 
-  return NextResponse.json({ data: data });
+  return NextResponse.json({ data:  "data" });
 }
 // {
 //   // "input": "{\"contactId\":\"1201\",\"dealId\":\"17327602555\"}"
