@@ -84,7 +84,7 @@ export const schema = async ({
   }
 
   const filteredData = dataCompanies.results.filter(
-    (obj: any) => !obj.hasOwnProperty("hubspotDefined")
+    (obj: any) => !obj.hasOwnProperty("hubspotDefined") && !obj.hidden
   );
 
   const schemaProperties: { [key: string]: any } = { ...defaultProperties };
