@@ -13,10 +13,12 @@ export interface PropsContact {
   contactId?: string;
   jobtitle?: string;
   ownerId?: string;
-  propertiesOwnerid?:Promise<string> | string
+  propertiesOwnerid?: Promise<string> | string;
 }
 
-export const handleContact = async (dataProp: PropsContact & { [key: string]: any }) => {
+export const handleContact = async (
+  dataProp: PropsContact & { [key: string]: any }
+) => {
   const {
     phone,
     company,
@@ -50,7 +52,7 @@ export const handleContact = async (dataProp: PropsContact & { [key: string]: an
         website,
         lifecyclestage,
         jobtitle,
-        hubspot_owner_id: ownerId ?  ownerId : propertiesOwnerid,
+        hubspot_owner_id: ownerId ? ownerId : propertiesOwnerid,
         ...Object.entries(dynamicProps).reduce((acc, [key, value]) => {
           if (value !== "") {
             acc[key as keyof typeof dynamicProps] = value;
@@ -71,15 +73,13 @@ export const handleContact = async (dataProp: PropsContact & { [key: string]: an
 
     const data = await response?.json();
     const name = data?.properties?.firstname;
-
-    console.log(data,"test");
+    if (!data.id)
+      return `The function encountered an error and couldn't create the new deal. Please try again later. We apologize for the inconvenience.`;
+    console.log(data, "test");
 
     return `Response: Proceso completado con éxito. el  contact  ${name}  se creo correctamente.. Puede ver los detalles acá [Link]: https://app.hubspot.com/contacts/${idAccount}/contact/${data.id}.
       `;
   } catch (error: any) {
     return "The function encountered an error and couldn't create the new deal. Please try again later. We apologize for the inconvenience.";
-    // if (error.response.data.category == "EXPIRED_AUTHENTICATION") {
-    //   return "token expired";
-    // }
   }
 };

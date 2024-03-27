@@ -37,13 +37,14 @@ import { descriptionGetOwnerData } from "../funtionsTools/owner/describeHandleOw
 import { ChatMessageHistory } from "@langchain/community/stores/message/in_memory";
 import {
   RunnableConfig,
+  RunnableSequence,
   RunnableWithMessageHistory,
 } from "@langchain/core/runnables";
 
 export const agentAi = async (
   message: string,
   phoneNumber: string,
-  email: string 
+  email: string
 ) => {
   const validateDataAccount: any = await renewTokenAgent(phoneNumber);
 
@@ -118,7 +119,9 @@ export const agentAi = async (
     },
   });
 
-  const handleNewAndUpdatedContact = await descriptionHandleContact(propsCredential);
+  const handleNewAndUpdatedContact = await descriptionHandleContact(
+    propsCredential
+  );
 
   const createAssociation = descriptionHandleAssociationObject(propsCredential);
 
@@ -204,7 +207,9 @@ export const agentAi = async (
     },
   });
 
-  const handleNewAndUpdatedCompany = await descriptionHandleCompany(propsCredential);
+  const handleNewAndUpdatedCompany = await descriptionHandleCompany(
+    propsCredential
+  );
 
   const getCompanyInfoByName = new DynamicStructuredTool({
     name: "getCompanyInfoByName",
@@ -298,7 +303,7 @@ export const agentAi = async (
   const registerMessageAndAssociateWithObjects =
     describeHandleComunications(propsCredential);
 
-  const handleNewAndUpdatedDeals =await descriptionHandleDeal(propsCredential);
+  const handleNewAndUpdatedDeals = await descriptionHandleDeal(propsCredential);
 
   const tools = [
     createOrUpdateCallRecord,
@@ -326,70 +331,70 @@ export const agentAi = async (
   // });
   // const outputParser = new StringOutputParser();
 
-  const plannerPrompt = ChatPromptTemplate.fromTemplate(`
-  Your function is to understand the user-provided {input}, without adding or inventing information. Do not include superfluous steps. Follow these instructions to provide the correct result and formatted text:
+//   const plannerPrompt = ChatPromptTemplate.fromTemplate(`
+//   Your function is to understand the user-provided {input}, without adding or inventing information. Do not include superfluous steps. Follow these instructions to provide the correct result and formatted text:
 
-  Detailed Reading: Read the entire message carefully to understand all the requests and details provided.
+//   Detailed Reading: Read the entire message carefully to understand all the requests and details provided.
   
-  Task Breakdown: Divide the message into individual tasks and address them one by one to avoid confusion or errors. Clearly identify each action that needs to be taken and the order in which they should be carried out.
+//   Task Breakdown: Divide the message into individual tasks and address them one by one to avoid confusion or errors. Clearly identify each action that needs to be taken and the order in which they should be carried out.
   
-  Plan the Execution Order: Organize the tasks in a logical order, taking into account possible dependencies between them.
+//   Plan the Execution Order: Organize the tasks in a logical order, taking into account possible dependencies between them.
   
-  Consult the following examples:
+//   Consult the following examples:
   
-  Input:
-  Create a deal named Meta and associate it with the company named Whatsapp, then create the contact for Mark Zuckerberg and associate it with the deal.
+//   Input:
+//   Create a deal named Meta and associate it with the company named Whatsapp, then create the contact for Mark Zuckerberg and associate it with the deal.
   
-  Output:
-  Create the deal named Meta.
-  Search for the company named Whatsapp.
-  Associate the deal named Meta with the company Whatsapp.
-  Create the contact for Mark Zuckerberg.
-  Associate the deal named Meta with the contact for Mark Zuckerberg.,
+//   Output:
+//   Create the deal named Meta.
+//   Search for the company named Whatsapp.
+//   Associate the deal named Meta with the company Whatsapp.
+//   Create the contact for Mark Zuckerberg.
+//   Associate the deal named Meta with the contact for Mark Zuckerberg.,
   
-  Input:
-  Create a deal Amazon.
+//   Input:
+//   Create a deal Amazon.
   
-  Output:
-  Create a deal named Amazon.
+//   Output:
+//   Create a deal named Amazon.
   
-  Input:
-  Associate the contact named Max with the deal named Redix.
+//   Input:
+//   Associate the contact named Max with the deal named Redix.
   
-  Output:
-  Search for the contact named Max.
-  Search for the deal named Redix.
-  Associate the contact named Max with the deal named Redix.
+//   Output:
+//   Search for the contact named Max.
+//   Search for the deal named Redix.
+//   Associate the contact named Max with the deal named Redix.
   
-  Input:
-  Register or add a note to the deal for OpenAI that says tomorrow I have a meeting.
+//   Input:
+//   Register or add a note to the deal for OpenAI that says tomorrow I have a meeting.
   
-  Output:
-  Create a note for the deal named OpenAI that says: "Tomorrow I have a meeting".
+//   Output:
+//   Create a note for the deal named OpenAI that says: "Tomorrow I have a meeting".
   
-  Input:
-  Register a meeting with the deal for Amazon that says: we had a meeting for onboarding.
+//   Input:
+//   Register a meeting with the deal for Amazon that says: we had a meeting for onboarding.
   
-  Output:
-  Register a meeting with the deal named Amazon that says: "We had a meeting for onboarding.
+//   Output:
+//   Register a meeting with the deal named Amazon that says: "We had a meeting for onboarding.
 
-  Input:
-  hola
+//   Input:
+//   hola
   
-  Output:
-  hola
+//   Output:
+//   hola
 
-  Input:
-  Create a strike deal for Cabak company.
+//   Input:
+//   Create a strike deal for Cabak company.
   
-  Output:
-  Create a deal named strike, 
-  associate it with the company named Cabak..
+//   Output:
+//   Create a deal named strike, 
+//   associate it with the company named Cabak..
 
 
-###IMPORTANT: Do not add any additional text. It is crucial not to complete any text. In the final response, provide only the output result, without any additional information. It is fundamental to provide only the formatted text without any extra details. Provide the response according to the language corresponding to the user input. Note that when "Negocio" is written, it refers to "Deal", and when "empresa" is written, it refers to "Company".
-Identify the language of the {input} and respond in that language.
-No inventar nada y no utilizar ejemplos como respuesta, simplemente dar el mismo texto del input formateado.`);
+// ###IMPORTANT: Do not add any additional text. It is crucial not to complete any text. In the final response, provide only the output result, without any additional information. It is fundamental to provide only the formatted text without any extra details. Provide the response according to the language corresponding to the user input. Note that when "Negocio" is written, it refers to "Deal", and when "empresa" is written, it refers to "Company".
+// Identify the language of the {input} and respond in that language.
+// No inventar nada y no utilizar ejemplos como respuesta, simplemente dar el mismo texto del input formateado.`);
 
   // const llmChain = plannerPrompt.pipe(models).pipe(outputParser);
 
@@ -427,7 +432,6 @@ No inventar nada y no utilizar ejemplos como respuesta, simplemente dar el mismo
     tools,
     handleParsingErrors:
       "Please try again, paying special attention to the values of the parameters and the user input.",
-  
   });
 
   const config: RunnableConfig = { configurable: { sessionId: phoneNumber } };

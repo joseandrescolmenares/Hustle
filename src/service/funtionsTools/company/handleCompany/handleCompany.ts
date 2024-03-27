@@ -64,15 +64,13 @@ export const handleCompany = async (dataProp: DataProps) => {
 
     const data = await response.json();
     const name = data?.properties?.name;
-
+      if(!data?.id) return `The function encountered an error and couldn't create the new deal. Please try again later. We apologize for the inconvenience.`
     console.log(data);
 
     return `Proceso completado con éxito. la  empresa  ${name}  se creo correctamente.. Puede ver los detalles acá : https://app.hubspot.com/contacts/${idAccount}/companies/${data?.id}.
       `;
   } catch (error: any) {
     return "The function encountered an error and couldn't create the new deal. Please try again later. We apologize for the inconvenience.";
-    // if (error.response.data.category == "EXPIRED_AUTHENTICATION") {
-    //   return "token expired";
-    // }
+   
   }
 };
